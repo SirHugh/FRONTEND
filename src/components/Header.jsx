@@ -16,7 +16,7 @@ const Header = () => {
           Home
         </Link>
         {user && (
-          <Link to="/students" className="text-white hover:text-gray-300 mr-4">
+          <Link to="/alumnos" className="text-white hover:text-gray-300 mr-4">
             Gestión de alumnos
           </Link>
         )}
