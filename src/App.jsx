@@ -5,6 +5,7 @@ import "./App.css";
 import Header from "./components/Header";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import { AuthProvider } from "./context/AuthContext";
+import AlumnosPage from "./pages/AlumnosPage";
 
 function App() {
   return (
@@ -14,10 +15,11 @@ function App() {
           <AuthProvider>
             <Header />
             <Routes>
+              <Route path="/login" element={<LoginPage />} />
               <Route element={<PrivateRoutes />}>
                 <Route path="/" element={<HomePage />} exact />
+                <Route path="/alumnos" element={<AlumnosPage />} exact />
               </Route>
-              <Route path="/login" element={<LoginPage />} />
             </Routes>
           </AuthProvider>
         </Router>

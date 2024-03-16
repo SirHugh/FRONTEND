@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { getAuthToken, getRefreshToken } from "../services/AuthService";
 
 const AuthContext = createContext();
 
@@ -26,26 +27,23 @@ export const AuthProvider = ({ children }) => {
   let loginUser = async (e) => {
     e.preventDefault();
 
-    let response = await fetch("http://127.0.0.1:8000/auth/token/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: e.target.email.value,
-        password: e.target.password.value,
-      }),
+    let res = await getAuthToken({
+      email: e.target.email.value,
+      password: e.target.password.value,
+    }).catch(function (error) {
+      if (error.response.status === 401) {
+        // La respuesta fue hecha y el servidor respondió con un código de estado 401
+        alert("No se encuentra usuario activo con estas credenciales");
+      }
     });
 
-    let data = await response.json();
-
-    if (response.status === 200) {
-      setAuthToken(data);
-      setUser(jwtDecode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
+    if (res.status === 200) {
+      setAuthToken(res.data);
+      setUser(jwtDecode(res.data.access));
+      localStorage.setItem("authTokens", JSON.stringify(res.data));
       history("/");
     } else {
-      alert("Something Went Wrong!");
+      alert("Opps, Algo ha salido Mal!");
     }
   };
 
@@ -54,33 +52,46 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("authTokens");
     history("/login");
+
+    console.log("loged out");
   };
 
   let updateToken = async () => {
-    console.log("Update token Called!");
-    let response = await fetch("http://127.0.0.1:8000/auth/token/refresh/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    // let response = await fetch("http://127.0.0.1:8000/auth/token/refresh/", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     refresh: authTokens?.refresh,
+    //   }),
+    // });
+    if (authTokens !== null) {
+      let response = await getRefreshToken({
         refresh: authTokens?.refresh,
-      }),
-    });
+      }).catch(function (error) {
+        if (error.response.status >= 400) {
+          // La respuesta fue hecha y el servidor respondió con un código de estado 401
+          logoutUser();
+        }
+      });
 
-    let data = await response.json();
-    if (response.status === 200) {
-      setAuthToken(data);
-      setUser(jwtDecode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
+      // let data = response.data;
+      if (response.status === 200) {
+        setAuthToken(response.data);
+        setUser(jwtDecode(response.data.access));
+        localStorage.setItem("authTokens", JSON.stringify(response.data));
+      } else {
+        logoutUser();
+      }
+
+      if (loading) {
+        setLoading(false);
+        console.log("Update Token: " + loading);
+      }
     } else {
       logoutUser();
-      console.log("update failed");
-    }
-
-    if (loading) {
       setLoading(false);
-      console.log("Update Token: " + loading);
     }
   };
 
