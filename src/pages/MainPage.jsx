@@ -1,33 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import alumnosImage from '../assets/alumnos.jpg';
-import becasImage from '../assets/becas.jpg';
-import cajaImage from '../assets/caja.jpg';
-
-const imagesData = [
-  { title: 'Alumnos', imageUrl: alumnosImage },
-  { title: 'Becas', imageUrl: becasImage },
-  { title: 'Caja', imageUrl: cajaImage },
-];
+import Card from '../components/Card';
+import userIcon from '../assets/icons/UsuariosIcon.svg';
+import studentIcon from '../assets/icons/AlumnoIcon.svg';
+import boxIcon from '../assets/icons/CajaIcon.svg';
 
 const MainPage = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  // Datos para las tarjetas
+  const cardData = [
+    { title: 'Usuarios', icon: userIcon },
+    { title: 'Alumnos', icon: studentIcon, linkTo: '/alumnos' },
+    { title: 'Caja', icon: boxIcon },
+  ];
 
-  // Función para cambiar a la imagen anterior
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? imagesData.length - 1 : prevIndex - 1));
+  // Datos de ejemplo para el gráfico
+  const data = {
+    labels: ['1º Grado', '2º Grado', '3º Grado', '4º Grado', '5º Grado'],
+    datasets: [
+      {
+        label: 'Alumnos Becados',
+        data: [20, 15, 10, 5, 8], // Cantidad de alumnos becados por grado
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(153, 102, 255, 0.6)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)'
+        ],
+        borderWidth: 1,
+      },
+    ],
   };
-
-  // Función para cambiar a la siguiente imagen
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex === imagesData.length - 1 ? 0 : prevIndex + 1));
-  };
-
-  // Función para cambiar automáticamente a la siguiente imagen cada cierto tiempo
-  useEffect(() => {
-    const intervalId = setInterval(nextImage, 5000); // Cambiar cada 5 segundos
-    return () => clearInterval(intervalId); // Limpiar el intervalo al desmontar el componente
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -35,23 +45,14 @@ const MainPage = () => {
         {/* Aquí va tu encabezado con enlaces y demás */}
       </header>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="relative">
-          {/* Flecha izquierda para retroceder */}
-          <button className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md" onClick={prevImage}>
-            {'<'}
-          </button>
-          {/* Flecha derecha para avanzar */}
-          <button className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md" onClick={nextImage}>
-            {'>'}
-          </button>
-          {/* Mostrar la imagen actual */}
-          <img src={imagesData[currentImageIndex].imageUrl} alt={imagesData[currentImageIndex].title} className="w-full h-auto rounded-lg shadow-md" />
-          {/* Título de la imagen */}
-          <div className="absolute bottom-4 left-4 bg-white p-2 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold">{imagesData[currentImageIndex].title}</h2>
+        {/* Contenido adicional */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Renderizar tarjetas */}
+            {cardData.map((card, index) => (
+              <Card key={index} icon={card.icon} title={card.title} linkTo={card.linkTo} />
+            ))}
           </div>
-          {/* Enlace para acceder a la vista correspondiente */}
-          <Link to={`/${imagesData[currentImageIndex].title.toLowerCase().replace(/\s+/g, '-')}`} className="absolute bottom-4 right-4 text-blue-500 font-semibold">Ver más</Link>
         </div>
       </main>
     </div>
