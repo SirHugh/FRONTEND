@@ -10,31 +10,31 @@ const Header = () => {
   };
 
   return (
-    <div className="flex justify-between items-center bg-gray-800 text-white py-4 px-6">
+    <div className="flex justify-between items-center bg-blue-500 text-white py-4 px-6">
       <div>
         <Link to="/" className="text-white hover:text-gray-300 mr-4">
-          Home
+          Inicio
         </Link>
         {user && (
           <Link to="/alumnos" className="text-white hover:text-gray-300 mr-4">
-            Gestión de alumnos
+            Alumnos
           </Link>
         )}
       </div>
       <div>
         {user ? (
           <div className="flex items-center">
-            <h2 className="mr-4">Hello, {user.username}</h2>
+            <h2 className="mr-4">Hola, {user.nombre}.</h2>
             <button
               onClick={handleLogout}
               className="text-white hover:text-gray-300"
             >
-              Logout
+              Cerrar sesión
             </button>
           </div>
         ) : (
           <Link to="/login" className="text-white hover:text-gray-300">
-            Login
+            Iniciar sesión
           </Link>
         )}
       </div>
