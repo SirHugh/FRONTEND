@@ -7,6 +7,7 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import { AuthProvider } from "./context/AuthContext";
 import AlumnosPage from "./pages/AlumnosPage";
 import MainPage from "./pages/MainPage";
+import AlumnoDetail from "./components/AlumnoDetail";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Route element={<PrivateRoutes />}>
                 <Route path="/" element={<MainPage />} exact />
                 <Route path="/alumnos" element={<AlumnosPage />} exact />
+                <Route path="/alumnos/:id" element={<AlumnoDetail />} />
               </Route>
             </Routes>
           </AuthProvider>

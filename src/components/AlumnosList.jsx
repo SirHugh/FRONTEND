@@ -93,7 +93,9 @@ export const AlumnosList = () => {
                 <td className="px-6 py-4 whitespace-nowrap">{alumno.telefono}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <EditButton onClick={() => handleEdit(alumno.id_alumno)} />
-                  <SeeButton onClick={() => handleView(alumno.id_alumno)} />
+                  <Link to={`/alumnos/${alumno.id_alumno}`}>
+                      <SeeButton />
+                  </Link>
                   <DeleteButton onClick={() => handleDelete(alumno.id_alumno)} />
                 </td>
               </tr>
