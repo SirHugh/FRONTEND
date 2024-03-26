@@ -18,13 +18,13 @@ const AlumnoCard = ({ alumno, onDelete }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para guardar los cambios
-    console.log("Alumno editado:", editedAlumno);
-    setIsEditing(false);
+    onUpdate(editedAlumno); // Llama a la función de manejo para enviar los datos actualizados
   };
+  
+  ;
 
   return (
-    <div className="bg-gray-100 p-4 rounded-md shadow-md">
+    <div className="bg-white-100 p-4 rounded-md shadow-md">
       <h1 className="text-primary">Datos del Alumno</h1>
       <hr className="my-4" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -45,7 +45,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                 <input
                   type="text"
                   name="nombre"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  id="nombre"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                   value={editedAlumno.nombre}
                   onChange={handleChange}
@@ -63,7 +64,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                 <input
                   type="text"
                   name="apellido"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  id="apellido"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                   value={editedAlumno.apellido}
                   onChange={handleChange}
@@ -83,7 +85,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                 <input
                   type="text"
                   name="cedula"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  id="cedula"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                   value={editedAlumno.cedula}
                   onChange={handleChange}
@@ -102,7 +105,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                   <input
                     type="text"
                     name="genero"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    id="genero"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
                     value={editedAlumno.genero}
                     onChange={handleChange}
@@ -122,7 +126,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                   <input
                     type="text"
                     name="fecha_nac"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    id="fecha_nac"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
                     value={editedAlumno.fecha_nac}
                     onChange={handleChange}
@@ -140,7 +145,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                   <input
                     type="text"
                     name="nacionalidad"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    id="nacionalidad"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
                     value={editedAlumno.nacionalidad}
                     onChange={handleChange}
@@ -160,7 +166,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                   <input
                     type="text"
                     name="barrio"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    id="barrio"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
                     value={editedAlumno.barrio}
                     onChange={handleChange}
@@ -178,7 +185,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                   <input
                     type="text"
                     name="edad_primer_grado"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    id="edad_primer_grado"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
                     value={editedAlumno.edad_primer_grado}
                     onChange={handleChange}
@@ -198,7 +206,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                   <input
                     type="text"
                     name="curso_jardin"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    id="curso_jardin"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
                     value={editedAlumno.curso_jardin}
                     onChange={handleChange}
@@ -217,7 +226,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                     <input
                       type="text"
                       name="cantidad_hermanos"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                      id="cantidad_hermanos"
+                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       placeholder=" "
                       value={editedAlumno.cantidad_hermanos}
                       onChange={handleChange}
@@ -237,11 +247,12 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                     <input
                       type="text"
                       name="id_alumno"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                      id="id_alumno"
+                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       placeholder=" "
                       value={editedAlumno.id_alumno}
                       onChange={handleChange}
-                      readOnly={!isEditing}
+                      readOnly={true}
                       required
                     />
                     <label
@@ -255,7 +266,8 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                     <input
                       type="text"
                       name="telefono"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                      id="telefono"
+                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       placeholder=" "
                       value={editedAlumno.telefono}
                       onChange={handleChange}
@@ -300,7 +312,7 @@ const AlumnoCard = ({ alumno, onDelete }) => {
           </div>
           <hr className="my-4" />
           <div className="flex justify-end mt-4">
-<button className="bg-red-500 text-white px-2 py-1 rounded-md" onClick={() => onDelete(alumno.id)}>Eliminar</button>
+<button className="bg-red-500 text-white px-2 py-1 rounded-md" onClick={() => onDelete(alumno.id_alumno)}>Eliminar</button>
 </div>
 </div>
 );

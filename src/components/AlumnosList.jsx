@@ -4,16 +4,27 @@ import Card from '../components/Card';
 import userIcon from '../assets/icons/UsuariosIcon.svg';
 import studentIcon from '../assets/icons/AlumnoIcon.svg';
 import boxIcon from '../assets/icons/CajaIcon.svg';
-import { getAlumnos } from "../services/AcademicoService";
+import { getAlumnos, deleteAlumno } from "../services/AcademicoService";
 import  EditButton  from "./Buttons/EditButton";
 import  DeleteButton  from "./Buttons/DeleteButton";
 import SeeButton from "./Buttons/SeeButton";
+import AlumnoForm from "./AlumnoForm"; // Importar el componente AlumnoForm
+import DeleteModal from "./DeleteModal";
+import SuccessModal from "./SuccessModal";
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showAlumnoForm, setShowAlumnoForm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [deletedAlumnoId, setDeletedAlumnoId] = useState(null);
   const itemsPerPage = 10;
+
+  const handleToggleModal = () => {
+    setShowAlumnoForm(!showAlumnoForm);
+  };
 
   useEffect(() => {
     async function loadAlumnos() {
@@ -22,6 +33,40 @@ export const AlumnosList = () => {
     }
     loadAlumnos();
   }, []);
+
+  const handleDelete = async (alumnoId) => {
+    try {
+      // Almacenar el ID del alumno que se eliminará
+      setDeletedAlumnoId(alumnoId);
+      // Mostrar el modal de eliminación
+      setShowDeleteModal(true);
+    } catch (error) {
+      console.error('Error deleting alumno:', error);
+    }
+  };
+  
+  // Función para confirmar la eliminación del alumno desde el modal
+  const handleDeleteConfirm = async () => {
+    try {
+      await deleteAlumno(deletedAlumnoId);
+      // Mostrar el modal de éxito después de eliminar el alumno
+      setShowDeleteModal(false);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error('Error deleting alumno:', error);
+    }
+  };
+  
+  // Función para cancelar la eliminación del alumno desde el modal
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+  };
+
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    // Redirigir a la página de alumnos
+    window.location.href = '/alumnos';
+  };
 
   // Filtra los alumnos por nombre y apellido
   const filteredAlumnos = alumnos.filter(
@@ -44,6 +89,7 @@ export const AlumnosList = () => {
   const handleAddAlumno = () => {
     // Aquí puedes implementar la lógica para agregar un nuevo alumno
     console.log("Agregar nuevo alumno");
+    setShowAlumnoForm(true);
   };
 
   return (
@@ -147,6 +193,22 @@ export const AlumnosList = () => {
         >
           Añadir Alumno
         </button>
+        {/* Renderizado condicional del modal */}
+      {showAlumnoForm && <AlumnoForm onClose={handleToggleModal} />}
+      <SuccessModal
+          show={showSuccessModal}
+          onClose={closeSuccessModal}
+          title={"Borrado exitoso"}
+          message={"El alumno ha sido eliminado correctamente."}
+        />
+        {/* Modal de confirmación de eliminación */}
+        <DeleteModal
+          show={showDeleteModal}
+          onDelete={() => handleDeleteConfirm(deletedAlumnoId)} // Pasar deletedAlumnoId como argumento
+          onCancel={handleDeleteCancel} // Usar handleDeleteCancel para cancelar la eliminación
+          message={"¿Estás seguro de que deseas eliminar este alumno? Esta acción no se puede deshacer."}
+        />
+
       </div>
     </div>
   );
