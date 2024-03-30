@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import NoImage from "../assets/no-image.png";
 import { useState } from "react";
 
-const AlumnoCard = (alumno) => {
+const AlumnoCard = ({ alumno }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedAlumno, setEditedAlumno] = useState(alumno);
   const navigate = useNavigate();

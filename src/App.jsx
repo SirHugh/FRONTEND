@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -10,6 +10,7 @@ import AlumnosPage from "./pages/AlumnosPage";
 import NewStudent from "./pages/NewStudent";
 import ResponsablesPage from "./pages/ResponsablesPage";
 import NewResponsable from "./pages/NewResponsable";
+import Sidebar from "./components/SideBar";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,7 +24,9 @@ function App() {
       <div className="font-Poppins section">
         <Router>
           <AuthProvider>
-            <Header />
+            {/* Pasa la función toggleSidebar al componente Header */}
+            <Header toggleSidebar={toggleSidebar} />
+            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route element={<PrivateRoutes />}>

@@ -36,7 +36,7 @@ export default function AlumnosPage() {
       </div>
       <div className="font-Poppins section">
         {loading ? (
-          <div className="text-center text-5xl">Loading...</div>
+          <div className="text-center text-5xl">Cargando...</div>
         ) : (
           <div>
             <div className="flex flex-col gap-2">
