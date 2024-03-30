@@ -31,11 +31,16 @@ const AlumnoCard = ({ alumno, onDelete }) => {
         {/* left column */}
         <div className="col-span-1 md:col-span-1">
           <div className="text-center">
-            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" className="avatar rounded-full border-4 border-white mx-auto" alt="avatar" />
+            <img
+              src={editedAlumno.fotocarnet}
+              className="avatar rounded-full border-4 border-white mx-auto h-80 w-80 object-cover"
+              alt="avatar"
+            />
             <h6 className="mt-4">Subir una foto diferente...</h6>
             <input type="file" className="form-control" disabled={!isEditing} />
           </div>
         </div>
+
 
         {/* edit form column */}
         <div className="col-span-1 md:col-span-2">
