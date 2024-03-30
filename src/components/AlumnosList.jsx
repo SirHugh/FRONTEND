@@ -93,16 +93,17 @@ export const AlumnosList = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full">
-      <div className="w-full max-w-8xl flex justify-left mb-2">
-        <input
-          type="text"
-          placeholder="Buscar alumno"
-          className="border border-gray-300 rounded-md px-4 py-2 w-64 mr-4"
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      <div className="overflow-x-auto w-full max-w-8xl">
+    <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+      <div className="flex flex-col items-center justify-center mb-2">
+        <div className="w-full max-w-8xl flex justify-left mb-2">
+          <input
+            type="text"
+            placeholder="Buscar alumno"
+            className="border border-gray-300 rounded-md px-4 py-2 w-64 mr-4"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+      <div className="overflow-x-auto w-full max-w-12xl">
         <table className="min-w-full divide-y divide-gray-200">
           {/* Encabezado de la tabla */}
           <thead className="bg-gray-50">
@@ -142,7 +143,6 @@ export const AlumnosList = () => {
                   <Link to={`/alumnos/${alumno.id_alumno}`}>
                       <SeeButton />
                   </Link>
-                  <DeleteButton onClick={() => handleDelete(alumno.id_alumno)} />
                 </td>
               </tr>
             ))}
@@ -210,6 +210,7 @@ export const AlumnosList = () => {
         />
 
       </div>
+    </div>
     </div>
   );
 };

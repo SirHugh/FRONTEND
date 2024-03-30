@@ -56,7 +56,8 @@ const AlumnoDetail = () => {
   return (
     <div>
       {alumno ? (
-        <div>
+        <div className="flex justify-center items-center">
+        <div className="bg-white p-4 rounded-md ">
           <AlumnoCard alumno={alumno} onDelete={toggleDeleteModal} onSubmit={handleSubmit} />
           <DeleteModal
             show={showDeleteModal}
@@ -70,6 +71,7 @@ const AlumnoDetail = () => {
             title={"Borrado exitoso"}
             message={"El alumno ha sido eliminado correctamente."}
           />
+        </div>
         </div>
       ) : (
         <p>Cargando detalles del alumno...</p>

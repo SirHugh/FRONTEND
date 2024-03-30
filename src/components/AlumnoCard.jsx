@@ -312,7 +312,6 @@ const AlumnoCard = ({ alumno, onDelete }) => {
           </div>
           <hr className="my-4" />
           <div className="flex justify-end mt-4">
-<button className="bg-red-500 text-white px-2 py-1 rounded-md" onClick={() => onDelete(alumno.id_alumno)}>Eliminar</button>
 </div>
 </div>
 );
