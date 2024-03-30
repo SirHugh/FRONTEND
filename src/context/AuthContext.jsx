@@ -52,31 +52,18 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("authTokens");
     history("/login");
-
-    console.log("loged out");
   };
 
   let updateToken = async () => {
-    // let response = await fetch("http://127.0.0.1:8000/auth/token/refresh/", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     refresh: authTokens?.refresh,
-    //   }),
-    // });
     if (authTokens !== null) {
       let response = await getRefreshToken({
         refresh: authTokens?.refresh,
       }).catch(function (error) {
         if (error.response.status >= 400) {
-          // La respuesta fue hecha y el servidor respondió con un código de estado 401
           logoutUser();
         }
       });
 
-      // let data = response.data;
       if (response.status === 200) {
         setAuthToken(response.data);
         setUser(jwtDecode(response.data.access));
@@ -87,7 +74,6 @@ export const AuthProvider = ({ children }) => {
 
       if (loading) {
         setLoading(false);
-        console.log("Update Token: " + loading);
       }
     } else {
       logoutUser();
@@ -107,10 +93,7 @@ export const AuthProvider = ({ children }) => {
       console.log("useEffect: " + loading);
       updateToken();
     }
-
-    console.log(loading);
-
-    let fourMinutes = 1000 * 20;
+    let fourMinutes = 1000 * 60 * 4;
     let interval = setInterval(() => {
       if (authTokens) {
         updateToken();

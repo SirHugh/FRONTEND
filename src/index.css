@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "Poppins";
+    src: url(./fonts/Poppins-Medium.ttf);
+  }
+
+  img {
+    width: 100%;
+  }
+
+  .section {
+    @apply px-4 pt-10 container mx-auto min-h-screen;
+  }
+}
+
+/* .img-display-before {
+  height: 200px;
+  width: 200px;
+  margin-left: 35px;
+} */
+
+.img-display-after {
+  height: 200px;
+  width: 200px;
+  border-radius: 100%;
+}

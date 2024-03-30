@@ -1,14 +1,21 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  "./src/**/*.{html,js}",
-  './pages/**/*.{html,js}',
-  './components/**/*.{html,js}'],
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    fontFamily: {
+      Poppins: "Poppins",
+    },
+    extend: {
+      colors: {
+        lightGray: "#D3D3D3",
+        purple: "#6842EF",
+      },
+    },
+    screens: {
+      xs: "480px",
+      sm: "768px",
+      md: "1060px",
+    },
   },
-  plugins: ['tailwindcss: {}',
-    'autoprefixer: {}'],
-}
+  plugins: [],
+};

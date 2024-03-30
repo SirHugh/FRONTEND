@@ -1,17 +1,32 @@
 import { ApiClient } from "./ApiClient";
 
-export const getAlumnos = () => ApiClient.get("/academico/alumnos/");
+//funciones para el manejo de la API de alumnos
 
-export const getAlumnoById = (id) => ApiClient.get(`/academico/alumnos/${id}`);
+export const getAlumnos = (page) =>
+  ApiClient.get(`/academico/alumnos/?page=${page}`);
 
-export const createAlumno = (data) =>
-  ApiClient.post(`/academico/alumnos/`, data);
+export const searchAlumnos = (searchTerm) => {
+  return ApiClient.get(`/academico/alumnos/?search=${searchTerm}`);
+};
+
+export const getAlumnoById = (id) => {
+  return ApiClient.get(`/academico/alumnos/${id}`);
+};
+
+export const createAlumno = (data) => {
+  return ApiClient.post("/academico/alumnos/", data);
+};
 
 export const updateAlumno = (id, data) =>
   ApiClient.put(`/academico/alumnos/${id}`, data);
 
 export const deleteAlumno = (id) =>
   ApiClient.delete(`/academico/alumnos/${id}`);
+
+//funciones para el manejo de la API de responsables
+
+export const createResponsables = (data) =>
+  ApiClient.post("/academico/responsable/", data);
 
 // path('grados/', views.grado_list),
 // path('grados/<int:pk>/', views. grado_detail),
