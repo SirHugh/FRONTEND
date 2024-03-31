@@ -4,6 +4,9 @@ import { getAlumnos } from "../services/AcademicoService";
 import  EditButton  from "./Buttons/EditButton";
 import SeeButton from "./Buttons/SeeButton";
 import AlumnoForm from "./AlumnoForm"; // Importar el componente AlumnoForm
+import PersonalInfoForm from "./formularios/PersonalInfoForm";
+import ResponsableForm from "./formularios/ResponsableForm";
+import InscripcionForm from "./formularios/InscriptionForm";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
 
 export const AlumnosList = () => {
@@ -13,10 +16,15 @@ export const AlumnosList = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [showAlumnoForm, setShowAlumnoForm] = useState(false);
+  const [showPersonalInfoForm, setShowPersonalInfoForm] = useState(false);
+  const [showResponsableForm, setShowResponsableForm] = useState(false);
+  const [showInscriptionForm, setShowInscriptionForm] = useState(false);
 
   const handleToggleModal = () => {
-    setShowAlumnoForm(!showAlumnoForm);
+    setShowInscriptionForm(!showInscriptionForm);
   };
+
+  
 
   useEffect(() => {
     async function loadAlumnos() {
@@ -33,7 +41,7 @@ export const AlumnosList = () => {
 
   const handleAddAlumno = () => {
     console.log("Agregar nuevo alumno");
-    setShowAlumnoForm(true);
+    setShowInscriptionForm(true);
   };
 
   // Función para manejar la adición de un nuevo alumno
@@ -113,7 +121,7 @@ export const AlumnosList = () => {
         >
           Añadir Alumno
         </button>
-        {showAlumnoForm && <AlumnoForm onClose={handleToggleModal} />}
+        {showInscriptionForm && <InscripcionForm onClose={handleToggleModal} />}
       </div>
     </div>
     </div>
