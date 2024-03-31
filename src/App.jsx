@@ -11,6 +11,7 @@ import NewStudent from "./pages/NewStudent";
 import ResponsablesPage from "./pages/ResponsablesPage";
 import NewResponsable from "./pages/NewResponsable";
 import Sidebar from "./components/SideBar";
+import MainPage from "./pages/MainPage";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -30,7 +31,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route element={<PrivateRoutes />}>
-                <Route path="/" element={<HomePage />} exact />
+                <Route path="/" element={<MainPage />} exact />
                 <Route path="/alumnos" element={<AlumnosPage />} exact />
                 <Route path="/alumnos/nuevo" element={<NewStudent />} exact />
                 <Route
