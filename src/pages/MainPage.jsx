@@ -4,6 +4,7 @@ import Card from '../components/Card';
 import userIcon from '../assets/icons/UsuariosIcon.svg';
 import studentIcon from '../assets/icons/AlumnoIcon.svg';
 import boxIcon from '../assets/icons/CajaIcon.svg';
+import academicIcon from '../assets/icons/academicoIcon.svg'; // Importa el icono para la sección académica
 
 const MainPage = () => {
   // Datos para las tarjetas
@@ -11,6 +12,7 @@ const MainPage = () => {
     { title: 'Usuarios', icon: userIcon },
     { title: 'Alumnos', icon: studentIcon, linkTo: '/alumnos' },
     { title: 'Caja', icon: boxIcon },
+    { title: 'Académico', icon: academicIcon, linkTo: '/academico' }, // Nueva tarjeta para la sección académica
   ];
 
   return (
