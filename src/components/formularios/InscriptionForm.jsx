@@ -35,11 +35,33 @@ const InscripcionForm = () => {
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
-        <div className="modal-container bg-white w-full max-w-[600px] mx-auto p-8 rounded-md shadow-xl z-50">
+        <div className="modal-container bg-white w-full max-w-[900px] mx-auto p-8 rounded-md shadow-xl z-50">
           <h2 className="text-2xl font-bold mb-6">Inscripción</h2>
           <div className="mb-8">
-            <p className="mb-2 text-lg font-medium">Paso {step}: {step === 1 && 'Datos del alumno'}{step === 2 && 'Datos del responsable'}{step === 3 && 'Datos académicos'}{step === 4 && 'Resumen'}</p>
-            {/* Aquí puedes agregar lógica para mostrar indicaciones de los pasos */}
+            <ol className="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
+              <li className={`flex md:w-full items-center ${step === 1 ? 'text-blue-600 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400'} sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700`}>
+                <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                  </svg>
+                  Personal<span className="hidden sm:inline-flex sm:ms-2">Info</span>
+                </span>
+              </li>
+              <li className={`flex md:w-full items-center ${step === 2 ? 'text-blue-600 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400'} sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700`}>
+                <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                  <span className="me-2">2</span>
+                  Datos<span className="hidden sm:inline-flex sm:ms-2">Responsable</span>
+                </span>
+              </li>
+              <li className={`flex md:w-full items-center ${step === 3 ? 'text-blue-600 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400'}`}>
+                <span className="me-2">3</span>
+                Datos<span className="hidden sm:inline-flex sm:ms-2">Académicos</span>
+              </li>
+              <li className={`flex md:w-full items-center ${step === 4 ? 'text-blue-600 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400'}`}>
+                <span className="me-2">4</span>
+                Resumen
+              </li>
+            </ol>
           </div>
           {step === 1 && <AlumnoForm onSubmit={handleAlumnoSubmit} onClose={handleBack} />}
           {step === 2 && <ResponsableForm onSubmit={handleResponsableSubmit} onClose={handleBack} />}

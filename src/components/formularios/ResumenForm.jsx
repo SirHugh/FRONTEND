@@ -1,6 +1,12 @@
 import React from 'react';
 
-const ResumenForm = ({ alumnoData, responsableData, academicoData, onClose }) => {
+const ResumenForm = ({ alumnoData, responsableData, academicoData, onClose, onSubmit }) => {
+  const handleSubmit = () => {
+    // Aquí puedes manejar la lógica de confirmación de inscripción
+    // Por ejemplo, llamar a la función onSubmit
+    onSubmit();
+  };
+
   return (
     <div>
       <h2>Resumen</h2>
@@ -30,7 +36,7 @@ const ResumenForm = ({ alumnoData, responsableData, academicoData, onClose }) =>
           Volver
         </button>
         <button
-          onClick={handleSubmit} // Aquí deberías manejar la lógica de confirmación de inscripción
+          onClick={handleSubmit}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Confirmar Inscripción
