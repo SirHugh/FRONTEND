@@ -8,6 +8,7 @@ import PersonalInfoForm from "./formularios/PersonalInfoForm";
 import ResponsableForm from "./formularios/ResponsableForm";
 import InscripcionForm from "./formularios/InscriptionForm";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
+import App from '../../multi-step-form-inscription/src/App'
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -121,7 +122,7 @@ export const AlumnosList = () => {
         >
           Añadir Alumno
         </button>
-        {showInscriptionForm && <InscripcionForm onClose={handleToggleModal} />}
+        {showInscriptionForm && <App onClose={handleToggleModal} />}
       </div>
     </div>
     </div>

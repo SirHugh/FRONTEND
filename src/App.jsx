@@ -10,6 +10,7 @@ import AlumnosPage from "./pages/AlumnosPage";
 import MainPage from "./pages/MainPage";
 import AlumnoDetail from "./components/AlumnoDetail";
 import Sidebar from "./components/SideBar";
+import MatriculacionPage from "./pages/MatriculacionPage";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -31,6 +32,7 @@ function App() {
               <Route path="/" element={<MainPage />} exact />
               <Route path="/alumnos" element={<AlumnosPage />} exact />
               <Route path="/alumnos/:id" element={<AlumnoDetail />} />
+              <Route path="/academico" element={<MatriculacionPage />} />
             </Route>
           </Routes>
         </AuthProvider>

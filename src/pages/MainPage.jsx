@@ -9,10 +9,10 @@ import academicIcon from '../assets/icons/academicoIcon.svg'; // Importa el icon
 const MainPage = () => {
   // Datos para las tarjetas
   const cardData = [
-    { title: 'Usuarios', icon: userIcon },
+    //{ title: 'Usuarios', icon: userIcon },
     { title: 'Alumnos', icon: studentIcon, linkTo: '/alumnos' },
     { title: 'Caja', icon: boxIcon },
-    { title: 'Académico', icon: academicIcon, linkTo: '/academico' }, // Nueva tarjeta para la sección académica
+    { title: 'Matricular Alumno', icon: academicIcon, linkTo: '/academico' }, // Nueva tarjeta para la sección académica
   ];
 
   return (
