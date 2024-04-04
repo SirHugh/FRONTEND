@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { getAlumnos } from "../services/AcademicoService";
-import  EditButton  from "./Buttons/EditButton";
+import EditButton from "./Buttons/EditButton";
 import SeeButton from "./Buttons/SeeButton";
 import AlumnoForm from "./AlumnoForm"; // Importar el componente AlumnoForm
 import PersonalInfoForm from "./formularios/PersonalInfoForm";
 import ResponsableForm from "./formularios/ResponsableForm";
 import InscripcionForm from "./formularios/InscriptionForm";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
-import App from '../../multi-step-form-inscription/src/App'
+// import App from "../../multi-step-form-inscription/src/App";
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -25,17 +25,15 @@ export const AlumnosList = () => {
     setShowInscriptionForm(!showInscriptionForm);
   };
 
-  
-
   useEffect(() => {
     async function loadAlumnos() {
       const page = Math.min(currentPage + 1, totalPages);
       const res = await getAlumnos(page);
-      console.log("Datos recibidos del alumno: "+JSON.stringify(res));
+      console.log("Datos recibidos del alumno: " + JSON.stringify(res));
 
-      setAlumnos(res.data.data);
+      setAlumnos(res.data.results);
       setLoading(false);
-      setTotalPages(res.data.number_of_pages);
+      setTotalPages(Math.ceil(res.data.count / 10));
     }
     loadAlumnos();
   }, [currentPage]);
@@ -64,67 +62,76 @@ export const AlumnosList = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-      <div className="overflow-x-auto w-full max-w-12xl">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Apellido
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Nombre
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Cedula
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Fecha de Nacimiento
-              </th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Teléfono
-              </th>
-              <th className="relative px-6 py-3">
-                <span className="sr-only">Acciones</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredAlumnos.map((alumno) => (
-              <tr key={alumno.id_alumno}>
-                <td className="px-6 py-4 whitespace-nowrap">{alumno.apellido}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{alumno.nombre}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{alumno.cedula}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{alumno.fecha_nac}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{alumno.telefono}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <EditButton onClick={() => handleEdit(alumno.id_alumno)} />
-                  <Link to={`/alumnos/${alumno.id_alumno}`}>
-                      <SeeButton />
-                  </Link>
-                </td>
+        <div className="overflow-x-auto w-full max-w-12xl">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Apellido
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Nombre
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Cedula
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Fecha de Nacimiento
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Teléfono
+                </th>
+                <th className="relative px-6 py-3">
+                  <span className="sr-only">Acciones</span>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredAlumnos.map((alumno) => (
+                <tr key={alumno.id_alumno}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {alumno.apellido}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {alumno.nombre}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {alumno.cedula}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {alumno.fecha_nac}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {alumno.telefono}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <EditButton onClick={() => handleEdit(alumno.id_alumno)} />
+                    <Link to={`/alumnos/${alumno.id_alumno}`}>
+                      <SeeButton />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-4 flex justify-center">
+          <PaginationButtons
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage} // Pasar setCurrentPage como prop
+          />
+        </div>
+        <div className="mt-4 flex justify-center">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={handleAddAlumno}
+          >
+            Añadir Alumno
+          </button>
+          {showInscriptionForm && <App onClose={handleToggleModal} />}
+        </div>
       </div>
-      <div className="mt-4 flex justify-center">
-      <PaginationButtons
-        totalPages={totalPages}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage} // Pasar setCurrentPage como prop
-      />
-
-      </div>
-      <div className="mt-4 flex justify-center">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleAddAlumno}
-        >
-          Añadir Alumno
-        </button>
-        {showInscriptionForm && <App onClose={handleToggleModal} />}
-      </div>
-    </div>
     </div>
   );
 };
