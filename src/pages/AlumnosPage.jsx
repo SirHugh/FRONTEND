@@ -16,9 +16,9 @@ export default function AlumnosPage() {
       console.log("page n°: " + page);
       const res = await getAlumnos(page);
 
-      setPages(res.data.data);
+      setPages(res.data.results);
       setLoading(false);
-      setTotalPages(res.data.number_of_pages);
+      setTotalPages(Math.ceil(res.data.count / 10));
       console.log("response: ", res.data);
     }
     loadAlumnos();
