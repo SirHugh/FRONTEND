@@ -19,6 +19,17 @@ function App() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const RedirectToExternalURL = () => {
+    // Redirigir a la URL deseada en una nueva ventana
+    React.useEffect(() => {
+      const externalURL = 'http://localhost:5173/multi-step-form-vite-react/';
+      window.open(externalURL, '_blank');
+    }, []);
+  
+    // Renderizar un componente vacío o un mensaje mientras se redirige
+    return null;
+  };
+
   return (
     <>
       <Router>
@@ -32,7 +43,7 @@ function App() {
               <Route path="/" element={<MainPage />} exact />
               <Route path="/alumnos" element={<AlumnosPage />} exact />
               <Route path="/alumnos/:id" element={<AlumnoDetail />} />
-              <Route path="/academico" element={<MatriculacionPage />} />
+              <Route path="/academico" element={<RedirectToExternalURL />} />
             </Route>
           </Routes>
         </AuthProvider>

@@ -3,10 +3,6 @@ import { Link } from "react-router-dom";
 import { getAlumnos } from "../services/AcademicoService";
 import EditButton from "./Buttons/EditButton";
 import SeeButton from "./Buttons/SeeButton";
-import AlumnoForm from "./AlumnoForm"; // Importar el componente AlumnoForm
-import PersonalInfoForm from "./formularios/PersonalInfoForm";
-import ResponsableForm from "./formularios/ResponsableForm";
-import InscripcionForm from "./formularios/InscriptionForm";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
 // import App from "../../multi-step-form-inscription/src/App";
 
@@ -16,14 +12,6 @@ export const AlumnosList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [showAlumnoForm, setShowAlumnoForm] = useState(false);
-  const [showPersonalInfoForm, setShowPersonalInfoForm] = useState(false);
-  const [showResponsableForm, setShowResponsableForm] = useState(false);
-  const [showInscriptionForm, setShowInscriptionForm] = useState(false);
-
-  const handleToggleModal = () => {
-    setShowInscriptionForm(!showInscriptionForm);
-  };
 
   useEffect(() => {
     async function loadAlumnos() {
@@ -37,11 +25,6 @@ export const AlumnosList = () => {
     }
     loadAlumnos();
   }, [currentPage]);
-
-  const handleAddAlumno = () => {
-    console.log("Agregar nuevo alumno");
-    setShowInscriptionForm(true);
-  };
 
   // Función para manejar la adición de un nuevo alumno
 
@@ -105,9 +88,8 @@ export const AlumnosList = () => {
                     {alumno.telefono}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <EditButton onClick={() => handleEdit(alumno.id_alumno)} />
                     <Link to={`/alumnos/${alumno.id_alumno}`}>
-                      <SeeButton />
+                      <EditButton />
                     </Link>
                   </td>
                 </tr>
@@ -121,15 +103,6 @@ export const AlumnosList = () => {
             currentPage={currentPage}
             onPageChange={setCurrentPage} // Pasar setCurrentPage como prop
           />
-        </div>
-        <div className="mt-4 flex justify-center">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleAddAlumno}
-          >
-            Añadir Alumno
-          </button>
-          {showInscriptionForm && <App onClose={handleToggleModal} />}
         </div>
       </div>
     </div>
