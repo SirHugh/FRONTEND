@@ -34,7 +34,7 @@ const AlumnoCard = ({ alumno, onDelete }) => {
             <img
               src={editedAlumno.fotocarnet}
               className="avatar rounded-full border-4 border-white mx-auto h-80 w-80 object-cover"
-              alt="avatar"
+              alt="Foto carnet"
             />
             <h6 className="mt-4">Subir una foto diferente...</h6>
             <input type="file" className="form-control" disabled={!isEditing} />
