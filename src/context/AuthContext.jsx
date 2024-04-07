@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { getAuthToken, getRefreshToken } from "../services/AuthService";
+import { ApiClient } from "../services/ApiClient";
 
 const AuthContext = createContext();
 
@@ -41,6 +42,8 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(res.data);
       setUser(jwtDecode(res.data.access));
       localStorage.setItem("authTokens", JSON.stringify(res.data));
+      ApiClient.defaults.headers.common["Authorization"] =
+        "Bearer " + authTokens.access;
       history("/");
     } else {
       alert("Opps, Algo ha salido Mal!");
@@ -78,6 +81,8 @@ export const AuthProvider = ({ children }) => {
 
       // let data = response.data;
       if (response.status === 200) {
+        ApiClient.defaults.headers.common["Authorization"] =
+          "Bearer " + authTokens.access;
         setAuthToken(response.data);
         setUser(jwtDecode(response.data.access));
         localStorage.setItem("authTokens", JSON.stringify(response.data));
@@ -110,7 +115,7 @@ export const AuthProvider = ({ children }) => {
 
     console.log(loading);
 
-    let fourMinutes = 1000 * 20;
+    let fourMinutes = 1000 * 60 * 4;
     let interval = setInterval(() => {
       if (authTokens) {
         updateToken();

@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -11,6 +11,7 @@ import MainPage from "./pages/MainPage";
 import AlumnoDetail from "./components/AlumnoDetail";
 import Sidebar from "./components/SideBar";
 import MatriculacionPage from "./pages/MatriculacionPage";
+import GradosPage from "./pages/GradosPage";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -33,6 +34,7 @@ function App() {
               <Route path="/alumnos" element={<AlumnosPage />} exact />
               <Route path="/alumnos/:id" element={<AlumnoDetail />} />
               <Route path="/academico" element={<MatriculacionPage />} />
+              <Route path="/grados" element={<GradosPage />} />
             </Route>
           </Routes>
         </AuthProvider>

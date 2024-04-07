@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAlumnos } from "../services/AcademicoService";
 import EditButton from "./Buttons/EditButton";
 import SeeButton from "./Buttons/SeeButton";
@@ -8,7 +8,7 @@ import PersonalInfoForm from "./formularios/PersonalInfoForm";
 import ResponsableForm from "./formularios/ResponsableForm";
 import InscripcionForm from "./formularios/InscriptionForm";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
-// import App from "../../multi-step-form-inscription/src/App";
+import App from "../../multi-step-form-inscription/src/App";
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -20,6 +20,7 @@ export const AlumnosList = () => {
   const [showPersonalInfoForm, setShowPersonalInfoForm] = useState(false);
   const [showResponsableForm, setShowResponsableForm] = useState(false);
   const [showInscriptionForm, setShowInscriptionForm] = useState(false);
+  const history = useNavigate();
 
   const handleToggleModal = () => {
     setShowInscriptionForm(!showInscriptionForm);
@@ -39,6 +40,8 @@ export const AlumnosList = () => {
   }, [currentPage]);
 
   const handleAddAlumno = () => {
+    const url = "/academico";
+    history(url);
     console.log("Agregar nuevo alumno");
     setShowInscriptionForm(true);
   };

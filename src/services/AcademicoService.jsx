@@ -28,6 +28,19 @@ export const deleteAlumno = (id) =>
 export const createResponsables = (data) =>
   ApiClient.post("/academico/responsable/", data);
 
+//  funciones para manejo de los grados
+export const getGrados = () => ApiClient.get("/academico/grados/");
+
+export const getGradoById = (id) => ApiClient.post(`/academico/grados/${id}`);
+
+export const createGrado = (data) => ApiClient.post("/academico/grados/", data);
+
+export const updateGrado = (id, data) =>
+  ApiClient.put(`/academico/grados/${id}/`, data);
+
+export const setGradoActive = (id, value) =>
+  ApiClient.patch(`/academico/grados/${id}/`, { es_activo: value });
+
 // path('grados/', views.grado_list),
 // path('grados/<int:pk>/', views. grado_detail),
 // path('matricula/', views.matricula_list),
