@@ -4,7 +4,6 @@ import { getAlumnos } from "../services/AcademicoService";
 import EditButton from "./Buttons/EditButton";
 import SeeButton from "./Buttons/SeeButton";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
-import App from "../../multi-step-form-inscription/src/App";
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);

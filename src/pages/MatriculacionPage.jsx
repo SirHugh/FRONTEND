@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import App from "../../multi-step-form-inscription/src/App";
 import { getQrCode } from "../services/AuthService";
 
 const MatriculacionPage = () => {
