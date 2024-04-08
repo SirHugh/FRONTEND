@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import "./App.css";
 import Header from "./components/Header";
@@ -20,34 +19,27 @@ function App() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const RedirectToExternalURL = () => {
-    // Redirigir a la URL deseada en una nueva ventana
-    React.useEffect(() => {
-      const externalURL = 'http://localhost:5173/multi-step-form-vite-react/';
-      window.open(externalURL, '_blank');
-    }, []);
-  
-    // Renderizar un componente vacío o un mensaje mientras se redirige
-    return null;
-  };
-
   return (
     <>
       <Router>
         <AuthProvider>
-          {/* Pasa la función toggleSidebar al componente Header */}
-          <Header toggleSidebar={toggleSidebar} />
-          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route element={<PrivateRoutes />}>
-              <Route path="/" element={<MainPage />} exact />
-              <Route path="/alumnos" element={<AlumnosPage />} exact />
-              <Route path="/alumnos/:id" element={<AlumnoDetail />} />
-              <Route path="/academico" element={<MatriculacionPage />} />
-              <Route path="/grados" element={<GradosPage />} />
-            </Route>
-          </Routes>
+          <div className="flex">
+            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+            <div className="flex flex-col w-screen">
+              {/* Pasa la función toggleSidebar al componente Header */}
+              <Header toggleSidebar={toggleSidebar} />
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route element={<PrivateRoutes />}>
+                  <Route path="/" element={<MainPage />} exact />
+                  <Route path="/alumnos" element={<AlumnosPage />} exact />
+                  <Route path="/alumnos/:id" element={<AlumnoDetail />} />
+                  <Route path="/academico" element={<MatriculacionPage />} />
+                  <Route path="/grados" element={<GradosPage />} />
+                </Route>
+              </Routes>
+            </div>
+          </div>
         </AuthProvider>
       </Router>
     </>

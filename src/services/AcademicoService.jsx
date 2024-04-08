@@ -41,6 +41,11 @@ export const updateGrado = (id, data) =>
 export const setGradoActive = (id, value) =>
   ApiClient.patch(`/academico/grados/${id}/`, { es_activo: value });
 
+// funciones para manejo de matriculas
+
+export const getMatriculaAnioGrado = (anio, grado) =>
+  ApiClient.get(`/academico/matricula/?anio_lectivo=${anio}&id_grado=${grado}`);
+
 // path('grados/', views.grado_list),
 // path('grados/<int:pk>/', views. grado_detail),
 // path('matricula/', views.matricula_list),
