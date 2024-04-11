@@ -45,14 +45,16 @@ export const setGradoActive = (id, value) =>
 
 export const getMatriculaAnioGrado = (anio, grado, page) =>
   ApiClient.get(
-    `/academico/matricula/?anio_lectivo=${anio}&id_grado=${grado}&page=${
+    `/academico/matricula/?es_activo=true&anio_lectivo=${anio}&id_grado=${grado}&page=${
       page ? page : ""
     }`
   );
 
-export const getMatriculaSearch = (data, page) =>
+export const getMatriculaSearch = (data, page, value) =>
   ApiClient.get(
-    `/academico/matricula/?search=${data}&page=${page ? page : ""}`
+    `/academico/matricula/?es_activo${value}&search=${data}&page=${
+      page ? page : ""
+    }`
   );
 
 export const setMatriculaActive = (id, value, date) =>
