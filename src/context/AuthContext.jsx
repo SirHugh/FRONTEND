@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
       setUser(jwtDecode(res.data.access));
       localStorage.setItem("authTokens", JSON.stringify(res.data));
       ApiClient.defaults.headers.common["Authorization"] =
-        "Bearer " + authTokens.access;
+        "Bearer " + res.data.access;
       history("/");
     } else {
       alert("Opps, Algo ha salido Mal!");
@@ -60,16 +60,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   let updateToken = async () => {
-    // let response = await fetch("http://127.0.0.1:8000/auth/token/refresh/", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     refresh: authTokens?.refresh,
-    //   }),
-    // });
-    if (authTokens !== null) {
+    if (authTokens) {
       let response = await getRefreshToken({
         refresh: authTokens?.refresh,
       }).catch(function (error) {
@@ -78,14 +69,12 @@ export const AuthProvider = ({ children }) => {
           logoutUser();
         }
       });
-
-      // let data = response.data;
       if (response.status === 200) {
-        ApiClient.defaults.headers.common["Authorization"] =
-          "Bearer " + authTokens.access;
         setAuthToken(response.data);
         setUser(jwtDecode(response.data.access));
         localStorage.setItem("authTokens", JSON.stringify(response.data));
+        ApiClient.defaults.headers.common["Authorization"] =
+          "Bearer " + response.data.access;
       } else {
         logoutUser();
       }

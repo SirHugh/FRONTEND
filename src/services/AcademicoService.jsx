@@ -43,8 +43,26 @@ export const setGradoActive = (id, value) =>
 
 // funciones para manejo de matriculas
 
-export const getMatriculaAnioGrado = (anio, grado) =>
-  ApiClient.get(`/academico/matricula/?anio_lectivo=${anio}&id_grado=${grado}`);
+export const getMatriculaAnioGrado = (anio, grado, page) =>
+  ApiClient.get(
+    `/academico/matricula/?anio_lectivo=${anio}&id_grado=${grado}&page=${
+      page ? page : ""
+    }`
+  );
+
+export const getMatriculaSearch = (data, page) =>
+  ApiClient.get(
+    `/academico/matricula/?search=${data}&page=${page ? page : ""}`
+  );
+
+export const setMatriculaActive = (id, value, date) =>
+  ApiClient.patch(`/academico/matricula/${id}/`, {
+    es_activo: value,
+    fecha_desmatriculacion: date ? date : null,
+  });
+
+export const updateMatricula = (id, data) =>
+  ApiClient.put(`/academico/matricula/${id}/`, data);
 
 // path('grados/', views.grado_list),
 // path('grados/<int:pk>/', views. grado_detail),

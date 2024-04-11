@@ -11,6 +11,7 @@ import AlumnoDetail from "./components/AlumnoDetail";
 import Sidebar from "./components/SideBar";
 import MatriculacionPage from "./pages/MatriculacionPage";
 import GradosPage from "./pages/GradosPage";
+import BecasPage from "./pages/BecasPage";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -34,8 +35,9 @@ function App() {
                   <Route path="/" element={<MainPage />} exact />
                   <Route path="/alumnos" element={<AlumnosPage />} exact />
                   <Route path="/alumnos/:id" element={<AlumnoDetail />} />
-                  <Route path="/academico" element={<MatriculacionPage />} />
+                  <Route path="/matriculas" element={<MatriculacionPage />} />
                   <Route path="/grados" element={<GradosPage />} />
+                  <Route path="/becas" element={<BecasPage />} />
                 </Route>
               </Routes>
             </div>

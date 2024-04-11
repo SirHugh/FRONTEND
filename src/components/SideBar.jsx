@@ -59,17 +59,17 @@ const menuItems = [
     ],
   },
   {
-    text: "Gestión de alumnos",
+    text: "Academico",
     icon: (
       <img
         src={userIcon}
-        alt="Gestión de alumnos"
+        alt="Academico"
         className="w-5 h-5 mr-2 object-contain"
       />
     ),
     subItems: [
       {
-        text: "Lista de alumnos",
+        text: "Alumnos",
         icon: (
           <img
             src={userIcon}
@@ -80,7 +80,7 @@ const menuItems = [
         link: "/alumnos",
       },
       {
-        text: "Lista de matriculaciones",
+        text: "Matriculaciones",
         icon: (
           <img
             src={userIcon}
@@ -88,7 +88,7 @@ const menuItems = [
             className="w-5 h-5 mr-2 object-contain"
           />
         ),
-        link: "/matricula",
+        link: "/matriculas",
       },
       {
         text: "Grados",
@@ -100,6 +100,17 @@ const menuItems = [
           />
         ),
         link: "/grados",
+      },
+      {
+        text: "Becas",
+        icon: (
+          <img
+            src={userIcon}
+            alt="Opción 2"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/Becas",
       },
       // Agrega más subelementos según sea necesario
     ],

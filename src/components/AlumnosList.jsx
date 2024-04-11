@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { getAlumnos } from "../services/AcademicoService";
 import EditButton from "./Buttons/EditButton";
 import SeeButton from "./Buttons/SeeButton";
@@ -16,6 +16,7 @@ export const AlumnosList = () => {
   const [showResponsableForm, setShowResponsableForm] = useState(false);
   const [showInscriptionForm, setShowInscriptionForm] = useState(false);
   const history = useNavigate();
+  const location = useLocation();
 
   const handleToggleModal = () => {
     setShowInscriptionForm(!showInscriptionForm);
@@ -103,7 +104,11 @@ export const AlumnosList = () => {
                     {alumno.telefono}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link to={`/alumnos/${alumno.id_alumno}`}>
+                    <Link
+                      to={`/alumnos/${alumno.id_alumno}`}
+                      // state={{ from: location }}
+                      // replace
+                    >
                       <EditButton />
                     </Link>
                   </td>
@@ -118,6 +123,14 @@ export const AlumnosList = () => {
             currentPage={currentPage}
             onPageChange={setCurrentPage} // Pasar setCurrentPage como prop
           />
+        </div>
+        <div className="mt-4 flex justify-center">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={handleAddAlumno}
+          >
+            Añadir Alumno
+          </button>
         </div>
       </div>
     </div>
