@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import "./App.css";
@@ -12,6 +12,13 @@ import Sidebar from "./components/SideBar";
 import MatriculacionPage from "./pages/MatriculacionPage";
 import GradosPage from "./pages/GradosPage";
 import BecasPage from "./pages/BecasPage";
+import CajaPage from "./pages/CajaPage";
+
+const GROUPS = {
+  ACADEMICO: "ACADEMICO",
+  INSCRIPCION: "INSCRIPCION",
+  CAJA: "CAJA",
+};
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,28 +29,27 @@ function App() {
 
   return (
     <>
-      <Router>
-        <AuthProvider>
-          <div className="flex">
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-            <div className="flex flex-col w-screen">
-              {/* Pasa la función toggleSidebar al componente Header */}
-              <Header toggleSidebar={toggleSidebar} />
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route element={<PrivateRoutes />}>
-                  <Route path="/" element={<MainPage />} exact />
-                  <Route path="/alumnos" element={<AlumnosPage />} exact />
-                  <Route path="/alumnos/:id" element={<AlumnoDetail />} />
-                  <Route path="/matriculas" element={<MatriculacionPage />} />
-                  <Route path="/grados" element={<GradosPage />} />
-                  <Route path="/becas" element={<BecasPage />} />
-                </Route>
-              </Routes>
-            </div>
-          </div>
-        </AuthProvider>
-      </Router>
+      <div className="flex">
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        <div className="flex flex-col w-screen">
+          {/* Pasa la función toggleSidebar al componente Header */}
+          <Header toggleSidebar={toggleSidebar} />
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route element={<PrivateRoutes allowedGroup={GROUPS.ACADEMICO} />}>
+              <Route path="/" element={<MainPage />} exact />
+              <Route path="/alumnos" element={<AlumnosPage />} exact />
+              <Route path="/alumnos/:id" element={<AlumnoDetail />} />
+              <Route path="/matriculas" element={<MatriculacionPage />} />
+              <Route path="/grados" element={<GradosPage />} />
+              <Route path="/becas" element={<BecasPage />} />
+            </Route>
+            <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
+              <Route path="/caja" element={<CajaPage />} />
+            </Route>
+          </Routes>
+        </div>
+      </div>
     </>
   );
 }

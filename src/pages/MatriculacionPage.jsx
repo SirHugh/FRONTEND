@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getMatriculaAnioGrado } from "../services/AcademicoService";
 import { HiBars3, HiOutlineNewspaper } from "react-icons/hi2";
 import { MdQrCodeScanner, MdSearch } from "react-icons/md";
 import PaginationButtons from "../components/PaginationButtons";
 import QrCode from "../components/QrCode";
-import AuthContext from "../context/AuthContext";
+import useAuth from "../hooks/useAuth";
 
 const MatriculacionPage = () => {
   const [totalPages, setTotalPages] = useState(1);
@@ -13,7 +13,9 @@ const MatriculacionPage = () => {
   const [search, setSearch] = useState();
   const [showOptions, setShowOptions] = useState(false);
   const [qr_code, setQr_code] = useState(null);
-  const { authTokens } = useContext(AuthContext);
+  const { authTokens } = useAuth();
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const loadMatriculas = async () => {
@@ -28,6 +30,7 @@ const MatriculacionPage = () => {
       }
     };
     loadMatriculas();
+    console.log("Usuario: ", user.groups);
   }, [currentPage]);
 
   const setModalVisible = (value) => {
