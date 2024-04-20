@@ -1,24 +1,52 @@
 import { useEffect, useState } from "react";
-import { FaPlus, FaUsers } from "react-icons/fa6";
-import { MdWorkspacePremium } from "react-icons/md";
-import { getBecados, getBecas } from "../services/AcademicoService";
-import { IoPersonRemoveSharp } from "react-icons/io5";
-import { FaFileDownload } from "react-icons/fa";
+import { FaPlus, FaToggleOff, FaToggleOn, FaUsers } from "react-icons/fa6";
+import { MdGroupAdd, MdSearch } from "react-icons/md";
+import {
+  getBecados,
+  getBecadosBeca,
+  getBecas,
+  searchBecado,
+} from "../services/AcademicoService";
+import { FaFileDownload, FaRegEdit } from "react-icons/fa";
 import PaginationButtons from "../components/PaginationButtons";
+import { Button, Table } from "flowbite-react";
+import { TbCertificate, TbCertificateOff, TbListSearch } from "react-icons/tb";
+import AlumnoSetActiveModal from "../components/Becas/AlumnoActivoModal";
+import AgregarBecadoModal from "../components/Becas/AgregarBecadoModal";
+import BecaActiveModal from "../components/Becas/BecaActiveModal";
+import AgregarBecaModal from "../components/Becas/AgregarBecaModal";
 
 function BecasPage() {
-  const [search, setSearch] = useState("");
   const [becas, setBecas] = useState([]);
   const [becados, setBecados] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [showActivateModal, setShowActivateModal] = useState(false);
+  const becaType = {
+    id_beca: "",
+    nombre: "",
+    descripcion: "",
+    monto: 0,
+    porcentaje: 0,
+    es_activo: false,
+  };
+  const [beca, setBeca] = useState(becaType);
+  const [edit, setEdit] = useState(false);
+  const [changed, setChanged] = useState(false);
+  const [showAddBecadoModal, setShowAddBecadoModal] = useState(false);
+  const [showQuitarBecadoModal, setShowQuitarBecadoModal] = useState(false);
+  const [becado, setBecado] = useState();
+  const [becadosTitle, setBecadosTitle] = useState();
 
   useEffect(() => {
     const load = async () => {
       const res1 = await getBecas();
       if (res1.status === 200) {
         setBecas(res1.data);
-        const res2 = await getBecados();
+        const page = Math.min(currentPage + 1, totalPages);
+        console.log("page: ", page);
+        const res2 = await getBecados(page);
         if (res2.status === 200) {
           setTotalPages(Math.ceil(res2.data.count / 10));
           setBecados(res2.data.results);
@@ -30,158 +58,326 @@ function BecasPage() {
       }
     };
     load();
-  }, []);
+    setBecadosTitle("TODOS");
+  }, [currentPage, changed]);
+
+  function onCloseModal() {
+    setShowModal(false);
+    setEdit(false);
+    setShowActivateModal(false);
+    setBeca(becaType);
+  } // Cierra el modal
+
+  const handdleEdit = (b) => {
+    setBeca(b);
+    setEdit(true);
+    setShowModal(true);
+  };
+
+  const handdleActivate = (b) => {
+    setBeca(b);
+    setShowActivateModal(true);
+  };
+
+  const cargarBecados = async (b) => {
+    setBecadosTitle(b.nombre);
+    try {
+      const res = await getBecadosBeca(b.id_beca);
+      if (res.status === 200) {
+        setTotalPages(Math.ceil(res.data.count / 10));
+        setBecados(res.data.results);
+      }
+    } catch (error) {
+      // Manejo de errores en caso de que la solicitud falle
+      console.error("Error al activar", error);
+    }
+  };
+
+  const handdleSearch = async (e) => {
+    setBecadosTitle("TODOS");
+    try {
+      const res = await searchBecado(e.target.value);
+      if (res.status === 200) {
+        setTotalPages(Math.ceil(res.data.count / 10));
+        setBecados(res.data.results);
+      }
+    } catch (error) {
+      // Manejo de errores en caso de que la solicitud falle
+      console.error("Error al activar", error);
+    }
+  };
+
+  const onCloseAddBecado = () => {
+    setShowAddBecadoModal(false);
+  };
+
+  const handdleAddBecado = (b) => {
+    setShowAddBecadoModal(true);
+    setBeca(b);
+  };
+
+  const onCloseQuitarModal = () => {
+    setShowQuitarBecadoModal(false);
+  };
 
   return (
     <>
       <div>
         <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
-          <MdWorkspacePremium className="text-yellow-600" />
-          <h1 className="">Beca</h1>
+          <TbCertificate className="text-cyan-600" />
+          <h1 className="">BECAS</h1>
         </div>
-        <div className="flex flex-row justify-between p-3 gap-3 border items-center">
-          <div className="flex items-center mb-4">
-            <label htmlFor="search" className="mr-2">
-              Buscar
-            </label>
-            <input
-              type="text"
-              name="search"
-              id="search"
-              className="w-50 h-14 px-3 bg-white border border-black rounded-full hover:outline"
-              value={search}
-              placeholder="Buscar"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+        <div className="flex flex-row justify-end h-16 p-3 gap-3 border items-center">
           <div>
-            <button className="flex flex-row p-2 gap-3 h-14 items-center justify-center border border-gray-600">
-              <FaPlus></FaPlus>
+            <Button
+              className="flex flex-wrap"
+              onClick={() => setShowModal(true)}
+            >
+              <FaPlus className="mr-2 h-5 w-5" />
               <h1>Agregar Beca</h1>
-            </button>
+            </Button>
           </div>
         </div>
         <div>
-          <div className="flex flex-row px-10 bg-slate-400">
-            <table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
-              <thead className="bg-gray-100">
-                <tr className="bg-slate-300 h-12 text-slate-600">
-                  <th className="px-4 py-2">NOMBRE</th>
-                  <th className="px-4 py-2">DESCRIPCION</th>
-                  <th className="px-4 py-2">MONTO</th>
-                  <th className="px-4 py-2">PORCENTAJE</th>
-                </tr>
-              </thead>
-              <tbody>
-                {becas.map((beca) => (
-                  <tr
-                    key={beca.id_grado}
-                    className={`cursor-pointer hover:bg-gray-500 justify-start ${
-                      beca.es_activo == false ? `bg-red-400` : ``
+          <div className="px-10  bg-gray-300 ">
+            <Table>
+              <Table.Head>
+                <Table.HeadCell>NOMBRE</Table.HeadCell>
+                <Table.HeadCell>DESCRIPCION</Table.HeadCell>
+                <Table.HeadCell>MONTO</Table.HeadCell>
+                <Table.HeadCell>PORCENTAJE</Table.HeadCell>
+                <Table.HeadCell>
+                  <span className="sr-only">Mostrar</span>
+                </Table.HeadCell>
+                <Table.HeadCell>
+                  <span className="sr-only">Agregar</span>
+                </Table.HeadCell>
+                <Table.HeadCell>
+                  <span className="sr-only">Editar</span>
+                </Table.HeadCell>
+                <Table.HeadCell>
+                  <span className="sr-only">Estado</span>
+                </Table.HeadCell>
+              </Table.Head>
+              <Table.Body className="divide-y">
+                {becas.map((b) => (
+                  <Table.Row
+                    key={b.id_beca}
+                    className={`bg-white dark:border-gray-700 hover:bg-gray-100 dark:bg-gray-800 justify-start cursor-default ${
+                      b.es_activo == false ? `bg-red-400` : ``
                     }`}
-                    onClick={() => console.log("clicked")}
                   >
-                    <td className="px-4 py-2">{beca.nombre}</td>
-                    <td className="px-4 py-2">{beca.descripcion}</td>
-                    <td className="px-4 py-2">{beca.monto}</td>
-                    <td className="px-4 py-2">
-                      {beca.porcentaje ? beca.porcentaje + " %" : ""}
-                    </td>
-                  </tr>
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {b.nombre}
+                    </Table.Cell>
+                    <Table.Cell>{b.descripcion}</Table.Cell>
+                    <Table.Cell>{b.monto}. Gs.</Table.Cell>
+                    <Table.Cell>
+                      {b.porcentaje ? b.porcentaje + " %" : ""}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <a
+                        onClick={() => cargarBecados(b)}
+                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
+                      >
+                        <TbListSearch
+                          title="Mostrar Lista"
+                          className="size-6"
+                        />
+                      </a>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <a
+                        disabled
+                        onClick={() => {
+                          b.es_activo ? handdleAddBecado(b) : "";
+                        }}
+                        className={`font-medium  hover:underline dark:text-cyan-500  ${
+                          b.es_activo
+                            ? "cursor-pointer text-cyan-600"
+                            : "text-gray-600"
+                        }`}
+                      >
+                        <MdGroupAdd
+                          title="Agregar Estudiante"
+                          className="size-6"
+                        />
+                      </a>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <a
+                        onClick={() => handdleEdit(b)}
+                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
+                      >
+                        <FaRegEdit title="Modificar Beca" className="size-6" />
+                      </a>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <a
+                        onClick={() => handdleActivate(b)}
+                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
+                      >
+                        {b.es_activo ? (
+                          <FaToggleOn
+                            title="Desactivar"
+                            className="size-6 text-green-500"
+                          />
+                        ) : (
+                          <FaToggleOff
+                            title="Activar"
+                            className="size-6 text-red-800"
+                          />
+                        )}
+                      </a>
+                    </Table.Cell>
+                  </Table.Row>
                 ))}
-              </tbody>
-            </table>
+              </Table.Body>
+            </Table>
           </div>
         </div>
         <div>
           <div className="flex flex-row justify-between p-3 items-center">
             <div className="flex flex-row p-2 gap-3 items-center justify-between font-bold text-2xl">
               <FaUsers />
-              <h1>Becados</h1>
+              <h1>Becados: </h1>
+              <h1 className="text-xl font-medium text-cyan-600 ">
+                {becadosTitle ? becadosTitle : "Todos"}
+              </h1>
+            </div>
+
+            <div className="w-80 relative">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <MdSearch className="size-6" />
+              </div>
+              <input
+                type="search"
+                id="search"
+                name="search"
+                className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Buscar Becado..."
+                onChange={(e) => {
+                  handdleSearch(e);
+                }}
+                required
+              />
             </div>
             <div className="flex flex-row gap-1">
-              <button className="flex flex-row p-2 gap-3 h-14 w-28 items-center justify-center border border-gray-600">
-                <FaPlus></FaPlus>
-                Agregar
-              </button>
-              <button className="flex flex-row p-2 gap-3 h-14 w-28 items-center justify-center border border-gray-600">
-                <IoPersonRemoveSharp />
-                Remover
-              </button>
-              <button className="flex flex-row p-2 gap-3 h-14 w-28 items-center justify-center border border-gray-600">
-                <FaFileDownload />
+              <Button className="flex flex-wrap p-2">
+                <FaFileDownload className="mr-2 h-5 w-5" />
                 Descargar
-              </button>
+              </Button>
             </div>
           </div>
-          <div>
-            <table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
-              <thead></thead>
-              <tbody>
+          <div className="h-1/3">
+            <Table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
+              <Table.Head>
+                <Table.HeadCell>CEDULA</Table.HeadCell>
+                <Table.HeadCell>NOMBRE</Table.HeadCell>
+                <Table.HeadCell>APELLIDO</Table.HeadCell>
+                <Table.HeadCell>GRADO</Table.HeadCell>
+                <Table.HeadCell>ORIGEN</Table.HeadCell>
+                <Table.HeadCell>
+                  <span className="sr-only justify-end">QUITAR</span>
+                </Table.HeadCell>
+              </Table.Head>
+              <Table.Body>
                 {becados.map((becado) => (
-                  <tr
+                  <Table.Row
                     key={becado.id}
-                    className={`cursor-pointer hover:bg-gray-500 justify-start ${
+                    className={`cursor-default hover:bg-gray-100 justify-start ${
                       becado.es_activo == false ? `bg-red-300` : ``
                     }`}
                     onClick={() => console.log("clicked")}
                   >
-                    <td className="px-4 py-2">
+                    <Table.Cell>
                       {becado.id_matricula.id_alumno.cedula}
-                    </td>
-                    <td className="px-4 py-2">
+                    </Table.Cell>
+                    <Table.Cell>
                       {becado.id_matricula.id_alumno.nombre}
-                    </td>
-                    <td className="px-4 py-2">
+                    </Table.Cell>
+                    <Table.Cell>
                       {becado.id_matricula.id_alumno.apellido}
-                    </td>
-                    <td className="px-4 py-2">
+                    </Table.Cell>
+                    <Table.Cell>
+                      {becado.id_matricula.id_grado.grado}° -{" "}
+                      {becado.id_matricula.id_grado.nombre}
+                    </Table.Cell>
+                    <Table.Cell>
                       {becado.id_matricula.es_interno == true
                         ? "Fundacion"
                         : "Externo"}
-                    </td>
-                  </tr>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <a
+                        onClick={() => {
+                          setShowQuitarBecadoModal(true);
+                          setBecado(becado);
+                          console.log(becado);
+                        }}
+                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
+                      >
+                        {becado.es_activo ? (
+                          <TbCertificate
+                            title="Remover Beca"
+                            className="size-6"
+                          />
+                        ) : (
+                          <TbCertificateOff className="text-red-800 size-6" />
+                        )}
+                      </a>
+                    </Table.Cell>
+                  </Table.Row>
                 ))}
-              </tbody>
-            </table>
-            <PaginationButtons
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage} // Pasar setCurrentPage como prop
-            />
+              </Table.Body>
+            </Table>
           </div>
+          <PaginationButtons
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage} // Pasar setCurrentPage como prop
+          />
         </div>
       </div>
+
+      {/* Agregar Beca Modal */}
+
+      <AgregarBecaModal
+        show={showModal}
+        onClose={onCloseModal}
+        beca={beca}
+        setBeca={setBeca}
+        edit={edit}
+        changed={changed}
+        setChanged={setChanged}
+      />
+
+      <BecaActiveModal
+        show={showActivateModal}
+        onClose={onCloseModal}
+        beca={beca}
+        setBeca={setBeca}
+        changed={changed}
+        setChanged={setChanged}
+      />
+
+      <AgregarBecadoModal
+        show={showAddBecadoModal}
+        onClose={onCloseAddBecado}
+        beca={beca}
+        changed={changed}
+        setChanged={setChanged}
+      />
+
+      <AlumnoSetActiveModal
+        show={showQuitarBecadoModal}
+        onClose={onCloseQuitarModal}
+        becado={becado}
+        changed={changed}
+        setChanged={setChanged}
+      />
     </>
   );
 }
 
 export default BecasPage;
-
-{
-  /* BECADO DATASTRUCTURE
-{"id": 1,
-"id_beca": 1,
-"id_matricula": {
-  "id_matricula": 5,
-  "id_alumno": {
-    "id_alumno": 60,
-    "nombre": "Ana",
-    "apellido": "Barboza",
-    "cedula": 500761,
-    "fecha_nac": "2024-04-24",
-    "telefono": "4234343",
-    "fotocarnet": null
-  },
-  "fecha_inscripcion": "2024-04-09",
-  "anio_lectivo": 2024,
-  "es_activo": false,
-  "fecha_desmatriculacion": null,
-  "trabaja": false,
-  "es_interno": true,
-  "id_grado": 4
-},
-"es_activo": true,
-"fecha_inicio": "2024-02-15"
-}, */
-}

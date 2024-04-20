@@ -29,7 +29,7 @@ function App() {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex flex-row h-full">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <div className="flex flex-col w-screen">
           {/* Pasa la función toggleSidebar al componente Header */}

@@ -1,22 +1,22 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Card from '../components/Card';
-import userIcon from '../assets/icons/UsuariosIcon.svg';
-import studentIcon from '../assets/icons/AlumnoIcon.svg';
-import boxIcon from '../assets/icons/CajaIcon.svg';
-import academicIcon from '../assets/icons/academicoIcon.svg'; // Importa el icono para la sección académica
+import React from "react";
+import { Link } from "react-router-dom";
+import Card from "../components/Card";
+import userIcon from "../assets/icons/UsuariosIcon.svg";
+import studentIcon from "../assets/icons/AlumnoIcon.svg";
+import boxIcon from "../assets/icons/CajaIcon.svg";
+import academicIcon from "../assets/icons/academicoIcon.svg"; // Importa el icono para la sección académica
 
 const MainPage = () => {
   // Datos para las tarjetas
   const cardData = [
     //{ title: 'Usuarios', icon: userIcon },
-    { title: 'Alumnos', icon: studentIcon, linkTo: '/alumnos' },
-    { title: 'Caja', icon: boxIcon },
-    { title: 'Matricular Alumno', icon: academicIcon, linkTo: '/academico' }, // Nueva tarjeta para la sección académica
+    { title: "Alumnos", icon: studentIcon, linkTo: "/alumnos" },
+    { title: "Caja", icon: boxIcon },
+    { title: "Matricular Alumno", icon: academicIcon, linkTo: "/academico" }, // Nueva tarjeta para la sección académica
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-full bg-gray-100">
       <header className="bg-white shadow-sm">
         {/* Aquí va tu encabezado con enlaces y demás */}
       </header>
@@ -26,7 +26,12 @@ const MainPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Renderizar tarjetas */}
             {cardData.map((card, index) => (
-              <Card key={index} icon={card.icon} title={card.title} linkTo={card.linkTo} />
+              <Card
+                key={index}
+                icon={card.icon}
+                title={card.title}
+                linkTo={card.linkTo}
+              />
             ))}
           </div>
         </div>
