@@ -134,10 +134,10 @@ const MatriculacionPage = () => {
                   key={matricula.id_matricula}
                   className="cursor-pointer hover:bg-gray-100"
                 >
-                  <td className="px-4 py-2">{matricula.id_alumno.nombre}</td>
-                  <td className="px-4 py-2">{matricula.id_alumno.apellido}</td>
-                  <td className="px-4 py-2">{matricula.id_grado}</td>
-                  <td className="px-4 py-2">
+                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_alumno.nombre}</td>
+                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_alumno.apellido}</td>
+                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_grado}</td>
+                  <td style={{ width: '40%' }} className="px-4 py-2">
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
@@ -149,6 +149,7 @@ const MatriculacionPage = () => {
                       <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{matricula.es_activo ? 'Activo' : 'Inactivo'}</span>
                     </label>
                   </td>
+
 
                 </tr>
               ))}

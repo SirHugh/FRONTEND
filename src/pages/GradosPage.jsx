@@ -118,11 +118,11 @@ function GradosPage() {
                   className="cursor-pointer hover:bg-gray-100"
                   onClick={() => listAlumnos(grado.id_grado, grado)}
                 >
-                  <td className="px-4 py-2">{grado.grado}°</td>
-                  <td className="px-4 py-2">{grado.nombre}</td>
-                  <td className="px-4 py-2">{grado.nivel}</td>
-                  <td className="px-4 py-2">{grado.turno}</td>
-                  <td className="px-4 py-2">
+                  <td style={{ width: '20%' }} className="px-4 py-2">{grado.grado}°</td>
+                  <td style={{ width: '20%' }} className="px-4 py-2">{grado.nombre}</td>
+                  <td style={{ width: '20%' }} className="px-4 py-2">{grado.nivel}</td>
+                  <td style={{ width: '20%' }} className="px-4 py-2">{grado.turno}</td>
+                  <td style={{ width: '20%' }} className="px-4 py-2">
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
