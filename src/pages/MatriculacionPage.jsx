@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { getMatriculaAnioGrado, setMatriculaActive } from "../services/AcademicoService";
+import {
+  getMatriculaAnioGrado,
+  setMatriculaActive,
+} from "../services/AcademicoService";
 import { HiBars3, HiOutlineNewspaper } from "react-icons/hi2";
 import { MdQrCodeScanner, MdSearch } from "react-icons/md";
 import PaginationButtons from "../components/PaginationButtons";
@@ -134,23 +137,42 @@ const MatriculacionPage = () => {
                   key={matricula.id_matricula}
                   className="cursor-pointer hover:bg-gray-100"
                 >
-                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_alumno.nombre}</td>
-                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_alumno.apellido}</td>
-                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_grado}</td>
-                  <td style={{ width: '40%' }} className="px-4 py-2">
+                  <td style={{ width: "20%" }} className="px-4 py-2">
+                    {matricula.id_alumno.nombre}
+                  </td>
+                  <td style={{ width: "20%" }} className="px-4 py-2">
+                    {matricula.id_alumno.apellido}
+                  </td>
+                  <td style={{ width: "20%" }} className="px-4 py-2">
+                    {matricula.id_grado.grado}
+                    {" - "}
+                    {matricula.id_grado.nombre}
+                  </td>
+                  <td style={{ width: "40%" }} className="px-4 py-2">
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={matricula.es_activo}
-                        onChange={(e) => handleToggleChange(matricula.id_grado, e.target.checked)}
+                        onChange={(e) =>
+                          handleToggleChange(
+                            matricula.id_grado,
+                            e.target.checked
+                          )
+                        }
                         className="sr-only peer"
                       />
-                      <div className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 ${matricula.es_activo ? 'peer-checked:bg-blue-600' : 'dark:bg-gray-700 peer-checked:bg-gray-600'} dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}></div>
-                      <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{matricula.es_activo ? 'Activo' : 'Inactivo'}</span>
+                      <div
+                        className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 ${
+                          matricula.es_activo
+                            ? "peer-checked:bg-blue-600"
+                            : "dark:bg-gray-700 peer-checked:bg-gray-600"
+                        } dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}
+                      ></div>
+                      <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        {matricula.es_activo ? "Activo" : "Inactivo"}
+                      </span>
                     </label>
                   </td>
-
-
                 </tr>
               ))}
             </tbody>
