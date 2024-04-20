@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMatriculaAnioGrado } from "../services/AcademicoService";
+import { getMatriculaAnioGrado, setMatriculaActive } from "../services/AcademicoService";
 import { HiBars3, HiOutlineNewspaper } from "react-icons/hi2";
 import { MdQrCodeScanner, MdSearch } from "react-icons/md";
 import PaginationButtons from "../components/PaginationButtons";
@@ -46,11 +46,25 @@ const MatriculacionPage = () => {
     window.open(url, "_blank");
   };
 
+  const handleToggleChange = async (id, value) => {
+    try {
+      await setMatriculaActive(id, value);
+      // Actualizar las matriculaciones después de cambiar el estado
+      const page = Math.min(currentPage + 1, totalPages);
+      const res = await getMatriculaAnioGrado("", "", page);
+      if (res.status === 200) {
+        setMatriculas(res.data.results);
+      }
+    } catch (error) {
+      console.error("Error al cambiar el estado de la matriculación:", error);
+    }
+  };
+
   return (
     <>
-      <div className="h-full">
-        <div className="flex w-full h-16 p-3 justify-between border-b">
-          <div className="flex items-center p-2 gap-3 text-4xl font-bold">
+      <div className="container mx-auto p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2 text-4xl font-bold">
             <HiOutlineNewspaper />
             <h1 className="text-lg">Matriculaciones</h1>
           </div>
@@ -88,8 +102,8 @@ const MatriculacionPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex p-2 gap-2 items-center justify-end">
-          <label htmlFor="anio" className="p-2">
+        <div className="flex items-center mb-4">
+          <label htmlFor="anio" className="mr-2">
             Busqueda
           </label>
           <input
@@ -104,31 +118,43 @@ const MatriculacionPage = () => {
             <MdSearch />
           </button>
         </div>
-        <div className="w-full items-start bg-black">
-          <table className="w-full">
-            <thead></thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              <tr className="text-right hover:bg-slate-500 cursor-pointer">
-                <td> </td>
-                <td className="text-right pr-4"> </td>
-                <td> </td>
-                <td> </td>
+        <div className="overflow-x-auto">
+          <table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2">Nombre</th>
+                <th className="px-4 py-2">Apellido</th>
+                <th className="px-4 py-2">Grado</th>
+                <th className="px-4 py-2">Estado</th>
               </tr>
+            </thead>
+            <tbody>
+              {matriculas.map((matricula) => (
+                <tr
+                  key={matricula.id_matricula}
+                  className="cursor-pointer hover:bg-gray-100"
+                >
+                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_alumno.nombre}</td>
+                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_alumno.apellido}</td>
+                  <td style={{ width: '20%' }} className="px-4 py-2">{matricula.id_grado}</td>
+                  <td style={{ width: '40%' }} className="px-4 py-2">
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={matricula.es_activo}
+                        onChange={(e) => handleToggleChange(matricula.id_grado, e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 ${matricula.es_activo ? 'peer-checked:bg-blue-600' : 'dark:bg-gray-700 peer-checked:bg-gray-600'} dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}></div>
+                      <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{matricula.es_activo ? 'Activo' : 'Inactivo'}</span>
+                    </label>
+                  </td>
+
+
+                </tr>
+              ))}
             </tbody>
           </table>
-        </div>
-
-        <div className="w-full h-3/4">
-          <div className="flex flex-col p-2 gap-2">
-            {matriculas.map((matricula) => (
-              <div
-                key={matricula.id_matricula}
-                className="flex h-14 border border-black rounded-md "
-              >
-                {matricula.id_alumno.nombre} {matricula.id_alumno.apellido}
-              </div>
-            ))}
-          </div>
         </div>
         <PaginationButtons
           totalPages={totalPages}
