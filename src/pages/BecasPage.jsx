@@ -41,24 +41,29 @@ function BecasPage() {
 
   useEffect(() => {
     const load = async () => {
-      const res1 = await getBecas();
-      if (res1.status === 200) {
+      try {
+        const res1 = await getBecas();
         setBecas(res1.data);
-        const page = Math.min(currentPage + 1, totalPages);
-        console.log("page: ", page);
-        const res2 = await getBecados(page);
-        if (res2.status === 200) {
-          setTotalPages(Math.ceil(res2.data.count / 10));
-          setBecados(res2.data.results);
-        } else {
-          console.error("Error al cargar los becados:", res2.message);
-        }
-      } else {
-        console.error("Error al cargar las becas:", res1.message);
+      } catch (error) {
+        console.error("Error al cargar los becados:", error);
       }
     };
     load();
     setBecadosTitle("TODOS");
+  }, [changed]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const page = Math.min(currentPage + 1, totalPages);
+        const res2 = await getBecados(page);
+        setTotalPages(Math.ceil(res2.data.count / 10));
+        setBecados(res2.data.results);
+      } catch (error) {
+        console.error("Error al cargar los becados:", error);
+      }
+    };
+    load();
   }, [currentPage, changed]);
 
   function onCloseModal() {
@@ -163,7 +168,7 @@ function BecasPage() {
                 {becas.map((b) => (
                   <Table.Row
                     key={b.id_beca}
-                    className={`bg-white dark:border-gray-700 hover:bg-gray-100 dark:bg-gray-800 justify-start cursor-default ${
+                    className={`bg-white hover:border-l-4 hover:border-l-cyan-700 justify-start cursor-default ${
                       b.es_activo == false ? `bg-red-400` : ``
                     }`}
                   >
@@ -270,7 +275,7 @@ function BecasPage() {
             </div>
           </div>
           <div className="h-1/3">
-            <Table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
+            <Table className="w-full bg-white ">
               <Table.Head>
                 <Table.HeadCell>CEDULA</Table.HeadCell>
                 <Table.HeadCell>NOMBRE</Table.HeadCell>
@@ -281,11 +286,11 @@ function BecasPage() {
                   <span className="sr-only justify-end">QUITAR</span>
                 </Table.HeadCell>
               </Table.Head>
-              <Table.Body>
+              <Table.Body className=" divide-y">
                 {becados.map((becado) => (
                   <Table.Row
                     key={becado.id}
-                    className={`cursor-default hover:bg-gray-100 justify-start ${
+                    className={`cursor-default hover:border-l-4 hover:border-l-cyan-700  justify-start ${
                       becado.es_activo == false ? `bg-red-300` : ``
                     }`}
                     onClick={() => console.log("clicked")}

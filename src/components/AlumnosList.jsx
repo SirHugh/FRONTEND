@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getAlumnos } from "../services/AcademicoService";
-import EditButton from "./Buttons/EditButton";
-import SeeButton from "./Buttons/SeeButton";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { getAlumnos, searchAlumnos } from "../services/AcademicoService";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
+import { Table } from "flowbite-react";
+import { MdSearch } from "react-icons/md";
+import { SiQuicklook } from "react-icons/si";
+import { PiStudentBold } from "react-icons/pi";
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -11,22 +13,13 @@ export const AlumnosList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [showAlumnoForm, setShowAlumnoForm] = useState(false);
-  const [showPersonalInfoForm, setShowPersonalInfoForm] = useState(false);
-  const [showResponsableForm, setShowResponsableForm] = useState(false);
-  const [showInscriptionForm, setShowInscriptionForm] = useState(false);
   const history = useNavigate();
-  const location = useLocation();
-
-  const handleToggleModal = () => {
-    setShowInscriptionForm(!showInscriptionForm);
-  };
 
   useEffect(() => {
     async function loadAlumnos() {
       const page = Math.min(currentPage + 1, totalPages);
       const res = await getAlumnos(page);
-      console.log("Datos recibidos del alumno: " + JSON.stringify(res));
+      console.log("Datos recibidos del alumno: ", res.data);
 
       setAlumnos(res.data.results);
       setLoading(false);
@@ -35,87 +28,78 @@ export const AlumnosList = () => {
     loadAlumnos();
   }, [currentPage]);
 
-  const handleAddAlumno = () => {
-    const url = "/academico";
-    history(url);
-    console.log("Agregar nuevo alumno");
-    setShowInscriptionForm(true);
+  const handdleSearch = async (e) => {
+    try {
+      const res = await searchAlumnos(1, e.target.value);
+      if (res.status === 200) {
+        setTotalPages(Math.ceil(res.data.count / 10));
+        setAlumnos(res.data.results);
+      }
+    } catch (error) {
+      // Manejo de errores en caso de que la solicitud falle
+      console.error("Error al activar", error);
+    }
   };
 
-  // Función para manejar la adición de un nuevo alumno
-
-  const filteredAlumnos = alumnos.filter(
-    (alumno) =>
-      alumno.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      alumno.apellido.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+    <div className="w-full  mx-auto bg-white rounded-lg shadow-lg">
+      <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
+        <PiStudentBold className="text-cyan-600" />
+        <h1 className="">ALUMNOS</h1>
+      </div>
       <div className="flex flex-col items-center justify-center mb-2">
-        <div className="w-full max-w-8xl flex justify-left mb-2">
-          <input
-            type="text"
-            placeholder="Buscar alumno"
-            className="border border-gray-300 rounded-md px-4 py-2 w-64 mr-4"
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="flex w-full p-3">
+          <div className="w-80 relative">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <MdSearch className="size-6" />
+            </div>
+            <input
+              type="search"
+              id="search"
+              name="search"
+              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Buscar Becado..."
+              onChange={(e) => {
+                handdleSearch(e);
+              }}
+              required
+            />
+          </div>
         </div>
-        <div className="overflow-x-auto w-full max-w-12xl">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Apellido
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Nombre
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Cedula
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Fecha de Nacimiento
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Teléfono
-                </th>
-                <th className="relative px-6 py-3">
-                  <span className="sr-only">Acciones</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredAlumnos.map((alumno) => (
-                <tr key={alumno.id_alumno}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {alumno.apellido}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+        <div className="overflow-x-auto w-full px-10 max-w-12xl bg-slate-300">
+          <Table className=" divide-y ">
+            <Table.Head className="bg-gray-500">
+              <Table.HeadCell>Nombre</Table.HeadCell>
+              <Table.HeadCell>Apellido</Table.HeadCell>
+              <Table.HeadCell>Cedula</Table.HeadCell>
+              <Table.HeadCell>Fecha de Nacimiento</Table.HeadCell>
+              <Table.HeadCell>Teléfono</Table.HeadCell>
+              <Table.HeadCell>
+                <span className="sr-only">Acciones</span>
+              </Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="bg-white divide-y ">
+              {alumnos.map((alumno) => (
+                <Table.Row
+                  key={alumno.id_alumno}
+                  className="hover:border-l-cyan-700 hover:border-l-4"
+                >
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {alumno.nombre}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {alumno.cedula}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {alumno.fecha_nac}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {alumno.telefono}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link
-                      to={`/alumnos/${alumno.id_alumno}`}
-                      // state={{ from: location }}
-                      // replace
-                    >
-                      <EditButton />
+                  </Table.Cell>
+                  <Table.Cell>{alumno.apellido}</Table.Cell>
+                  <Table.Cell>{alumno.cedula}</Table.Cell>
+                  <Table.Cell>{alumno.fecha_nac}</Table.Cell>
+                  <Table.Cell>{alumno.telefono}</Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/alumnos/${alumno.id_alumno}`}>
+                      <SiQuicklook className="text-cyan-700 text-2xl" />
                     </Link>
-                  </td>
-                </tr>
+                  </Table.Cell>
+                </Table.Row>
               ))}
-            </tbody>
-          </table>
+            </Table.Body>
+          </Table>
         </div>
         <div className="mt-4 flex justify-center">
           <PaginationButtons
@@ -123,14 +107,6 @@ export const AlumnosList = () => {
             currentPage={currentPage}
             onPageChange={setCurrentPage} // Pasar setCurrentPage como prop
           />
-        </div>
-        <div className="mt-4 flex justify-center">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleAddAlumno}
-          >
-            Añadir Alumno
-          </button>
         </div>
       </div>
     </div>
