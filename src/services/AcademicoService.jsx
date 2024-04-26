@@ -20,7 +20,7 @@ export const createAlumno = (data) => {
 };
 
 export const updateAlumno = (id, data) =>
-  ApiClient.put(`/academico/alumnos/${id}`, data);
+  ApiClient.put(`/academico/alumnos/${id}/`, data);
 
 export const deleteAlumno = (id) =>
   ApiClient.delete(`/academico/alumnos/${id}`);
@@ -29,6 +29,9 @@ export const deleteAlumno = (id) =>
 
 export const createResponsables = (data) =>
   ApiClient.post("/academico/responsable/", data);
+
+export const getResponsables = () =>
+  ApiClient.get("/academico/responsable/");
 
 //  funciones para manejo de los grados
 export const getGrados = () => ApiClient.get("/academico/grados/");

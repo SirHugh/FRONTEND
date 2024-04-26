@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const AlumnoCard = ({ alumno, onDelete }) => {
+const AlumnoCard = ({ alumno, onSubmit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedAlumno, setEditedAlumno] = useState(alumno);
 
@@ -18,7 +18,7 @@ const AlumnoCard = ({ alumno, onDelete }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(editedAlumno); // Llama a la función de manejo para enviar los datos actualizados
+    onSubmit(editedAlumno); // Llama a la función de manejo para enviar los datos actualizados
   };
   
   ;
@@ -113,9 +113,9 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                     id="genero"
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    value={editedAlumno.genero}
+                    value={editedAlumno.genero == "F" ? "Femenino" : "Masculino"}
                     onChange={handleChange}
-                    readOnly={!isEditing}
+                    readOnly={true}
                     required
                   />
                   <label
@@ -189,6 +189,25 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                 <div className="relative z-0 w-full mb-5 group">
                   <input
                     type="text"
+                    name="direccion"
+                    id="direccion"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                    value={editedAlumno.direccion}
+                    onChange={handleChange}
+                    readOnly={!isEditing}
+                    required
+                  />
+                  <label
+                    htmlFor="direccion"
+                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  >
+                    Dirección
+                  </label>
+                </div>
+                <div className="relative z-0 w-full mb-5 group">
+                  <input
+                    type="text"
                     name="edad_primer_grado"
                     id="edad_primer_grado"
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -205,6 +224,25 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                     Edad al Ingresar al Primer Grado
                   </label>
                 </div>
+                                  {/* Perfil Psicologico */}
+                                  <div className="relative z-0 w-full mb-5 group">
+                    <input
+                      type="text"
+                      name="perfil_psicologico"
+                      id="perfil_psicologico"
+                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                      placeholder=" "
+                      value={editedAlumno.perfil_psicologico}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
+                    />
+                    <label
+                      htmlFor="perfil_psicologico"
+                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                      Perfil Psicológico
+                    </label>
+                  </div>
               </div>
               <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 w-full mb-5 group">
@@ -214,7 +252,7 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                     id="curso_jardin"
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
-                    value={editedAlumno.curso_jardin}
+                    value={editedAlumno.curso_jardin ? "Sí" : "No"}
                     onChange={handleChange}
                     readOnly={!isEditing}
                     required
@@ -286,6 +324,25 @@ const AlumnoCard = ({ alumno, onDelete }) => {
                       Teléfono
                     </label>
                   </div>
+                  {/* Alergico a */}
+                  <div className="relative z-0 w-full mb-5 group">
+                    <input
+                      type="text"
+                      name="alergico_a"
+                      id="alergico_a"
+                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                      placeholder=" "
+                      value={editedAlumno.alergico_a}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
+                    />
+                    <label
+                      htmlFor="alergico_a"
+                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    >
+                      Alergico a
+                    </label>
+                  </div>
                 </div>
                 {isEditing ? (
                   <div className="flex justify-between mt-4">
@@ -317,6 +374,7 @@ const AlumnoCard = ({ alumno, onDelete }) => {
           </div>
           <hr className="my-4" />
           <div className="flex justify-end mt-4">
+            {/* Otros campos de entrada */}
 </div>
 </div>
 );

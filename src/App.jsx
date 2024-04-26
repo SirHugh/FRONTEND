@@ -39,7 +39,7 @@ function App() {
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ACADEMICO} />}>
               <Route path="/" element={<MainPage />} exact />
               <Route path="/alumnos" element={<AlumnosPage />} exact />
-              <Route path="/alumnos/:id" element={<AlumnoDetail />} />
+              <Route path="/alumnos/:id/" element={<AlumnoDetail />} />
               <Route path="/matriculas" element={<MatriculacionPage />} />
               <Route path="/grados" element={<GradosPage />} />
               <Route path="/becas" element={<BecasPage />} />

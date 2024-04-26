@@ -12,7 +12,7 @@ const MainPage = () => {
     //{ title: 'Usuarios', icon: userIcon },
     { title: "Alumnos", icon: studentIcon, linkTo: "/alumnos" },
     { title: "Caja", icon: boxIcon },
-    { title: "Matricular Alumno", icon: academicIcon, linkTo: "/academico" }, // Nueva tarjeta para la sección académica
+    { title: "Matricular Alumno", icon: academicIcon, linkTo: "/Matriculas" }, // Nueva tarjeta para la sección académica
   ];
 
   return (

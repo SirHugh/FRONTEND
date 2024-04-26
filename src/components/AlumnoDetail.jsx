@@ -36,7 +36,20 @@ const AlumnoDetail = () => {
 
   const handleSubmit = async (updatedAlumno) => {
     try {
-      await updateAlumno(updatedAlumno.id, updatedAlumno);
+      const alumnoFormData = new FormData();
+      const alumno = updatedAlumno;
+
+    for (var key in alumno) {
+      if(key == "fotocarnet"){
+        if(alumno[key] instanceof File){
+          alumnoFormData.append(key, alumno[key]);
+        }
+      }else{
+        alumnoFormData.append(key, alumno[key] ? alumno[key]  : "");
+      }
+    }
+      await updateAlumno(updatedAlumno.id_alumno, alumnoFormData);
+      setShowSuccessModal(true);
       // Si es necesario, realizar alguna acción después de actualizar
     } catch (error) {
       console.error('Error updating alumno:', error);
@@ -68,8 +81,8 @@ const AlumnoDetail = () => {
           <SuccessModal
             show={showSuccessModal}
             onClose={closeSuccessModal}
-            title={"Borrado exitoso"}
-            message={"El alumno ha sido eliminado correctamente."}
+            title={"Datos actualizados"}
+            message={"Los datos del alumno han sido modificados exitosamente."}
           />
         </div>
         </div>

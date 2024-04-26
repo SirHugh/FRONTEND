@@ -155,7 +155,7 @@ const MatriculacionPage = () => {
                         checked={matricula.es_activo}
                         onChange={(e) =>
                           handleToggleChange(
-                            matricula.id_grado,
+                            matricula.id_matricula,
                             e.target.checked
                           )
                         }
