@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { getAlumnos, searchAlumnos } from "../services/AcademicoService";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getAlumnos, searchAlumnos, getMatriculaAnioGrado, getGrados, getGradoById } from "../services/AcademicoService";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
 import { Table } from "flowbite-react";
 import { MdSearch } from "react-icons/md";
@@ -13,20 +13,54 @@ export const AlumnosList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const history = useNavigate();
+  const [grados, setGrados] = useState([]); // Estado para almacenar los grados
+  const [selectedGrado, setSelectedGrado] = useState(null); // Estado para almacenar el grado seleccionado
 
+  const handleGradoChange = async (e) => {
+    const gradoId = e.target.value;
+    setSelectedGrado(gradoId); // Actualizar el estado del grado seleccionado
+  
+    if (gradoId) {
+      // Si se selecciona un grado válido, filtrar los alumnos por ese grado
+      try {
+        const anio = new Date().getFullYear(); // Obtener el año actual
+        const page = currentPage + 1; // Ajustar la página a partir de currentPage
+        const res = await getMatriculaAnioGrado(anio, gradoId, page); // Pasar la página a la función de solicitud
+
+        setAlumnos(res.data.results.map(alumno => alumno.id_alumno));
+        setTotalPages(Math.ceil(res.data.count / 10));
+      } catch (error) {
+        console.error("Error al filtrar los alumnos por grado:", error);
+      }
+    } else {
+      // Si no se selecciona ningún grado, cargar todos los alumnos nuevamente
+      setCurrentPage(0);
+    }
+  };
+  
   useEffect(() => {
     async function loadAlumnos() {
       const page = Math.min(currentPage + 1, totalPages);
       const res = await getAlumnos(page);
-      console.log("Datos recibidos del alumno: ", res.data);
-
-      setAlumnos(res.data.results);
+      setAlumnos(res.data.results); // Inicializar la lista de alumnos
       setLoading(false);
       setTotalPages(Math.ceil(res.data.count / 10));
     }
     loadAlumnos();
   }, [currentPage]);
+
+  useEffect(() => {
+    async function fetchGrados() {
+      try {
+        // Obtener la lista de grados disponibles
+        const res = await getGrados();
+        setGrados(res.data); // Almacenar la lista de grados en el estado
+      } catch (error) {
+        console.error("Error al obtener los grados:", error);
+      }
+    }
+    fetchGrados();
+  }, []);
 
   const handdleSearch = async (e) => {
     try {
@@ -58,12 +92,26 @@ export const AlumnosList = () => {
               id="search"
               name="search"
               className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Buscar Becado..."
+              placeholder="Buscar Alumno..."
               onChange={(e) => {
                 handdleSearch(e);
               }}
               required
             />
+          </div>
+          <div className="w-80 relative">
+            <select
+              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={selectedGrado || ""}
+              onChange={handleGradoChange}
+            >
+              <option value="">Seleccionar Grado</option>
+              {grados.map((grado) => (
+                <option key={grado.id_grado} value={grado.id_grado}>
+                  {grado.nombre}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="overflow-x-auto w-full px-10 max-w-12xl bg-slate-300">
