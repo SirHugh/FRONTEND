@@ -6,6 +6,7 @@ import { Table } from "flowbite-react";
 import { MdSearch } from "react-icons/md";
 import { SiQuicklook } from "react-icons/si";
 import { PiStudentBold } from "react-icons/pi";
+import { BiEdit } from "react-icons/bi";
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -34,18 +35,20 @@ export const AlumnosList = () => {
       }
     } else {
       // Si no se selecciona ningún grado, cargar todos los alumnos nuevamente
+      loadAlumnos();
       setCurrentPage(0);
     }
   };
   
+  const loadAlumnos = async () => {
+    const page = Math.min(currentPage + 1, totalPages);
+    const res = await getAlumnos(page);
+    setAlumnos(res.data.results); // Inicializar la lista de alumnos
+    setLoading(false);
+    setTotalPages(Math.ceil(res.data.count / 10));
+  };
+
   useEffect(() => {
-    async function loadAlumnos() {
-      const page = Math.min(currentPage + 1, totalPages);
-      const res = await getAlumnos(page);
-      setAlumnos(res.data.results); // Inicializar la lista de alumnos
-      setLoading(false);
-      setTotalPages(Math.ceil(res.data.count / 10));
-    }
     loadAlumnos();
   }, [currentPage]);
 
@@ -114,7 +117,7 @@ export const AlumnosList = () => {
             </select>
           </div>
         </div>
-        <div className="overflow-x-auto w-full px-10 max-w-12xl bg-slate-300">
+        <div className="overflow-x-auto w-full px-10 max-w-12xl bg-white">
           <Table className=" divide-y ">
             <Table.Head className="bg-gray-500">
               <Table.HeadCell>Nombre</Table.HeadCell>
@@ -141,7 +144,7 @@ export const AlumnosList = () => {
                   <Table.Cell>{alumno.telefono}</Table.Cell>
                   <Table.Cell>
                     <Link to={`/alumnos/${alumno.id_alumno}`}>
-                      <SiQuicklook className="text-cyan-700 text-2xl" />
+                      <BiEdit className="text-cyan-700 text-2xl" title="Editar" />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
