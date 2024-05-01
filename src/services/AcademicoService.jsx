@@ -5,6 +5,9 @@ import { ApiClient } from "./ApiClient";
 export const getAlumnos = (page) =>
   ApiClient.get(`/academico/alumnos/?page=${page}`);
 
+export const getTotalAlumnos = () =>
+  ApiClient.get(`/academico/alumnos/`);
+
 export const searchAlumnos = (page, searchTerm) => {
   return ApiClient.get(
     `/academico/alumnos/?page=${page ? page : ""}&search=${searchTerm}`

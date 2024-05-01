@@ -140,16 +140,6 @@ function GradosPage() {
         </table>
       </div>
       <div>
-      {alumnos.length > 0 && selectedGrado && (
-        <AlumnosListModal
-          show={true} // Mostrar el modal
-          onClose={handleCloseModal} // Función para cerrar el modal
-          alumnos={alumnos} // Lista de alumnos
-          grado={selectedGrado.nombre} // Grado seleccionado
-          seccion={selectedGrado.seccion} // Sección (podrías obtenerlo del objeto de grado si lo tienes)
-          turno = {selectedGrado.turno}
-        />
-      )}
       </div>
     </div>
   );

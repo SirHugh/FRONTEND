@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAlumnos, searchAlumnos, getMatriculaAnioGrado, getGrados, getGradoById } from "../services/AcademicoService";
+import { getAlumnos, searchAlumnos, getMatriculaAnioGrado, getGrados, getTotalAlumnos } from "../services/AcademicoService";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
 import { Table } from "flowbite-react";
 import { MdSearch } from "react-icons/md";
 import { SiQuicklook } from "react-icons/si";
 import { PiStudentBold } from "react-icons/pi";
 import { BiEdit } from "react-icons/bi";
+import * as XLSX from "xlsx";
+import { FaFileDownload } from "react-icons/fa";
+import { Button } from "flowbite-react";
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -78,6 +81,39 @@ export const AlumnosList = () => {
     }
   };
 
+  const exportAlumnos = async () => {
+    try {
+      let allAlumnos = [];
+  
+      // Si se ha seleccionado un grado, obtén todos los alumnos de ese grado
+      if (selectedGrado) {
+        const anio = new Date().getFullYear();
+        const res = await getMatriculaAnioGrado(anio, selectedGrado, currentPage+1);
+        allAlumnos = res.data.results.map(alumno => alumno.id_alumno);
+      } else {
+        // Si no se ha seleccionado un grado, obtén todos los alumnos
+        const res = await getTotalAlumnos();
+        allAlumnos = res.data.results;
+      }
+  
+      const data = allAlumnos.map((alumno) => ({
+        Nombre: alumno.nombre,
+        Apellido: alumno.apellido,
+        Cedula: alumno.cedula,
+        "Fecha de Nacimiento": alumno.fecha_nac,
+        Teléfono: alumno.telefono,
+      }));
+  
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, worksheet, "Alumnos");
+      XLSX.writeFile(wb, "alumnos.xlsx");
+    } catch (error) {
+      console.error("Error al exportar los alumnos:", error);
+    }
+  };
+  
+
   return (
     <div className="w-full  mx-auto bg-white rounded-lg shadow-lg">
       <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
@@ -116,6 +152,10 @@ export const AlumnosList = () => {
               ))}
             </select>
           </div>
+          <Button className="flex flex-wrap p-2" onClick={exportAlumnos}>
+                <FaFileDownload className="mr-2 h-5 w-5" />
+                Descargar
+          </Button>
         </div>
         <div className="overflow-x-auto w-full px-10 max-w-12xl bg-white">
           <Table className=" divide-y ">
