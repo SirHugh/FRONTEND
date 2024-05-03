@@ -34,7 +34,7 @@ const menuItems = [
     ),
     subItems: [
       {
-        text: "Opción 1",
+        text: "Usuarios",
         icon: (
           <img
             src={lockIcon}
@@ -42,7 +42,7 @@ const menuItems = [
             className="w-5 h-5 mr-2 object-contain"
           />
         ),
-        link: "/alumnos",
+        link: "/usuarios",
       },
       {
         text: "Opción 2",

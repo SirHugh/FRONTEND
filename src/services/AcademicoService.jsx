@@ -3,10 +3,9 @@ import { ApiClient } from "./ApiClient";
 //funciones para el manejo de la API de alumnos
 
 export const getAlumnos = (page) =>
-  ApiClient.get(`/academico/alumnos/?page=${page}`);
+  ApiClient.get(`/academico/alumnos/?page=${page ? page : ""}`);
 
-export const getTotalAlumnos = () =>
-  ApiClient.get(`/academico/alumnos/`);
+export const getTotalAlumnos = () => ApiClient.get(`/academico/alumnos/`);
 
 export const searchAlumnos = (page, searchTerm) => {
   return ApiClient.get(
@@ -33,8 +32,7 @@ export const deleteAlumno = (id) =>
 export const createResponsables = (data) =>
   ApiClient.post("/academico/responsable/", data);
 
-export const getResponsables = () =>
-  ApiClient.get("/academico/responsable/");
+export const getResponsables = () => ApiClient.get("/academico/responsable/");
 
 //  funciones para manejo de los grados
 export const getGrados = () => ApiClient.get("/academico/grados/");
