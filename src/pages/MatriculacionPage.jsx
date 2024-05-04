@@ -17,6 +17,7 @@ const MatriculacionPage = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [qr_code, setQr_code] = useState(null);
   const { authTokens } = useAuth();
+  const blueColor = "#3B82F6";
 
   const { user } = useAuth();
 
@@ -68,12 +69,12 @@ const MatriculacionPage = () => {
       <div className="container mx-auto p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 text-4xl font-bold">
-            <HiOutlineNewspaper />
+            <HiOutlineNewspaper style={{color:blueColor}} />
             <h1 className="text-lg">Matriculaciones</h1>
           </div>
           <div className="flex relative">
             <button
-              className="flex p-2 gap-2 bg-blue-700 rounded-lg text-center text-white items-center px-5 py-2.5 "
+              className="flex p-2 gap-2 bg-blue-500 rounded-lg text-center text-white items-center px-5 py-2.5 "
               onMouseOver={() => setShowOptions(true)}
               onMouseLeave={() => setShowOptions(false)}
               onClick={() => openNuevaMatricula()}

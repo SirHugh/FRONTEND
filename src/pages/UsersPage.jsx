@@ -45,7 +45,7 @@ function UsersPage() {
         <div className="flex flex-row justify-end h-16 p-3 gap-3 border items-center">
           <div>
             <Button
-              className="flex flex-wrap"
+              className="flex flex-wrap bg-blue-500"
               onClick={() => setShowNewUserModal(true)}
             >
               <FaPlus className="mr-2 h-5 w-5" />

@@ -113,11 +113,12 @@ export const AlumnosList = () => {
     }
   };
   
+  const blueColor = "#3B82F6";
 
   return (
     <div className="w-full  mx-auto bg-white rounded-lg shadow-lg">
       <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
-        <PiStudentBold className="text-cyan-600" />
+        <PiStudentBold style={{color:blueColor}}/>
         <h1 className="">ALUMNOS</h1>
       </div>
       <div className="flex flex-col items-center justify-center mb-2">
@@ -152,7 +153,7 @@ export const AlumnosList = () => {
               ))}
             </select>
           </div>
-          <Button className="flex flex-wrap p-2" onClick={exportAlumnos}>
+          <Button className="flex flex-wrap p-2 bg-blue-500" onClick={exportAlumnos}>
                 <FaFileDownload className="mr-2 h-5 w-5" />
                 Descargar
           </Button>
@@ -173,7 +174,7 @@ export const AlumnosList = () => {
               {alumnos.map((alumno) => (
                 <Table.Row
                   key={alumno.id_alumno}
-                  className="hover:border-l-cyan-700 hover:border-l-4"
+                  className="hover:border-l-blue-500 hover:border-l-4"
                 >
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {alumno.nombre}
@@ -184,7 +185,7 @@ export const AlumnosList = () => {
                   <Table.Cell>{alumno.telefono}</Table.Cell>
                   <Table.Cell>
                     <Link to={`/alumnos/${alumno.id_alumno}`}>
-                      <BiEdit className="text-cyan-700 text-2xl" title="Editar" />
+                      <BiEdit className="text-2xl" style={{color:blueColor}} title="Editar" />
                     </Link>
                   </Table.Cell>
                 </Table.Row>

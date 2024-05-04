@@ -38,6 +38,7 @@ function BecasPage() {
   const [showQuitarBecadoModal, setShowQuitarBecadoModal] = useState(false);
   const [becado, setBecado] = useState();
   const [becadosTitle, setBecadosTitle] = useState();
+  const blueColor = "#3B82F6";
 
   useEffect(() => {
     const load = async () => {
@@ -129,13 +130,13 @@ function BecasPage() {
     <>
       <div>
         <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
-          <TbCertificate className="text-cyan-600" />
+          <TbCertificate style={{color:blueColor}}/>
           <h1 className="">BECAS</h1>
         </div>
         <div className="flex flex-row justify-end h-16 p-3 gap-3 border items-center">
           <div>
             <Button
-              className="flex flex-wrap"
+              className="flex flex-wrap bg-blue-500 "
               onClick={() => setShowModal(true)}
             >
               <FaPlus className="mr-2 h-5 w-5" />
@@ -144,7 +145,7 @@ function BecasPage() {
           </div>
         </div>
         <div>
-          <div className="px-10  bg-gray-300 ">
+        <div className="w-full  mx-auto bg-white rounded-lg shadow-lg">
             <Table>
               <Table.Head>
                 <Table.HeadCell>NOMBRE</Table.HeadCell>
@@ -168,7 +169,7 @@ function BecasPage() {
                 {becas.map((b) => (
                   <Table.Row
                     key={b.id_beca}
-                    className={`bg-white hover:border-l-4 hover:border-l-cyan-700 justify-start cursor-default ${
+                    className={`bg-white hover:border-l-4 hover:border-l-blue-500 justify-start cursor-default ${
                       b.es_activo == false ? `bg-red-400` : ``
                     }`}
                   >
@@ -188,6 +189,7 @@ function BecasPage() {
                         <TbListSearch
                           title="Mostrar Lista"
                           className="size-6"
+                          style={{color:blueColor}}
                         />
                       </a>
                     </Table.Cell>
@@ -206,6 +208,7 @@ function BecasPage() {
                         <MdGroupAdd
                           title="Agregar Estudiante"
                           className="size-6"
+                          style={{color:blueColor}}
                         />
                       </a>
                     </Table.Cell>
@@ -214,7 +217,7 @@ function BecasPage() {
                         onClick={() => handdleEdit(b)}
                         className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
                       >
-                        <FaRegEdit title="Modificar Beca" className="size-6" />
+                        <FaRegEdit title="Modificar Beca" className="size-6" style={{color:blueColor}}/>
                       </a>
                     </Table.Cell>
                     <Table.Cell>
@@ -225,7 +228,7 @@ function BecasPage() {
                         {b.es_activo ? (
                           <FaToggleOn
                             title="Desactivar"
-                            className="size-6 text-green-500"
+                            className="size-6 text-blue-500"
                           />
                         ) : (
                           <FaToggleOff
@@ -244,7 +247,7 @@ function BecasPage() {
         <div>
           <div className="flex flex-row justify-between p-3 items-center">
             <div className="flex flex-row p-2 gap-3 items-center justify-between font-bold text-2xl">
-              <FaUsers />
+              <FaUsers style={{color:blueColor}} />
               <h1>Becados: </h1>
               <h1 className="text-xl font-medium text-cyan-600 ">
                 {becadosTitle ? becadosTitle : "Todos"}
@@ -268,7 +271,7 @@ function BecasPage() {
               />
             </div>
             <div className="flex flex-row gap-1">
-              <Button className="flex flex-wrap p-2">
+              <Button className="flex flex-wrap p-2 bg-blue-500 ">
                 <FaFileDownload className="mr-2 h-5 w-5" />
                 Descargar
               </Button>
@@ -290,7 +293,7 @@ function BecasPage() {
                 {becados.map((becado) => (
                   <Table.Row
                     key={becado.id}
-                    className={`cursor-default hover:border-l-4 hover:border-l-cyan-700  justify-start ${
+                    className={`cursor-default hover:border-l-4 hover:border-l-blue-500  justify-start ${
                       becado.es_activo == false ? `bg-red-300` : ``
                     }`}
                     onClick={() => console.log("clicked")}
@@ -326,6 +329,7 @@ function BecasPage() {
                           <TbCertificate
                             title="Remover Beca"
                             className="size-6"
+                            style={{color:blueColor}}
                           />
                         ) : (
                           <TbCertificateOff className="text-red-800 size-6" />
