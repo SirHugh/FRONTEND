@@ -6,11 +6,29 @@ import { FaPlus, FaUsersCog } from "react-icons/fa";
 import { Button } from "flowbite-react";
 import UserCard from "../components/users/UserCard";
 import NewUserModal from "../components/users/NewUserModal";
+import ActivateUserModal from "../components/users/ActivateUserModal";
 
 function UsersPage() {
   const [users, setUsers] = useState([]);
   const [groups, setGroups] = useState([]);
   const [showNewUserModal, setShowNewUserModal] = useState(false);
+  const [showActivateUserModal, setShowActivateUserModal] = useState(false);
+  const initialState = {
+    id: "",
+    last_login: "",
+    email: "",
+    nombre: "",
+    apellido: "",
+    cedula: 0,
+    direccion: "",
+    telefono: "",
+    is_staff: true,
+    is_active: false,
+    groups: [],
+    user_permissions: [],
+  };
+  const [user, setUser] = useState(initialState);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const retriveUser = async () => {
@@ -27,15 +45,46 @@ function UsersPage() {
       }
     };
     retriveUser();
-  }, []);
+  }, [reload]);
+
+  const handdleEdit = (u) => {
+    setUser(u);
+    setShowNewUserModal(true);
+  };
+
+  const handdleActivate = (u) => {
+    setUser(u);
+    setShowActivateUserModal(true);
+  };
+
+  const onCloseModal = () => {
+    setUser(initialState);
+    if (showNewUserModal) {
+      setShowNewUserModal(false);
+    }
+    if (showActivateUserModal) {
+      setShowActivateUserModal(false);
+    }
+  };
 
   return (
     <>
       <Toaster />
       <NewUserModal
         show={showNewUserModal}
-        onClose={() => setShowNewUserModal(false)}
+        user={user}
+        setUser={setUser}
+        onClose={onCloseModal}
         groups={groups}
+        reload={reload}
+        setReload={setReload}
+      />
+      <ActivateUserModal
+        show={showActivateUserModal}
+        onClose={onCloseModal}
+        user={user}
+        reload={reload}
+        setReload={setReload}
       />
       <div>
         <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
@@ -55,9 +104,14 @@ function UsersPage() {
         </div>
         <div>
           <div className="px-10  bg-gray-300 ">
-            {users.map((user) => (
-              <div key={user.id}>
-                <UserCard user={user} groups={groups} />
+            {users.map((u) => (
+              <div key={u.id}>
+                <UserCard
+                  user={u}
+                  groups={groups}
+                  editUser={() => handdleEdit(u)}
+                  activateUser={() => handdleActivate(u)}
+                />
               </div>
             ))}
           </div>

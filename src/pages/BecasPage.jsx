@@ -15,6 +15,7 @@ import AlumnoSetActiveModal from "../components/Becas/AlumnoActivoModal";
 import AgregarBecadoModal from "../components/Becas/AgregarBecadoModal";
 import BecaActiveModal from "../components/Becas/BecaActiveModal";
 import AgregarBecaModal from "../components/Becas/AgregarBecaModal";
+import { Toaster } from "react-hot-toast";
 
 function BecasPage() {
   const [becas, setBecas] = useState([]);
@@ -128,9 +129,10 @@ function BecasPage() {
 
   return (
     <>
+      <Toaster />
       <div>
         <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
-          <TbCertificate style={{color:blueColor}}/>
+          <TbCertificate style={{ color: blueColor }} />
           <h1 className="">BECAS</h1>
         </div>
         <div className="flex flex-row justify-end h-16 p-3 gap-3 border items-center">
@@ -145,7 +147,7 @@ function BecasPage() {
           </div>
         </div>
         <div>
-        <div className="w-full  mx-auto bg-white rounded-lg shadow-lg">
+          <div className="w-full  mx-auto bg-white rounded-lg shadow-lg">
             <Table>
               <Table.Head>
                 <Table.HeadCell>NOMBRE</Table.HeadCell>
@@ -189,7 +191,7 @@ function BecasPage() {
                         <TbListSearch
                           title="Mostrar Lista"
                           className="size-6"
-                          style={{color:blueColor}}
+                          style={{ color: blueColor }}
                         />
                       </a>
                     </Table.Cell>
@@ -201,14 +203,13 @@ function BecasPage() {
                         }}
                         className={`font-medium  hover:underline dark:text-cyan-500  ${
                           b.es_activo
-                            ? "cursor-pointer text-cyan-600"
+                            ? "cursor-pointer text-blue-500"
                             : "text-gray-600"
                         }`}
                       >
                         <MdGroupAdd
                           title="Agregar Estudiante"
                           className="size-6"
-                          style={{color:blueColor}}
                         />
                       </a>
                     </Table.Cell>
@@ -217,7 +218,11 @@ function BecasPage() {
                         onClick={() => handdleEdit(b)}
                         className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
                       >
-                        <FaRegEdit title="Modificar Beca" className="size-6" style={{color:blueColor}}/>
+                        <FaRegEdit
+                          title="Modificar Beca"
+                          className="size-6"
+                          style={{ color: blueColor }}
+                        />
                       </a>
                     </Table.Cell>
                     <Table.Cell>
@@ -247,7 +252,7 @@ function BecasPage() {
         <div>
           <div className="flex flex-row justify-between p-3 items-center">
             <div className="flex flex-row p-2 gap-3 items-center justify-between font-bold text-2xl">
-              <FaUsers style={{color:blueColor}} />
+              <FaUsers style={{ color: blueColor }} />
               <h1>Becados: </h1>
               <h1 className="text-xl font-medium text-cyan-600 ">
                 {becadosTitle ? becadosTitle : "Todos"}
@@ -329,7 +334,7 @@ function BecasPage() {
                           <TbCertificate
                             title="Remover Beca"
                             className="size-6"
-                            style={{color:blueColor}}
+                            style={{ color: blueColor }}
                           />
                         ) : (
                           <TbCertificateOff className="text-red-800 size-6" />

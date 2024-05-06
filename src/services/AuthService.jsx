@@ -16,3 +16,6 @@ export const getGroups = (id) =>
   ApiClient.get(`/auth/groups/${id ? id`/` : ""}`);
 
 export const createUser = (data) => ApiClient.post("/auth/users/", data);
+
+export const updateUser = (id, data) =>
+  ApiClient.put(`/auth/users/${id}/`, data);
