@@ -13,6 +13,7 @@ import useAuth from "../hooks/useAuth";
 import * as XLSX from "xlsx";
 import { FaFileDownload } from "react-icons/fa";
 import { Button } from "flowbite-react";
+import MatriculaForm from "../components/MatriculaForm";
 
 const MatriculacionPage = () => {
   const [totalPages, setTotalPages] = useState(1);
@@ -25,6 +26,7 @@ const MatriculacionPage = () => {
   const [grados, setGrados] = useState([]); // Estado para almacenar los grados
   const [selectedGrado, setSelectedGrado] = useState(null); // Estado para almacenar el grado seleccionado
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); 
+  const [editMatricula, setEditMatricula] = useState(null);
   const blueColor = "#3B82F6";
 
   const { user } = useAuth();
@@ -143,6 +145,15 @@ const MatriculacionPage = () => {
     }
   };
 
+  //Editar matricula
+  const handleEditMatricula = (matricula) => {
+    setEditMatricula(matricula);
+  };
+
+  const handleCloseForm = () => {
+    setEditMatricula(null);
+  };
+
   return (
     <>
       <div className="container mx-auto p-4">
@@ -248,6 +259,7 @@ const MatriculacionPage = () => {
                 <th className="px-4 py-2">Origen</th>
                 <th className="px-4 py-2">Año Lectivo</th>
                 <th className="px-4 py-2">Estado</th>
+                <th className="px-4 py-2">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -298,6 +310,9 @@ const MatriculacionPage = () => {
                       </span>
                     </label>
                   </td>
+                  <td className="px-4 py-2">
+                  <button className="text-blue-500" onClick={() => handleEditMatricula(matricula)}>Editar</button>
+                </td>
                 </tr>
               ))}
             </tbody>
@@ -326,6 +341,13 @@ const MatriculacionPage = () => {
           </div>
         </div>
       </dialog>
+      {editMatricula && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <MatriculaForm matricula={editMatricula} onClose={handleCloseForm} />
+          </div>
+        </div>
+      )}
     </>
   );
 };
