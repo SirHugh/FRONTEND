@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getMatriculaAnioGrado,
   setMatriculaActive,
+  getGrados,
 } from "../services/AcademicoService";
 import { HiBars3, HiOutlineNewspaper } from "react-icons/hi2";
 import { MdQrCodeScanner, MdSearch } from "react-icons/md";
@@ -17,6 +18,9 @@ const MatriculacionPage = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [qr_code, setQr_code] = useState(null);
   const { authTokens } = useAuth();
+  const [grados, setGrados] = useState([]); // Estado para almacenar los grados
+  const [selectedGrado, setSelectedGrado] = useState(null); // Estado para almacenar el grado seleccionado
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); 
   const blueColor = "#3B82F6";
 
   const { user } = useAuth();
@@ -25,7 +29,6 @@ const MatriculacionPage = () => {
     const loadMatriculas = async () => {
       const page = Math.min(currentPage + 1, totalPages);
       const res = await getMatriculaAnioGrado("", "", page);
-      console.log("Got Matriculas: ", res);
       if (res.status == 200) {
         setTotalPages(Math.ceil(res.data.count / 10));
         setMatriculas(res.data.results);
@@ -63,6 +66,43 @@ const MatriculacionPage = () => {
       console.error("Error al cambiar el estado de la matriculación:", error);
     }
   };
+
+  //Filtrado por grados
+  const handleGradoChange = async (e) => {
+    const gradoId = e.target.value;
+    setSelectedGrado(gradoId); // Actualizar el estado del grado seleccionado
+  
+    if (gradoId) {
+      // Si se selecciona un grado válido, filtrar los alumnos por ese grado
+      try {
+        const anio = selectedYear // Obtener el año actual
+        const page = currentPage + 1; // Ajustar la página a partir de currentPage
+        const res = await getMatriculaAnioGrado(anio, gradoId, page); // Pasar la página a la función de solicitud
+
+        setMatriculas(res.data.results);
+        setTotalPages(Math.ceil(res.data.count / 10));
+      } catch (error) {
+        console.error("Error al filtrar los alumnos por grado:", error);
+      }
+    } else {
+      // Si no se selecciona ningún grado, cargar todos los alumnos nuevamente
+      loadMatriculas();
+      setCurrentPage(0);
+    }
+  };
+
+  useEffect(() => {
+    async function fetchGrados() {
+      try {
+        // Obtener la lista de grados disponibles
+        const res = await getGrados();
+        setGrados(res.data); // Almacenar la lista de grados en el estado
+      } catch (error) {
+        console.error("Error al obtener los grados:", error);
+      }
+    }
+    fetchGrados();
+  }, []);
 
   return (
     <>
@@ -121,7 +161,40 @@ const MatriculacionPage = () => {
           <button>
             <MdSearch />
           </button>
+
+          <div className="w-80 relative">
+            <select
+              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={selectedGrado || ""}
+              onChange={handleGradoChange}
+            >
+              <option value="">Seleccionar Grado</option>
+              {grados.map((grado) => (
+                <option key={grado.id_grado} value={grado.id_grado}>
+                  {grado.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="w-80 relative">
+            <select
+              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
+              <option value="">Seleccionar Año</option>
+              {Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          
         </div>
+        
         <div className="overflow-x-auto">
           <table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
             <thead className="bg-gray-100">
@@ -129,6 +202,8 @@ const MatriculacionPage = () => {
                 <th className="px-4 py-2">Nombre</th>
                 <th className="px-4 py-2">Apellido</th>
                 <th className="px-4 py-2">Grado</th>
+                <th className="px-4 py-2">Origen</th>
+                <th className="px-4 py-2">Año Lectivo</th>
                 <th className="px-4 py-2">Estado</th>
               </tr>
             </thead>
@@ -144,12 +219,18 @@ const MatriculacionPage = () => {
                   <td style={{ width: "20%" }} className="px-4 py-2">
                     {matricula.id_alumno.apellido}
                   </td>
-                  <td style={{ width: "20%" }} className="px-4 py-2">
+                  <td style={{ width: "15%" }} className="px-4 py-2">
                     {matricula.id_grado.grado}
                     {" - "}
                     {matricula.id_grado.nombre}
                   </td>
-                  <td style={{ width: "40%" }} className="px-4 py-2">
+                  <td style={{ width: "15%" }} className="px-4 py-2">
+                    {matricula.es_interno ? "FUNDACION UPC" : "EXTERNO"}
+                  </td>
+                  <td style={{ width: "15%" }} className="px-4 py-2">
+                    {matricula.anio_lectivo}
+                  </td>
+                  <td style={{ width: "15%" }} className="px-4 py-2">
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
