@@ -34,6 +34,9 @@ export const createResponsables = (data) =>
 
 export const getResponsables = () => ApiClient.get("/academico/responsable/");
 
+export const updateResponsable = (id, data) =>
+  ApiClient.put(`/academico/responsable/${id}/`, data);
+
 //  funciones para manejo de los grados
 export const getGrados = () => ApiClient.get("/academico/grados/");
 

@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
 import logo from "../assets/logo.png"; // Importa tu logo aquí
 import homeIcon from "../assets/icons/home.svg";
 import userIcon from "../assets/icons/user.svg";
@@ -9,6 +8,7 @@ import lockIcon from "../assets/icons/padlock.svg";
 import cashIcon from "../assets/icons/cash.svg";
 import downArrowIcon from "../assets/icons/down_arrow.svg";
 import upArrowIcon from "../assets/icons/up_arrow.svg";
+import useAuth from "../hooks/useAuth";
 
 // Define un array de objetos con la información de cada elemento del menú
 const menuItems = [
@@ -25,6 +25,7 @@ const menuItems = [
   },
   {
     text: "Seguridad",
+    allowedGroup: "ADMIN",
     icon: (
       <img
         src={lockIcon}
@@ -45,7 +46,7 @@ const menuItems = [
         link: "/usuarios",
       },
       {
-        text: "Opción 2",
+        text: "Configuración",
         icon: (
           <img
             src={lockIcon}
@@ -60,6 +61,7 @@ const menuItems = [
   },
   {
     text: "Academico",
+    allowedGroup: "ACADEMICO",
     icon: (
       <img
         src={userIcon}
@@ -117,6 +119,7 @@ const menuItems = [
   },
   {
     text: "Caja",
+    allowedGroup: "CAJA",
     icon: (
       <img src={cashIcon} alt="Caja" className="w-5 h-5 mr-2 object-contain" />
     ),
@@ -150,7 +153,7 @@ const menuItems = [
 ];
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-  const { user, logoutUser } = useContext(AuthContext);
+  const { user, logoutUser } = useAuth();
   const [isExpanded, setIsExpanded] = useState(false);
   const [showText, setShowText] = useState(false);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(
@@ -200,60 +203,66 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
       <ul>
         {menuItems.map((item, index) => (
-          <li
-            className="mb-12 pl-4"
-            key={index}
-            onClick={() => handleSubMenuToggle(index)}
-          >
-            <div className="flex justify-between items-center w-full">
-              {item.subItems ? (
-                <div className="text-white hover:text-gray-300 cursor-pointer flex items-center">
-                  {item.icon}
-                  {showText && item.text}
-                </div>
-              ) : (
-                <Link
-                  to={item.link}
-                  className="text-white hover:text-gray-300 flex items-center"
-                  onClick={toggleSidebar}
-                >
-                  {item.icon}
-                  {showText && item.text}
-                </Link>
-              )}
-              {item.subItems && (
-                <button
-                  className={`ml-2 focus:outline-none ${
-                    isExpanded ? "block" : "hidden"
-                  }`}
-                  onClick={() => handleSubMenuToggle(index)}
-                >
-                  <img
-                    src={isSubMenuOpen[index] ? upArrowIcon : downArrowIcon}
-                    alt="Arrow"
-                    className="w-4 h-4"
-                  />
-                </button>
-              )}
-            </div>
-            {/* Agrega un submenú si existen subItems */}
-            {item.subItems && isSubMenuOpen[index] && (
-              <ul className="pl-8">
-                {item.subItems.map((subItem, subIndex) => (
-                  <li className="mb-2" key={subIndex}>
-                    <div className="text-white flex items-center">
-                      <Link
-                        to={subItem.link}
-                        className="text-white hover:text-gray-300 flex items-center"
-                      >
-                        {showText && subItem.text}
-                      </Link>
+          <>
+            {user?.groups?.find((group) =>
+              item.allowedGroup?.includes(group)
+            ) && (
+              <li
+                className="mb-12 pl-4"
+                key={index}
+                onClick={() => handleSubMenuToggle(index)}
+              >
+                <div className="flex justify-between items-center w-full">
+                  {item.subItems ? (
+                    <div className="text-white hover:text-gray-300 cursor-pointer flex items-center">
+                      {item.icon}
+                      {showText && item.text}
                     </div>
-                  </li>
-                ))}
-              </ul>
+                  ) : (
+                    <Link
+                      to={item.link}
+                      className="text-white hover:text-gray-300 flex items-center"
+                      onClick={toggleSidebar}
+                    >
+                      {item.icon}
+                      {showText && item.text}
+                    </Link>
+                  )}
+                  {item.subItems && (
+                    <button
+                      className={`ml-2 focus:outline-none ${
+                        isExpanded ? "block" : "hidden"
+                      }`}
+                      onClick={() => handleSubMenuToggle(index)}
+                    >
+                      <img
+                        src={isSubMenuOpen[index] ? upArrowIcon : downArrowIcon}
+                        alt="Arrow"
+                        className="w-4 h-4"
+                      />
+                    </button>
+                  )}
+                </div>
+                {/* Agrega un submenú si existen subItems */}
+                {item.subItems && isSubMenuOpen[index] && (
+                  <ul className="pl-8">
+                    {item.subItems.map((subItem, subIndex) => (
+                      <li className="mb-2" key={subIndex}>
+                        <div className="text-white flex items-center">
+                          <Link
+                            to={subItem.link}
+                            className="text-white hover:text-gray-300 flex items-center"
+                          >
+                            {showText && subItem.text}
+                          </Link>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
             )}
-          </li>
+          </>
         ))}
       </ul>
       <div className="p-4">

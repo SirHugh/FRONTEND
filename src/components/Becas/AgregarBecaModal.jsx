@@ -3,6 +3,7 @@ import { useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import SuccessModal from "../SuccessModal";
 import { createBeca, updateBeca } from "../../services/AcademicoService";
+import toast, { Toaster } from "react-hot-toast";
 
 const AgregarBecaModal = ({
   show,
@@ -29,24 +30,22 @@ const AgregarBecaModal = ({
         await updateBeca(beca.id_beca, beca);
         onClose();
         setChanged(!changed);
+        toast.success("Beca Actualizada", { duration: 5000 });
         return 0;
       }
       await createBeca(beca);
+      setChanged(!changed);
     } catch (error) {
       // Manejo de errores en caso de que la solicitud falle
-      console.error("Error al crear el grado:", error);
+      toast.error("Error durante el registro.", error);
     }
-    SuccessModal(
-      true,
-      () => console.log("success Modal"),
-      "Guardado",
-      "Beca Creada"
-    );
+    toast.success("Beca Creada", { duration: 5000 });
     onClose();
   };
 
   const onCloseModal = () => {
     setDisableButton(true);
+
     onClose();
   };
 
