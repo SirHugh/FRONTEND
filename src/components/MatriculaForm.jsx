@@ -3,8 +3,8 @@ import { updateMatricula } from "../services/AcademicoService";
 
 const MatriculaForm = ({ matricula, onClose }) => {
   const [formData, setFormData] = useState({
-    id_alumno: matricula.id_alumno.id,
-    id_grado: matricula.id_grado.id,
+    id_alumno: matricula.id_alumno.id_alumno,
+    id_grado: matricula.id_grado.id_grado,
     fecha_inscripcion: matricula.fecha_inscripcion,
     anio_lectivo: matricula.anio_lectivo,
     es_activo: matricula.es_activo,
@@ -36,23 +36,21 @@ const MatriculaForm = ({ matricula, onClose }) => {
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col space-y-4">
         <label>
-          Nombre del alumno:
+          ID del alumno:
           <input
             type="text"
             value={formData.id_alumno}
             name="id_alumno"
             onChange={handleChange}
-            readOnly
           />
         </label>
         <label>
-          Grado:
+          ID Grado:
           <input
             type="text"
             value={formData.id_grado}
             name="id_grado"
             onChange={handleChange}
-            readOnly
           />
         </label>
         <label>
