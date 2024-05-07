@@ -3,6 +3,7 @@ import { getGrados, getMatriculaAnioGrado, setGradoActive } from '../services/Ac
 import { HiOutlinePlus } from 'react-icons/hi';
 import AddGradoForm from '../components/AddGradoForm'; // Importa el componente modal de creación de grado
 import AlumnosListModal from '../components/AlumnosListModal';
+import EditGradoForm from '../components/EditGradoForm';
 
 function GradosPage() {
   const [grados, setGrados] = useState([]);
@@ -75,6 +76,27 @@ function GradosPage() {
     }
   };
 
+  const handleEditGrado = (grado) => {
+    setSelectedGrado(grado); // Establece el grado seleccionado para la edición
+    setShowModal(true); // Muestra el modal de edición de grado
+  };
+
+  const handleUpdateGrado = async (id, data) => {
+    try {
+      await updateGrado(id, data); // Llama al servicio para actualizar el grado
+      setShowModal(false); // Oculta el modal de edición de grado después de la actualización
+      // Recarga la lista de grados para reflejar el cambio
+      const res = await getGrados();
+      if (res.status === 200) {
+        setGrados(res.data);
+      } else {
+        console.error('Error al cargar los grados:', res.message);
+      }
+    } catch (error) {
+      console.error('Error al actualizar el grado:', error);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex items-center justify-between mb-4">
@@ -101,6 +123,13 @@ function GradosPage() {
         />
       </div>
       <div className="overflow-x-auto">
+          {showModal && (
+            <EditGradoForm
+              grado={selectedGrado}
+              onUpdateGrado={handleUpdateGrado}
+              onClose={() => setShowModal(false)}
+            />
+          )}
         <table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
@@ -109,6 +138,7 @@ function GradosPage() {
               <th className="px-4 py-2">Nivel</th>
               <th className="px-4 py-2">Turno</th>
               <th className="px-4 py-2">Estado</th>
+              <th className="px-4 py-2">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -134,6 +164,10 @@ function GradosPage() {
                       <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{grado.es_activo ? 'Activo' : 'Inactivo'}</span>
                     </label>
                   </td>
+                  <td style={{ width: '10%' }} className="px-4 py-2">
+                  {/* Agrega un botón para editar el grado */}
+                  <button onClick={() => handleEditGrado(grado)}>Editar</button>
+                </td>
                 </tr>
               ))}
           </tbody>
