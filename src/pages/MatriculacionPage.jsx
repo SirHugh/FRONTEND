@@ -3,12 +3,16 @@ import {
   getMatriculaAnioGrado,
   setMatriculaActive,
   getGrados,
+  getTotalAlumnos
 } from "../services/AcademicoService";
 import { HiBars3, HiOutlineNewspaper } from "react-icons/hi2";
 import { MdQrCodeScanner, MdSearch } from "react-icons/md";
 import PaginationButtons from "../components/PaginationButtons";
 import QrCode from "../components/QrCode";
 import useAuth from "../hooks/useAuth";
+import * as XLSX from "xlsx";
+import { FaFileDownload } from "react-icons/fa";
+import { Button } from "flowbite-react";
 
 const MatriculacionPage = () => {
   const [totalPages, setTotalPages] = useState(1);
@@ -104,6 +108,41 @@ const MatriculacionPage = () => {
     fetchGrados();
   }, []);
 
+
+  //Exportar lista de alumnos
+
+  const exportAlumnos = async () => {
+    try {
+      let allAlumnos = [];
+  
+      // Si se ha seleccionado un grado, obtén todos los alumnos de ese grado
+      if (selectedGrado) {
+        const anio = selectedYear;
+        const res = await getMatriculaAnioGrado(anio, selectedGrado, currentPage+1);
+        allAlumnos = res.data.results.map(alumno => alumno.id_alumno);
+      } else {
+        // Si no se ha seleccionado un grado, obtén todos los alumnos
+        const res = await getTotalAlumnos();
+        allAlumnos = res.data.results;
+      }
+  
+      const data = allAlumnos.map((alumno) => ({
+        Nombre: alumno.nombre,
+        Apellido: alumno.apellido,
+        Cedula: alumno.cedula,
+        "Fecha de Nacimiento": alumno.fecha_nac,
+        Teléfono: alumno.telefono,
+      }));
+  
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, worksheet, "Alumnos");
+      XLSX.writeFile(wb, "alumnos.xlsx");
+    } catch (error) {
+      console.error("Error al exportar los alumnos:", error);
+    }
+  };
+
   return (
     <>
       <div className="container mx-auto p-4">
@@ -192,6 +231,10 @@ const MatriculacionPage = () => {
             </select>
           </div>
 
+          <Button className="flex flex-wrap p-2 bg-blue-500" onClick={exportAlumnos}>
+                <FaFileDownload className="mr-2 h-5 w-5" />
+                Descargar
+          </Button>
           
         </div>
         
