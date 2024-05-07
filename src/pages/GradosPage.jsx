@@ -109,19 +109,6 @@ function GradosPage() {
         </button>
       </div>
       {showFormModal && <AddGradoForm onClose={handleCloseFormModal} />} {/* Mostrar el modal si showModal es true */}
-      <div className="flex items-center mb-4">
-        <label htmlFor="anio" className="mr-2">
-          Año Lectivo
-        </label>
-        <input
-          type="number"
-          name="anio"
-          id="anio"
-          className="w-24 h-10 px-3 bg-white border border-gray-300 rounded-md focus:outline-none"
-          value={anio}
-          onChange={(e) => setAnio(e.target.value)}
-        />
-      </div>
       <div className="overflow-x-auto">
           {showModal && (
             <EditGradoForm

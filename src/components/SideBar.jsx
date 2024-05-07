@@ -14,6 +14,7 @@ import useAuth from "../hooks/useAuth";
 const menuItems = [
   {
     text: "Inicio",
+    allowedGroup: "ADMIN",
     icon: (
       <img
         src={homeIcon}

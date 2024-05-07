@@ -46,7 +46,7 @@ function EditGradoForm({ grado, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateGrado(grado.id, gradoData); // Aquí pasamos el ID del grado
+      await updateGrado(grado.id_grado, gradoData); // Aquí pasamos el ID del grado
       setShowSuccessModal(true);
     } catch (error) {
       console.error('Error al actualizar el grado:', error);
@@ -85,6 +85,67 @@ function EditGradoForm({ grado, onClose }) {
                     required
                   />
                 </div>
+                    <div className="mb-5">
+                    <label htmlFor="nivel" className="mb-3 block text-base font-medium text-[#07074D]">
+                        Nivel
+                    </label>
+                    <input
+                        type="text"
+                        id="nivel"
+                        name="nivel"
+                        placeholder="Nivel"
+                        value={gradoData.nivel}
+                        onChange={handleChange}
+                        className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                        required
+                    />
+                    </div>
+                    <div className="mb-5">
+                    <label htmlFor="seccion" className="mb-3 block text-base font-medium text-[#07074D]">
+                        Sección
+                    </label>
+                    <input
+                        type="text"
+                        id="seccion"
+                        name="seccion"
+                        placeholder="Sección"
+                        value={gradoData.seccion}
+                        onChange={handleChange}
+                        className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                    />
+                    </div>
+                </div>
+                <div>
+                    <div className="mb-5">
+                    <label htmlFor="grado" className="mb-3 block text-base font-medium text-[#07074D]">
+                        Grado
+                    </label>
+                    <input
+                        type="number"
+                        id="grado"
+                        name="grado"
+                        placeholder="Grado"
+                        value={gradoData.grado}
+                        onChange={handleChange}
+                        className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                        required
+                    />
+                    </div>
+                    <div className="mb-5">
+                    <label htmlFor="turno" className="mb-3 block text-base font-medium text-[#07074D]">
+                        Turno
+                    </label>
+                    <input
+                        type="text"
+                        id="turno"
+                        name="turno"
+                        placeholder="Turno"
+                        value={gradoData.turno}
+                        onChange={handleChange}
+                        className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                        required
+                    />
+                    </div>
                 {/* Resto de los campos omitidos por brevedad */}
                 <div className="mb-5">
                   <label htmlFor="es_activo" className="mb-3 block text-base font-medium text-[#07074D]">
