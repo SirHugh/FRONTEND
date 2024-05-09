@@ -10,6 +10,7 @@ const ResponsablesList = () => {
     const fetchResponsables = async () => {
       try {
         const res = await getResponsables();
+        console.log("Datos de los responsables: "+JSON.stringify(Object.fromEntries(res.data)));
         setResponsables(res.data);
       } catch (error) {
         console.error("Error al obtener los responsables:", error);
@@ -40,8 +41,8 @@ const ResponsablesList = () => {
                 className="hover:border-l-blue-500 hover:border-l-4"
               >
                 <Table.Cell>{responsable.id_responsable}</Table.Cell>
-                <Table.Cell>{responsable.id_cliente}</Table.Cell>
-                <Table.Cell>{responsable.id_alumno}</Table.Cell>
+                <Table.Cell>{responsable.id_cliente.nombre} {responsable.id_cliente.apellido}</Table.Cell>
+                <Table.Cell>{responsable.id_alumno.nombre}</Table.Cell>
                 <Table.Cell>{responsable.ocupacion}</Table.Cell>
                 <Table.Cell>{responsable.tipo_relacion}</Table.Cell>
                 <Table.Cell>

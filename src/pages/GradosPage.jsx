@@ -139,7 +139,8 @@ function GradosPage() {
                   <td style={{ width: '20%' }} className="px-4 py-2">{grado.nombre}</td>
                   <td style={{ width: '20%' }} className="px-4 py-2">{grado.nivel}</td>
                   <td style={{ width: '20%' }} className="px-4 py-2">{grado.turno}</td>
-                  <td style={{ width: '20%' }} className="px-4 py-2">
+                  <td style={{ width: '20%', position: 'relative' }} className="px-4 py-2">
+                   {!showModal && !showFormModal &&
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
@@ -148,9 +149,11 @@ function GradosPage() {
                         className="sr-only peer"
                       />
                       <div className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 ${grado.es_activo ? 'peer-checked:bg-blue-600' : 'dark:bg-gray-700 peer-checked:bg-gray-600'} dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}></div>
-                      <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{grado.es_activo ? 'Activo' : 'Inactivo'}</span>
+                      <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300" style={{ zIndex: 1 }}>{grado.es_activo ? 'Activo' : 'Inactivo'}</span>
                     </label>
+                  }
                   </td>
+
                   <td style={{ width: '10%' }} className="px-4 py-2">
                   {/* Agrega un botón para editar el grado */}
                   <button onClick={() => handleEditGrado(grado)}>Editar</button>

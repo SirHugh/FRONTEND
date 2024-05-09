@@ -52,10 +52,10 @@ function AddGradoForm({ onClose }) {
   };
 
   return (
-    <div className="fixed z-12 inset-0 overflow-y-auto">
-        <div className="flex items-center justify-center min-h-screen">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+    <div className="absolute z-12 inset-0 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
             <div className="modal-container bg-white w-full max-w-[600px] mx-auto p-8 rounded-md shadow-xl z-50">
             <h2 className="text-2xl font-bold mb-6">Crear Nuevo Grado</h2>

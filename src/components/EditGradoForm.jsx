@@ -60,7 +60,7 @@ function EditGradoForm({ grado, onClose }) {
   };
 
   return (
-    <div className="fixed z-12 inset-0 overflow-y-auto">
+    <div className="absolute z-12 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
