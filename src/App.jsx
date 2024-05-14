@@ -14,6 +14,7 @@ import GradosPage from "./pages/GradosPage";
 import BecasPage from "./pages/BecasPage";
 import CajaPage from "./pages/CajaPage";
 import UsersPage from "./pages/UsersPage";
+import ResponsablesPage from "./pages/ResponsablesPage"
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -45,6 +46,7 @@ function App() {
               <Route path="/matriculas" element={<MatriculacionPage />} />
               <Route path="/grados" element={<GradosPage />} />
               <Route path="/becas" element={<BecasPage />} />
+              <Route path="/responsables" element={<ResponsablesPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
               <Route path="/caja" element={<CajaPage />} />
