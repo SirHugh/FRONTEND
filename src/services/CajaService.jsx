@@ -1,12 +1,16 @@
 import { ApiClient } from "./ApiClient";
 
+// ---------------------
+// servicios para el manejo de productos
+// ---------------------
+
 export const getProducto = (grado, tipo) =>
   ApiClient.get(`/caja/producto/?grados=${grado}&tipo=${tipo}`);
 
 export const createProducto = (data) => ApiClient.post(`/caja/producto/`, data);
 
 export const updateProducto = (id, data) =>
-  ApiClient.put(`/caja/producto/${id}/`, data);
+  ApiClient.patch(`/caja/producto/${id}/`, data);
 
 // ---------------------
 // servicios para el manejo de aranceles
@@ -19,4 +23,7 @@ export const getArancel = (value, active, page) =>
     }&es_activo=${active}`
   );
 
-export const agregarArancel = (data) => ApiClient.post("/caja/arancel/", data);
+export const createArancel = (data) => ApiClient.post("/caja/arancel/", data);
+
+export const updateArancel = (id, data) =>
+  ApiClient.patch(`/caja/arancel/${id}/`, data);
