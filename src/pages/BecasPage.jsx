@@ -254,7 +254,7 @@ function BecasPage() {
             <div className="flex flex-row p-2 gap-3 items-center justify-between font-bold text-2xl">
               <FaUsers style={{ color: blueColor }} />
               <h1>Becados: </h1>
-              <h1 className="text-xl font-medium text-cyan-600 ">
+              <h1 className="text-xl font-medium ">
                 {becadosTitle ? becadosTitle : "Todos"}
               </h1>
             </div>
@@ -275,12 +275,12 @@ function BecasPage() {
                 required
               />
             </div>
-            <div className="flex flex-row gap-1">
+            {/*<div className="flex flex-row gap-1">
               <Button className="flex flex-wrap p-2 bg-blue-500 ">
                 <FaFileDownload className="mr-2 h-5 w-5" />
                 Descargar
               </Button>
-            </div>
+              </div>*/}
           </div>
           <div className="h-1/3">
             <Table className="w-full bg-white ">
