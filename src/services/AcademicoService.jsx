@@ -5,8 +5,6 @@ import { ApiClient } from "./ApiClient";
 export const getAlumnos = (page) =>
   ApiClient.get(`/academico/alumnos/?page=${page ? page : ""}`);
 
-export const getTotalAlumnos = () => ApiClient.get(`/academico/alumnos/`);
-
 export const searchAlumnos = (page, searchTerm) => {
   return ApiClient.get(
     `/academico/alumnos/?page=${page ? page : ""}&search=${searchTerm}`
@@ -38,6 +36,7 @@ export const updateResponsable = (id, data) =>
   ApiClient.put(`/academico/responsable/${id}/`, data);
 
 //  funciones para manejo de los grados
+
 export const getGrados = () => ApiClient.get("/academico/grados/");
 
 export const getGradoById = (id) => ApiClient.post(`/academico/grados/${id}`);
@@ -52,9 +51,9 @@ export const setGradoActive = (id, value) =>
 
 // funciones para manejo de matriculas
 
-export const getMatriculaAnioGrado = (anio, grado, page) =>
+export const getMatricula = (anio, grado, search, page) =>
   ApiClient.get(
-    `/academico/matricula/?anio_lectivo=${anio}&id_grado=${grado}&page=${
+    `/academico/matricula/?anio_lectivo=${anio}&id_grado=${grado}&search=${search}&page=${
       page ? page : ""
     }`
   );

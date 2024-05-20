@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAlumnos, searchAlumnos, getMatriculaAnioGrado, getGrados, getTotalAlumnos } from "../services/AcademicoService";
+import {
+  getAlumnos,
+  searchAlumnos,
+  getMatricula,
+  getGrados,
+} from "../services/AcademicoService";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
 import { Table } from "flowbite-react";
 import { MdSearch } from "react-icons/md";
-import { SiQuicklook } from "react-icons/si";
 import { PiStudentBold } from "react-icons/pi";
 import { BiEdit } from "react-icons/bi";
 import * as XLSX from "xlsx";
@@ -23,15 +27,15 @@ export const AlumnosList = () => {
   const handleGradoChange = async (e) => {
     const gradoId = e.target.value;
     setSelectedGrado(gradoId); // Actualizar el estado del grado seleccionado
-  
+
     if (gradoId) {
       // Si se selecciona un grado válido, filtrar los alumnos por ese grado
       try {
         const anio = new Date().getFullYear(); // Obtener el año actual
         const page = currentPage + 1; // Ajustar la página a partir de currentPage
-        const res = await getMatriculaAnioGrado(anio, gradoId, page); // Pasar la página a la función de solicitud
+        const res = await getMatricula(anio, gradoId, "", page); // Pasar la página a la función de solicitud
 
-        setAlumnos(res.data.results.map(alumno => alumno.id_alumno));
+        setAlumnos(res.data.results.map((alumno) => alumno.id_alumno));
         setTotalPages(Math.ceil(res.data.count / 10));
       } catch (error) {
         console.error("Error al filtrar los alumnos por grado:", error);
@@ -42,7 +46,7 @@ export const AlumnosList = () => {
       setCurrentPage(0);
     }
   };
-  
+
   const loadAlumnos = async () => {
     const page = Math.min(currentPage + 1, totalPages);
     const res = await getAlumnos(page);
@@ -84,18 +88,23 @@ export const AlumnosList = () => {
   const exportAlumnos = async () => {
     try {
       let allAlumnos = [];
-  
+
       // Si se ha seleccionado un grado, obtén todos los alumnos de ese grado
       if (selectedGrado) {
         const anio = new Date().getFullYear();
-        const res = await getMatriculaAnioGrado(anio, selectedGrado, currentPage+1);
-        allAlumnos = res.data.results.map(alumno => alumno.id_alumno);
+        const res = await getMatricula(
+          anio,
+          selectedGrado,
+          "",
+          currentPage + 1
+        );
+        allAlumnos = res.data.results.map((alumno) => alumno.id_alumno);
       } else {
         // Si no se ha seleccionado un grado, obtén todos los alumnos
-        const res = await getTotalAlumnos();
-        allAlumnos = res.data.results;
+        const res = await getAlumnos();
+        allAlumnos = res.data;
       }
-  
+
       const data = allAlumnos.map((alumno) => ({
         Nombre: alumno.nombre,
         Apellido: alumno.apellido,
@@ -103,7 +112,7 @@ export const AlumnosList = () => {
         "Fecha de Nacimiento": alumno.fecha_nac,
         Teléfono: alumno.telefono,
       }));
-  
+
       const worksheet = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, worksheet, "Alumnos");
@@ -112,13 +121,13 @@ export const AlumnosList = () => {
       console.error("Error al exportar los alumnos:", error);
     }
   };
-  
+
   const blueColor = "#3B82F6";
 
   return (
     <div className="w-full  mx-auto bg-white rounded-lg shadow-lg">
       <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
-        <PiStudentBold style={{color:blueColor}}/>
+        <PiStudentBold style={{ color: blueColor }} />
         <h1 className="">ALUMNOS</h1>
       </div>
       <div className="flex flex-col items-center justify-center mb-2">
@@ -153,9 +162,12 @@ export const AlumnosList = () => {
               ))}
             </select>
           </div>
-          <Button className="flex flex-wrap p-2 bg-blue-500" onClick={exportAlumnos}>
-                <FaFileDownload className="mr-2 h-5 w-5" />
-                Descargar
+          <Button
+            className="flex flex-wrap p-2 bg-blue-500"
+            onClick={exportAlumnos}
+          >
+            <FaFileDownload className="mr-2 h-5 w-5" />
+            Descargar
           </Button>
         </div>
         <div className="overflow-x-auto w-full px-10 max-w-12xl bg-white">
@@ -185,7 +197,11 @@ export const AlumnosList = () => {
                   <Table.Cell>{alumno.telefono}</Table.Cell>
                   <Table.Cell>
                     <Link to={`/alumnos/${alumno.id_alumno}`}>
-                      <BiEdit className="text-2xl" style={{color:blueColor}} title="Editar" />
+                      <BiEdit
+                        className="text-2xl"
+                        style={{ color: blueColor }}
+                        title="Editar"
+                      />
                     </Link>
                   </Table.Cell>
                 </Table.Row>

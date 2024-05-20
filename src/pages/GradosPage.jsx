@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { getGrados, getMatriculaAnioGrado, setGradoActive } from '../services/AcademicoService';
-import { HiOutlinePlus } from 'react-icons/hi';
-import AddGradoForm from '../components/AddGradoForm'; // Importa el componente modal de creación de grado
-import AlumnosListModal from '../components/AlumnosListModal';
-import EditGradoForm from '../components/EditGradoForm';
+import React, { useState, useEffect } from "react";
+import {
+  getGrados,
+  getMatricula,
+  setGradoActive,
+} from "../services/AcademicoService";
+import { HiOutlinePlus } from "react-icons/hi";
+import AddGradoForm from "../components/AddGradoForm"; // Importa el componente modal de creación de grado
+import AlumnosListModal from "../components/AlumnosListModal";
+import EditGradoForm from "../components/EditGradoForm";
 
 function GradosPage() {
   const [grados, setGrados] = useState([]);
@@ -20,9 +24,9 @@ function GradosPage() {
       const res = await getGrados();
       setLoading(false);
       if (res.status === 200) {
-        setGrados(res.data);// Almacena el id del grado seleccionado
+        setGrados(res.data); // Almacena el id del grado seleccionado
       } else {
-        console.error('Error al cargar los grados:', res.message);
+        console.error("Error al cargar los grados:", res.message);
       }
     };
     loadGrados();
@@ -31,7 +35,7 @@ function GradosPage() {
   const listAlumnos = async (id, grado) => {
     setSelectedGrado(grado); // Establecer el grado seleccionado
     setLoading(true);
-    const res = await getMatriculaAnioGrado(anio, id);
+    const res = await getMatricula(anio, id);
     setLoading(false);
     if (res.status === 200) {
       setAlumnos(res.data);
@@ -40,8 +44,6 @@ function GradosPage() {
       setAlumnos([]);
     }
   };
-  
-  
 
   const handleShowFormModal = () => {
     setShowFormModal(true);
@@ -69,10 +71,10 @@ function GradosPage() {
       if (res.status === 200) {
         setGrados(res.data);
       } else {
-        console.error('Error al cargar los grados:', res.message);
+        console.error("Error al cargar los grados:", res.message);
       }
     } catch (error) {
-      console.error('Error al activar/desactivar el grado:', error);
+      console.error("Error al activar/desactivar el grado:", error);
     }
   };
 
@@ -90,10 +92,10 @@ function GradosPage() {
       if (res.status === 200) {
         setGrados(res.data);
       } else {
-        console.error('Error al cargar los grados:', res.message);
+        console.error("Error al cargar los grados:", res.message);
       }
     } catch (error) {
-      console.error('Error al actualizar el grado:', error);
+      console.error("Error al actualizar el grado:", error);
     }
   };
 
@@ -104,19 +106,23 @@ function GradosPage() {
           <HiOutlinePlus className="text-blue-500 text-2xl" />
           <h1 className="text-2xl">Grados</h1>
         </div>
-        <button onClick={handleShowFormModal} className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none">
+        <button
+          onClick={handleShowFormModal}
+          className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none"
+        >
           Agregar Grado
         </button>
       </div>
-      {showFormModal && <AddGradoForm onClose={handleCloseFormModal} />} {/* Mostrar el modal si showModal es true */}
+      {showFormModal && <AddGradoForm onClose={handleCloseFormModal} />}{" "}
+      {/* Mostrar el modal si showModal es true */}
       <div className="overflow-x-auto">
-          {showModal && (
-            <EditGradoForm
-              grado={selectedGrado}
-              onUpdateGrado={handleUpdateGrado}
-              onClose={() => setShowModal(false)}
-            />
-          )}
+        {showModal && (
+          <EditGradoForm
+            grado={selectedGrado}
+            onUpdateGrado={handleUpdateGrado}
+            onClose={() => setShowModal(false)}
+          />
+        )}
         <table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
@@ -129,42 +135,65 @@ function GradosPage() {
             </tr>
           </thead>
           <tbody>
-              {grados.map((grado) => (
-                <tr
-                  key={grado.id_grado}
-                  className="cursor-pointer hover:bg-gray-100"
-                  onClick={() => listAlumnos(grado.id_grado, grado)}
+            {grados.map((grado) => (
+              <tr
+                key={grado.id_grado}
+                className="cursor-pointer hover:bg-gray-100"
+                onClick={() => listAlumnos(grado.id_grado, grado)}
+              >
+                <td style={{ width: "20%" }} className="px-4 py-2">
+                  {grado.grado}°
+                </td>
+                <td style={{ width: "20%" }} className="px-4 py-2">
+                  {grado.nombre}
+                </td>
+                <td style={{ width: "20%" }} className="px-4 py-2">
+                  {grado.nivel}
+                </td>
+                <td style={{ width: "20%" }} className="px-4 py-2">
+                  {grado.turno}
+                </td>
+                <td
+                  style={{ width: "20%", position: "relative" }}
+                  className="px-4 py-2"
                 >
-                  <td style={{ width: '20%' }} className="px-4 py-2">{grado.grado}°</td>
-                  <td style={{ width: '20%' }} className="px-4 py-2">{grado.nombre}</td>
-                  <td style={{ width: '20%' }} className="px-4 py-2">{grado.nivel}</td>
-                  <td style={{ width: '20%' }} className="px-4 py-2">{grado.turno}</td>
-                  <td style={{ width: '20%', position: 'relative' }} className="px-4 py-2">
-                   {!showModal && !showFormModal &&
+                  {!showModal && !showFormModal && (
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={grado.es_activo}
-                        onChange={(e) => handleToggleChange(grado.id_grado, e.target.checked)}
+                        onChange={(e) =>
+                          handleToggleChange(grado.id_grado, e.target.checked)
+                        }
                         className="sr-only peer"
                       />
-                      <div className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 ${grado.es_activo ? 'peer-checked:bg-blue-600' : 'dark:bg-gray-700 peer-checked:bg-gray-600'} dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}></div>
-                      <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300" style={{ zIndex: 1 }}>{grado.es_activo ? 'Activo' : 'Inactivo'}</span>
+                      <div
+                        className={`relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 ${
+                          grado.es_activo
+                            ? "peer-checked:bg-blue-600"
+                            : "dark:bg-gray-700 peer-checked:bg-gray-600"
+                        } dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}
+                      ></div>
+                      <span
+                        className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        style={{ zIndex: 1 }}
+                      >
+                        {grado.es_activo ? "Activo" : "Inactivo"}
+                      </span>
                     </label>
-                  }
-                  </td>
+                  )}
+                </td>
 
-                  <td style={{ width: '10%' }} className="px-4 py-2">
+                <td style={{ width: "10%" }} className="px-4 py-2">
                   {/* Agrega un botón para editar el grado */}
                   <button onClick={() => handleEditGrado(grado)}>Editar</button>
                 </td>
-                </tr>
-              ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-      <div>
-      </div>
+      <div></div>
     </div>
   );
 }
