@@ -137,7 +137,7 @@ const menuItems = [
     ),
     subItems: [
       {
-        text: "Opción 1",
+        text: "Productos",
         icon: (
           <img
             src={cashIcon}
@@ -145,7 +145,7 @@ const menuItems = [
             className="w-5 h-5 mr-2 object-contain"
           />
         ),
-        link: "/alumnos",
+        link: "/productos",
       },
       {
         text: "Opción 2",
