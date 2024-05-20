@@ -11,7 +11,7 @@ const MainPage = () => {
   const cardData = [
     //{ title: 'Usuarios', icon: userIcon },
     { title: "Alumnos", icon: studentIcon, linkTo: "/alumnos" },
-    { title: "Caja", icon: boxIcon },
+    { title: "Caja", icon: boxIcon, linkTo: "/caja" },
     { title: "Matricular Alumno", icon: academicIcon, linkTo: "/Matriculas" }, // Nueva tarjeta para la sección académica
   ];
 
