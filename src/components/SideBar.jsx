@@ -137,18 +137,18 @@ const menuItems = [
     ),
     subItems: [
       {
-        text: "Opción 1",
+        text: "Productos",
         icon: (
           <img
             src={cashIcon}
-            alt="Opción 1"
+            alt="Productos"
             className="w-5 h-5 mr-2 object-contain"
           />
         ),
-        link: "/alumnos",
+        link: "/productos",
       },
       {
-        text: "Opción 2",
+        text: "Aranceles",
         icon: (
           <img
             src={cashIcon}
@@ -156,7 +156,7 @@ const menuItems = [
             className="w-5 h-5 mr-2 object-contain"
           />
         ),
-        link: "/alumnos",
+        link: "/aranceles",
       },
       // Agrega más subelementos según sea necesario
     ],
