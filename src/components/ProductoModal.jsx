@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, TextInput, Select, Checkbox, Label } from "flowbite-react";
-import axios from 'axios';
+
+// Suponiendo que tienes una función para obtener la lista de grados
+import { getGrados } from "../services/AcademicoService";
 
 const ProductoModal = ({ producto, onSave, onClose }) => {
   const [nombre, setNombre] = useState("");
@@ -10,6 +12,8 @@ const ProductoModal = ({ producto, onSave, onClose }) => {
   const [precio, setPrecio] = useState(0);
   const [esActivo, setEsActivo] = useState(true);
   const [esMensual, setEsMensual] = useState(false);
+  const [grados, setGrados] = useState([]);
+  const [selectedGrados, setSelectedGrados] = useState([]);
 
   useEffect(() => {
     if (producto) {
@@ -20,20 +24,32 @@ const ProductoModal = ({ producto, onSave, onClose }) => {
       setPrecio(producto.precio);
       setEsActivo(producto.es_activo);
       setEsMensual(producto.es_mensual);
+      setSelectedGrados(producto.grados || []);
     }
+
+    // Cargar los grados al montar el componente
+    const fetchGrados = async () => {
+      const res = await getGrados();
+      if (res.status === 200) {
+        setGrados(res.data);
+      }
+    };
+    fetchGrados();
   }, [producto]);
 
   const handleSave = async () => {
     const updatedProducto = {
       nombre,
-      descripcion: descripcion || "", // Aseguramos que la descripción no sea null
+      descripcion: descripcion || "",
       tipo,
-      stock: stock || 0, // Aseguramos que el stock no sea null
-      precio: precio || 0, // Aseguramos que el precio no sea null
+      stock: stock || 0,
+      precio: precio || 0,
       es_activo: esActivo,
       es_mensual: esMensual,
-      grados: [] // Si se necesitan grados, inicializa como un array vacío
+      grados: selectedGrados,
     };
+
+    console.log("Datos del producto a guardar:", JSON.stringify(updatedProducto, null, 2));
 
     try {
       await onSave(updatedProducto);
@@ -44,6 +60,14 @@ const ProductoModal = ({ producto, onSave, onClose }) => {
         console.error("Request error:", error.message);
       }
     }
+  };
+
+  const handleGradosChange = (e) => {
+    const value = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedGrados(value);
   };
 
   return (
@@ -99,6 +123,21 @@ const ProductoModal = ({ producto, onSave, onClose }) => {
               value={precio}
               onChange={(e) => setPrecio(e.target.value)}
             />
+          </div>
+          <div>
+            <Label htmlFor="grados" value="Grados" />
+            <Select
+              id="grados"
+              multiple={true}
+              value={selectedGrados}
+              onChange={handleGradosChange}
+            >
+              {grados.map((grado) => (
+                <option key={grado.id_grado} value={grado.id_grado}>
+                  {grado.nombre}
+                </option>
+              ))}
+            </Select>
           </div>
           <div className="flex items-center gap-2">
             <Checkbox

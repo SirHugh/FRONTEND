@@ -37,10 +37,10 @@ const ProductosPage = () => {
       if (selectedProducto) {
         await updateProducto(selectedProducto.id_producto, producto);
       } else {
+        console.log("Datos del producto a guardar: "+JSON.stringify(producto));
         await createProducto(producto);
       }
       setShowModal(false);
-      // Recargar productos después de guardar
       const res = await getProducto(currentPage + 1, searchTerm);
       setProductos(res.data.slice(0, itemsPerPage));
     } catch (error) {
@@ -85,9 +85,12 @@ const ProductosPage = () => {
                 <Table.Cell>{producto.es_mensual ? "Sí" : "No"}</Table.Cell>
                 <Table.Cell>
                   <BiEdit
-                    className="text-2xl"
+                    className="text-2xl cursor-pointer"
                     title="Editar"
-                    onClick={() => { setSelectedProducto(producto); setShowModal(true); }}
+                    onClick={() => {
+                      setSelectedProducto(producto);
+                      setShowModal(true);
+                    }}
                   />
                 </Table.Cell>
               </Table.Row>
