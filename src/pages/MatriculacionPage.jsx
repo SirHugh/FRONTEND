@@ -21,6 +21,7 @@ const MatriculacionPage = () => {
   const [grados, setGrados] = useState([]); // Estado para almacenar los grados
   const [editMatricula, setEditMatricula] = useState(null);
   const blueColor = "#3B82F6";
+  const [reloadData, setReloadData] = useState(false); // Estado para forzar la recarga de datos
   const [filtros, setFiltros] = useState({
     search: "",
     grado: "",
@@ -30,8 +31,10 @@ const MatriculacionPage = () => {
   const [matricula, setMatricula] = useState();
 
   useEffect(() => {
+    // Función para cargar las matrículas
     const loadMatriculas = async () => {
       try {
+        // Obtener las matrículas con los filtros actuales
         const page = Math.min(currentPage + 1, totalPages);
         const res = await getMatricula(
           filtros.year,
@@ -43,22 +46,21 @@ const MatriculacionPage = () => {
         setMatriculas(res.data.results);
         const res2 = await getGrados();
         setGrados(res2.data); // Almacenar la lista de grados en el estado
-
-        console.log("matriculas:", matriculas);
-        console.log("page: ", page);
-        console.log("totalpages: ", totalPages);
       } catch (error) {
         console.log("Error al cargar las matriculas:", error.message);
       }
     };
     loadMatriculas();
-  }, [currentPage, filtros]);
+  }, [currentPage, filtros, reloadData]);
+  
 
   const openNuevaMatricula = () => {
     const url =
       "http://localhost:5174/Inscripci%C3%B3n/?auth=" + authTokens.access;
     window.open(url, "_blank");
   };
+
+
 
   //Exportar lista de alumnos
 
@@ -109,7 +111,9 @@ const MatriculacionPage = () => {
   };
 
   const handleCloseForm = () => {
+    // Cerrar el formulario de edición y forzar la recarga de datos
     setEditMatricula(null);
+    setReloadData((prev) => !prev); // Invertir el valor de reloadData
   };
 
   const handleDesmatricular = () => {};
@@ -298,7 +302,7 @@ const MatriculacionPage = () => {
       </div>
       {editMatricula && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
-          <div className="bg-white p-4 rounded shadow-lg">
+          <div className="bg-white p-12 rounded shadow-lg">
             <MatriculaForm
               matricula={editMatricula}
               onClose={handleCloseForm}

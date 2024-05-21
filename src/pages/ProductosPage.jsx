@@ -4,6 +4,8 @@ import { BiEdit } from "react-icons/bi";
 import PaginationButtons from "../components/PaginationButtons";
 import ProductoModal from "../components/ProductoModal";
 import { getProducto, createProducto, updateProducto } from "../services/CajaService";
+import { FaPlus } from "react-icons/fa";
+import { Button } from "flowbite-react";
 
 const ProductosPage = () => {
   const [productos, setProductos] = useState([]);
@@ -52,10 +54,18 @@ const ProductosPage = () => {
     <div className="w-full mx-auto bg-white rounded-lg shadow-lg p-6">
       <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
         <h1 className="">PRODUCTOS</h1>
-        <button onClick={() => { setSelectedProducto(null); setShowModal(true); }} className="ml-auto bg-blue-500 text-white px-4 py-2 rounded-lg">
-          Agregar Producto
-        </button>
       </div>
+        <div className="flex flex-row justify-end h-16 p-3 gap-3  items-center">
+          <div>
+            <Button
+                  className="flex flex-wrap bg-blue-500"
+                  onClick={() => { setSelectedProducto(null); setShowModal(true); }}
+                >
+                  <FaPlus className="mr-2 h-5 w-5" />
+                  <h1>Agregar Producto</h1>
+                </Button>
+          </div>
+        </div>
       <div className="overflow-x-auto w-full px-10 max-w-12xl bg-white">
         <Table className="divide-y">
           <Table.Head className="bg-gray-500">
