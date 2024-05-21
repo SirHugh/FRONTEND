@@ -1,21 +1,15 @@
-import { Button, Checkbox, Label, Modal, Select, Table } from "flowbite-react";
+import { Button, Checkbox, Label, Modal, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { getProducto } from "../../services/CajaService";
 import toast from "react-hot-toast";
 import MonthSelect from "../MonthSelect";
+import { CurrencyFormatter, DateFormatter, Months } from "../Constants";
 
 const Confirmacion = ({ show, onClose, matricula }) => {
   const [aranceles, setAranceles] = useState([]);
   const mesActual = new Date().getMonth() + 1;
-  const dataArancel = {
-    id_matricula: "",
-    id_producto: "",
-    fecha_vencimiento: "",
-    nro_cuota: "",
-    monto: "",
-    es_activo: true,
-  };
   const [aplicarArancel, setAplicarArancel] = useState([]);
+  const [diaVencimiento, setDiaVencimiento] = useState(10);
 
   useEffect(() => {
     const getAranceles = async () => {
@@ -36,8 +30,51 @@ const Confirmacion = ({ show, onClose, matricula }) => {
       ...aranceles[index],
       [name]: type === "checkbox" ? checked : value,
     };
-    console.log("newArray: ", aranceles);
+    console.log("Aranceles: ", aranceles);
   };
+
+  const validate = () => {
+    return true;
+  };
+
+  const generarAranceles = () => {
+    // if (!validate()) return;
+    setAplicarArancel([]);
+    const añoLectivo = matricula?.anio_lectivo;
+    aranceles.forEach((arancel) => {
+      if (arancel.aplicar) {
+        console.log("Generar", arancel);
+        const desde = Number(arancel.desde);
+        const hasta = arancel.hasta
+          ? Number(arancel.hasta)
+          : Number(arancel.desde);
+        var nro_cuota = 1;
+        for (let mes = desde; mes < hasta + 1; mes++) {
+          let fecha = new Date(añoLectivo, mes - 1, diaVencimiento);
+          let i = 1;
+          while (fecha.getDay() === 0 || fecha.getDay() === 6) {
+            fecha = new Date(añoLectivo, mes - 1, diaVencimiento + i);
+            i++;
+          }
+          const data = {
+            id_matricula: matricula.id_matricula,
+            id_producto: arancel.id_producto,
+            fecha_vencimiento: fecha,
+            nro_cuota: nro_cuota,
+            monto: arancel.precio,
+            es_activo: true,
+          };
+          console.log(data);
+          setAplicarArancel((prevFormValues) => {
+            return [...prevFormValues, data];
+          });
+          nro_cuota++;
+        }
+      }
+    });
+    console.log("Aranceles a Aplicar: ", aplicarArancel);
+  };
+
   return (
     <>
       <Modal show={show} onClose={onClose} size="4xl" popup>
@@ -76,13 +113,7 @@ const Confirmacion = ({ show, onClose, matricula }) => {
                       />
                     </Table.Cell>
                     <Table.Cell>{ar.nombre}</Table.Cell>
-                    <Table.Cell>
-                      {ar.precio.toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "PYG",
-                      })}{" "}
-                      gs.
-                    </Table.Cell>
+                    <Table.Cell>{CurrencyFormatter(ar.precio)}</Table.Cell>
                     <Table.Cell>
                       {ar.es_mensual ? "Mensual" : "Unico"}
                     </Table.Cell>
@@ -106,22 +137,43 @@ const Confirmacion = ({ show, onClose, matricula }) => {
             </Table>
           </div>
           <div className="flex justify-end">
-            <Button>Generar</Button>
+            <Button onClick={generarAranceles}>Generar</Button>
           </div>
           <div className="mb-2 p-2 block border">
             <Label htmlFor="nombre" value="Pagos a Generar" />
             <Table>
               <Table.Head>
-                <Table.HeadCell className="p-4">Aplicar</Table.HeadCell>
-                <Table.HeadCell>Nro. Cuota</Table.HeadCell>
                 <Table.HeadCell>Nombre</Table.HeadCell>
+                <Table.HeadCell>Mes</Table.HeadCell>
+                <Table.HeadCell>Nro. Cuota</Table.HeadCell>
                 <Table.HeadCell>Monto</Table.HeadCell>
                 <Table.HeadCell>Vencimiento</Table.HeadCell>
               </Table.Head>
-              <Table.Body></Table.Body>
+              <Table.Body>
+                {aplicarArancel.map((ar, index) => (
+                  <Table.Row key={index}>
+                    <Table.Cell>
+                      {aranceles.map(
+                        (a) => a.id_producto === ar.id_producto && a.nombre
+                      )}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {Months[ar.fecha_vencimiento.getMonth()].name}
+                    </Table.Cell>
+                    <Table.Cell>{ar.nro_cuota}</Table.Cell>
+                    <Table.Cell>{CurrencyFormatter(ar.monto)}</Table.Cell>
+                    <Table.Cell>
+                      {DateFormatter(ar.fecha_vencimiento)}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
             </Table>
           </div>
         </Modal.Body>
+        <Modal.Footer className="flex justify-end">
+          <Button>Confirmar Matricula</Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

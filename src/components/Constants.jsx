@@ -12,3 +12,20 @@ export const Months = [
   { id: 11, name: "NOVIEMBRE" },
   { id: 12, name: "DICIEMBRE" },
 ];
+
+export const getMonthName= (date)=> {
+  return Months(date.getMonth}
+
+export const DateFormatter = (date) =>
+  new Intl.DateTimeFormat("es-ES", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date);
+
+export const CurrencyFormatter = (value) =>
+  value.toLocaleString("es-ES", {
+    style: "currency",
+    currency: "PYG",
+  });
