@@ -14,7 +14,8 @@ export const Months = [
 ];
 
 export const getMonthName= (date)=> {
-  return Months(date.getMonth}
+  return Months(date.getMonth)
+}
 
 export const DateFormatter = (date) =>
   new Intl.DateTimeFormat("es-ES", {
