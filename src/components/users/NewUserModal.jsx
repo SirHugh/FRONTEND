@@ -118,7 +118,7 @@ const NewUserModal = ({
         <Modal.Header>
           <div className="flex flex-row items-center gap-3">
             <FaUserPlus />
-            Nuevo Usuario
+            Usuario
           </div>
         </Modal.Header>
         <Modal.Body>
@@ -131,6 +131,19 @@ const NewUserModal = ({
                 type="text"
                 name="nombre"
                 value={user.nombre}
+                onChange={handleChange}
+                required
+                className="w-4/5"
+              />
+            </div>
+            <div className="flex flex-row gap-4 items-center">
+              <Label className="w-1/5" htmlFor="apellido">
+                Apellido:
+              </Label>
+              <TextInput
+                type="text"
+                name="apellido"
+                value={user.apellido}
                 onChange={handleChange}
                 required
                 className="w-4/5"
@@ -151,7 +164,7 @@ const NewUserModal = ({
             </div>
             <div className="flex flex-row gap-4 items-center">
               <Label className="w-1/5" htmlFor="password">
-                Clase de acceso:
+                Clave de acceso:
               </Label>
               <TextInput
                 type="password"
@@ -232,7 +245,7 @@ const NewUserModal = ({
               />
             </div> */}
             <div className="flex justify-end">
-              <Button type="submit">Add User</Button>
+              <Button type="submit">Guardar</Button>
             </div>
           </form>
         </Modal.Body>

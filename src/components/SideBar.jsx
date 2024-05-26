@@ -46,17 +46,6 @@ const menuItems = [
         ),
         link: "/usuarios",
       },
-      {
-        text: "Configuración",
-        icon: (
-          <img
-            src={lockIcon}
-            alt="Opción 2"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/alumnos",
-      },
       // Agrega más subelementos según sea necesario
     ],
   },
