@@ -5,9 +5,10 @@ import backgroundImage from "../assets/loginBackground.jpg"; // Importa tu image
 import logo from "../assets/logo.png"; // Importa tu logo aquí
 
 const LoginPage = () => {
-  const { loginUser } = useContext(AuthContext);
+  const { loginUser, isAuthenticated } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { user, logoutUser } = useAuth();
 
   return (
     <div className="min-h-screen relative flex items-center justify-center">
