@@ -14,7 +14,7 @@ import useAuth from "../hooks/useAuth";
 const menuItems = [
   {
     text: "Inicio",
-    allowedGroup: "ADMIN",
+    allowedGroup: null, // Esto hace que sea visible para cualquier grupo
     icon: (
       <img
         src={homeIcon}
@@ -205,9 +205,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <ul>
         {menuItems.map((item, index) => (
           <>
-            {user?.groups?.find((group) =>
-              item.allowedGroup?.includes(group)
-            ) && (
+            {(!item.allowedGroup || user?.groups?.find((group) => item.allowedGroup?.includes(group))) && (
               <li
                 className="mb-12 pl-4"
                 key={index}
