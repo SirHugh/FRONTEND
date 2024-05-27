@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getMatricula, getGrados } from "../services/AcademicoService";
+import {
+  getMatricula,
+  getGrados,
+  getPeriodo,
+  setMatriculaActive,
+} from "../services/AcademicoService";
 import { HiBars3, HiOutlineNewspaper } from "react-icons/hi2";
 import { MdQrCodeScanner, MdSearch } from "react-icons/md";
 import PaginationButtons from "../components/PaginationButtons";
@@ -10,8 +15,14 @@ import { FaFileDownload } from "react-icons/fa";
 import { Button, Table } from "flowbite-react";
 import MatriculaForm from "../components/MatriculaForm";
 import Confirmacion from "../components/matriculacion/Confirmacion";
+import toast, { Toaster } from "react-hot-toast";
+import DesmatricularModal from "../components/matriculacion/Desmatricular";
+import { DateFormatter } from "../components/Constants";
+import moment from "moment";
 
 const MatriculacionPage = () => {
+  const [periodoActual, setPeriodoActual] = useState();
+  const [periodos, setPeriodos] = useState();
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
   const [matriculas, setMatriculas] = useState([]);
@@ -29,6 +40,23 @@ const MatriculacionPage = () => {
   });
   const [showConfirmacion, setShowConfirmacion] = useState(false);
   const [matricula, setMatricula] = useState();
+  const [showDesmatricularModal, setShowDesmatricularModal] = useState(false);
+
+  useEffect(() => {
+    const singleLoad = async () => {
+      try {
+        const res = await getGrados();
+        setGrados(res.data); // Almacenar la lista de grados en el estado
+        const res2 = await getPeriodo();
+        setPeriodos(res2.data);
+        const fs = res2.data.filter((periodo) => periodo.es_activo == true);
+        setPeriodoActual(fs[0]);
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    singleLoad();
+  }, []);
 
   useEffect(() => {
     // Función para cargar las matrículas
@@ -44,23 +72,18 @@ const MatriculacionPage = () => {
         );
         setTotalPages(Math.ceil(res.data.count / 10));
         setMatriculas(res.data.results);
-        const res2 = await getGrados();
-        setGrados(res2.data); // Almacenar la lista de grados en el estado
       } catch (error) {
         console.log("Error al cargar las matriculas:", error.message);
       }
     };
     loadMatriculas();
   }, [currentPage, filtros, reloadData]);
-  
 
   const openNuevaMatricula = () => {
     const url =
       "http://localhost:5174/Inscripci%C3%B3n/?auth=" + authTokens.access;
     window.open(url, "_blank");
   };
-
-
 
   //Exportar lista de alumnos
 
@@ -116,19 +139,73 @@ const MatriculacionPage = () => {
     setReloadData((prev) => !prev); // Invertir el valor de reloadData
   };
 
-  const handleDesmatricular = () => {};
+  const handleDesmatricular = (m) => {
+    console.log("desmatricular");
+    setMatricula(m);
+    setShowDesmatricularModal(true);
+  };
+
+  const desmatricular = () => {
+    const hoy = moment(new Date()).format("YYYY-MM-DD");
+    console.log("hoy", hoy);
+    try {
+      const res = setMatriculaActive(matricula.id_matricula, false, hoy);
+      toast.promise(
+        res,
+        {
+          loading: "Guardando",
+          success: "Alumno desmatriculado",
+          error: "Error al desmatricular al alumno",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+          success: {
+            duration: 5000,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error.message);
+    }
+    setShowDesmatricularModal(false);
+    setReloadData(!reloadData);
+  };
 
   const handleConfirmar = (m) => {
     setMatricula(m);
     setShowConfirmacion(true);
   };
 
+  const onCloseConfirmar = () => {
+    setMatricula([]);
+    setShowConfirmacion(false);
+    setReloadData(!reloadData);
+  };
+
   return (
     <>
+      <Toaster position="top-right" />
+      <DesmatricularModal
+        show={showDesmatricularModal}
+        onClose={() => setShowDesmatricularModal(false)}
+        title={"Desmatricular"}
+        information={
+          "Alumno: " +
+          matricula?.id_alumno?.nombre +
+          " " +
+          matricula?.id_alumno?.apellido
+        }
+        data={"Fecha de desmatriculacion: " + DateFormatter(new Date())}
+        message={"Confirmar la desmatriculacion."}
+        action={() => desmatricular()}
+      />
       <QrCode show={qr_codeVisible} onClose={() => setQr_codeVisible(false)} />
       <Confirmacion
         show={showConfirmacion}
-        onClose={() => setShowConfirmacion(false)}
+        onClose={onCloseConfirmar}
+        periodoActual={periodoActual}
         matricula={matricula}
       />
       <div className="container mx-auto p-4">
@@ -266,7 +343,10 @@ const MatriculacionPage = () => {
                   </Table.Cell>
                   <Table.Cell>
                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                      {matricula.es_activo ? "Activo" : "Inactivo"}
+                      {matricula.es_activo &&
+                      matricula.anio_lectivo === periodoActual?.periodo
+                        ? "Activo"
+                        : "Inactivo"}
                     </span>
                   </Table.Cell>
                   <Table.Cell>
@@ -278,16 +358,18 @@ const MatriculacionPage = () => {
                     </button>
                   </Table.Cell>
                   <Table.Cell>
-                    <Button
-                      color={matricula.es_activo ? "failure" : "warning"}
-                      onClick={
-                        matricula.es_activo
-                          ? () => handleDesmatricular(matricula)
-                          : () => handleConfirmar(matricula)
-                      }
-                    >
-                      {matricula.es_activo ? "Desmatricular" : "Confirmar"}
-                    </Button>
+                    {!matricula.fecha_desmatriculacion && (
+                      <Button
+                        color={matricula.es_activo ? "failure" : "warning"}
+                        onClick={
+                          matricula.es_activo
+                            ? () => handleDesmatricular(matricula)
+                            : () => handleConfirmar(matricula)
+                        }
+                      >
+                        {matricula.es_activo ? "Desmatricular" : "Confirmar"}
+                      </Button>
+                    )}
                   </Table.Cell>
                 </Table.Row>
               ))}

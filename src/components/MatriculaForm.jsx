@@ -100,7 +100,9 @@ const MatriculaForm = ({ matricula, onClose }) => {
         />
       </div>
       <div>
-        <label htmlFor="fecha_desmatriculacion">Fecha de Desmatriculación:</label>
+        <label htmlFor="fecha_desmatriculacion">
+          Fecha de Desmatriculación:
+        </label>
         <TextInput
           type="date"
           value={formData.fecha_desmatriculacion || ""}
@@ -125,10 +127,17 @@ const MatriculaForm = ({ matricula, onClose }) => {
         />
       </div>
       <div className="flex justify-end">
-        <Button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+        <Button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
           Guardar
         </Button>
-        <Button type="button" className="ml-2 bg-gray-300 px-4 py-2 rounded" onClick={onClose}>
+        <Button
+          type="button"
+          className="ml-2 bg-gray-300 px-4 py-2 rounded"
+          onClick={onClose}
+        >
           Cancelar
         </Button>
       </div>

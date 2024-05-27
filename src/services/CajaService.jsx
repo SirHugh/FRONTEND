@@ -5,7 +5,9 @@ import { ApiClient } from "./ApiClient";
 // ---------------------
 
 export const getProducto = (grado, tipo) =>
-  ApiClient.get(`/caja/producto/?grados=${grado}&tipo=${tipo}`);
+  ApiClient.get(
+    `/caja/producto/?tipo=${tipo}${grado ? "&grados=" + grado : ""}`
+  );
 
 export const createProducto = (data) => ApiClient.post(`/caja/producto/`, data);
 

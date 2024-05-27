@@ -1,22 +1,39 @@
 import { Button, Checkbox, Label, Modal, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { getProducto } from "../../services/CajaService";
-import toast from "react-hot-toast";
+import { createArancel, getProducto } from "../../services/CajaService";
+import toast, { Toaster } from "react-hot-toast";
 import MonthSelect from "../MonthSelect";
 import { CurrencyFormatter, DateFormatter, Months } from "../Constants";
+import { setMatriculaActive } from "../../services/AcademicoService";
+import moment from "moment";
 
-const Confirmacion = ({ show, onClose, matricula }) => {
+const Confirmacion = ({ show, onClose, periodoActual, matricula }) => {
   const [aranceles, setAranceles] = useState([]);
-  const mesActual = new Date().getMonth() + 1;
   const [aplicarArancel, setAplicarArancel] = useState([]);
-  const [diaVencimiento, setDiaVencimiento] = useState(10);
 
   useEffect(() => {
     const getAranceles = async () => {
       try {
-        const res = await getProducto(matricula?.id_grado.id_grado, "AR");
-        setAranceles(res.data);
-        console.log(res.data);
+        const res = await getProducto(matricula?.id_grado?.id_grado, "AR");
+
+        const fecha_inicio_periodo = new Date(periodoActual?.fecha_inicio);
+        const fecha_fin_periodo = new Date(periodoActual?.fecha_fin);
+        const fecha_inscripcion = new Date(matricula?.fecha_inscripcion);
+        const auxiliary = [];
+
+        res.data.forEach((item, index) => {
+          const desde = item.es_mensual
+            ? item.es_mensual
+            : fecha_inicio_periodo > fecha_inscripcion
+            ? fecha_inicio_periodo.getMonth()
+            : fecha_inscripcion.getMonth();
+
+          const hasta = !item.es_mensual ? fecha_fin_periodo.getMonth() : false;
+          item.desde = desde;
+          hasta && (item.hasta = hasta);
+          auxiliary.push(item);
+        });
+        setAranceles(auxiliary);
       } catch (error) {
         toast.error(error.message);
       }
@@ -30,41 +47,41 @@ const Confirmacion = ({ show, onClose, matricula }) => {
       ...aranceles[index],
       [name]: type === "checkbox" ? checked : value,
     };
-    console.log("Aranceles: ", aranceles);
-  };
-
-  const validate = () => {
-    return true;
+    generarAranceles();
   };
 
   const generarAranceles = () => {
-    // if (!validate()) return;
     setAplicarArancel([]);
-    const añoLectivo = matricula?.anio_lectivo;
+    const periodo = periodoActual.periodo;
     aranceles.forEach((arancel) => {
       if (arancel.aplicar) {
-        console.log("Generar", arancel);
-        const desde = Number(arancel.desde);
+        const desde = arancel.desde;
         const hasta = arancel.hasta
           ? Number(arancel.hasta)
           : Number(arancel.desde);
         var nro_cuota = 1;
-        for (let mes = desde; mes < hasta + 1; mes++) {
-          let fecha = new Date(añoLectivo, mes - 1, diaVencimiento);
+        for (let mes = desde; mes <= hasta; mes++) {
+          let fecha = new Date(periodo, mes, periodoActual?.vencimiento_pagos);
           let i = 1;
           while (fecha.getDay() === 0 || fecha.getDay() === 6) {
-            fecha = new Date(añoLectivo, mes - 1, diaVencimiento + i);
+            fecha = new Date(
+              periodo,
+              mes,
+              periodoActual?.vencimiento_pagos + i
+            );
             i++;
           }
+          const fechaMatriculacion = new Date(matricula.fecha_inscripcion);
+          const auxFecha =
+            fecha > fechaMatriculacion ? fecha : fechaMatriculacion;
           const data = {
             id_matricula: matricula.id_matricula,
             id_producto: arancel.id_producto,
-            fecha_vencimiento: fecha,
+            fecha_vencimiento: moment(auxFecha).format("YYYY-MM-DD"),
             nro_cuota: nro_cuota,
             monto: arancel.precio,
             es_activo: true,
           };
-          console.log(data);
           setAplicarArancel((prevFormValues) => {
             return [...prevFormValues, data];
           });
@@ -75,9 +92,59 @@ const Confirmacion = ({ show, onClose, matricula }) => {
     console.log("Aranceles a Aplicar: ", aplicarArancel);
   };
 
+  const handleSubmit = () => {
+    try {
+      const res_1 = setMatriculaActive(matricula.id_matricula, true);
+      toast.promise(
+        res_1,
+        {
+          loading: "Guardando",
+          success: "Alumno confirmado con exito",
+          error: "Error al confirmar al alumno",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+          success: {
+            duration: 5000,
+          },
+        }
+      );
+      if (aplicarArancel.length > 0) {
+        const res_2 = createArancel(aplicarArancel);
+        toast.promise(
+          res_2,
+          {
+            loading: "Guardando",
+            success: " Aranceles aplicados con exito",
+            error: "Error al aplicar los aranceles",
+          },
+          {
+            style: {
+              minWidth: "250px",
+            },
+            success: {
+              duration: 5000,
+            },
+          }
+        );
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setAplicarArancel([]);
+    setAranceles([]);
+    onClose();
+  };
+
   return (
     <>
-      <Modal show={show} onClose={onClose} size="4xl" popup>
+      <Modal show={show} onClose={closeModal} size="4xl" popup>
         <Modal.Header>Confirmacion de Matriculación</Modal.Header>
         <Modal.Body className="flex flex-col gap-3">
           <div className="border p-2">
@@ -86,10 +153,12 @@ const Confirmacion = ({ show, onClose, matricula }) => {
             </div>
             <div className="flex flex-row gap-3">
               <p>
-                {matricula?.id_alumno.nombre} {matricula?.id_alumno.apellido}
+                {matricula?.id_alumno?.nombre} {matricula?.id_alumno?.apellido}
               </p>
-              <p>Cedula: {matricula?.id_alumno.cedula}</p>
-              <p>Grado/Curso: {matricula?.id_grado.grado}</p>
+              <p>Cedula: {matricula?.id_alumno?.cedula}</p>
+              <p>Grado/Curso: {matricula?.id_grado?.grado}</p>
+
+              <p>Periodo: {matricula?.anio_lectivo}</p>
             </div>
           </div>
           <div className="mb-2 p-2 block border">
@@ -101,7 +170,7 @@ const Confirmacion = ({ show, onClose, matricula }) => {
                 <Table.HeadCell>Precio</Table.HeadCell>
                 <Table.HeadCell>Pago</Table.HeadCell>
                 <Table.HeadCell>Periodo</Table.HeadCell>
-                <Table.HeadCell>a</Table.HeadCell>
+                <Table.HeadCell></Table.HeadCell>
               </Table.Head>
               <Table.Body className="divade-y">
                 {aranceles?.map((ar, index) => (
@@ -115,19 +184,23 @@ const Confirmacion = ({ show, onClose, matricula }) => {
                     <Table.Cell>{ar.nombre}</Table.Cell>
                     <Table.Cell>{CurrencyFormatter(ar.precio)}</Table.Cell>
                     <Table.Cell>
-                      {ar.es_mensual ? "Mensual" : "Unico"}
+                      {ar.es_mensual ? "Unico" : "Mensual"}
                     </Table.Cell>
                     <Table.Cell className="p-1">
                       <MonthSelect
+                        value={ar.desde}
                         name={"desde"}
                         onChange={(e) => handleChange(index, e)}
+                        disabled={true}
                       />
                     </Table.Cell>
                     <Table.Cell className="p-1">
-                      {ar.es_mensual && (
+                      {!ar.es_mensual && (
                         <MonthSelect
+                          value={ar.hasta}
                           name={"hasta"}
                           onChange={(e) => handleChange(index, e)}
+                          disabled={true}
                         />
                       )}
                     </Table.Cell>
@@ -135,9 +208,6 @@ const Confirmacion = ({ show, onClose, matricula }) => {
                 ))}
               </Table.Body>
             </Table>
-          </div>
-          <div className="flex justify-end">
-            <Button onClick={generarAranceles}>Generar</Button>
           </div>
           <div className="mb-2 p-2 block border">
             <Label htmlFor="nombre" value="Pagos a Generar" />
@@ -158,12 +228,12 @@ const Confirmacion = ({ show, onClose, matricula }) => {
                       )}
                     </Table.Cell>
                     <Table.Cell>
-                      {Months[ar.fecha_vencimiento.getMonth()].name}
+                      {Months[new Date(ar.fecha_vencimiento).getMonth()].name}
                     </Table.Cell>
                     <Table.Cell>{ar.nro_cuota}</Table.Cell>
                     <Table.Cell>{CurrencyFormatter(ar.monto)}</Table.Cell>
                     <Table.Cell>
-                      {DateFormatter(ar.fecha_vencimiento)}
+                      {DateFormatter(new Date(ar.fecha_vencimiento))}
                     </Table.Cell>
                   </Table.Row>
                 ))}
@@ -172,7 +242,21 @@ const Confirmacion = ({ show, onClose, matricula }) => {
           </div>
         </Modal.Body>
         <Modal.Footer className="flex justify-end">
-          <Button>Confirmar Matricula</Button>
+          <Button
+            onClick={(e) => {
+              if (
+                window.confirm(
+                  "¿Desea confirmar los aranceles y al alumno en el periodo actual?"
+                )
+              ) {
+                handleSubmit();
+              } else {
+                closeModal();
+              }
+            }}
+          >
+            Confirmar Matricula
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

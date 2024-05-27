@@ -49,7 +49,9 @@ export const updateGrado = (id, data) =>
 export const setGradoActive = (id, value) =>
   ApiClient.patch(`/academico/grados/${id}/`, { es_activo: value });
 
-// funciones para manejo de matriculas
+// -----------------------------------------
+// ---funciones para manejo de matriculas---
+// -----------------------------------------
 
 export const getMatricula = (anio, grado, search, page) =>
   ApiClient.get(
@@ -68,13 +70,15 @@ export const searchMatricula = (value, data, page) =>
 export const setMatriculaActive = (id, value, date) =>
   ApiClient.patch(`/academico/matricula/${id}/`, {
     es_activo: value,
-    fecha_desmatriculacion: date ? date : null,
+    fecha_desmatriculacion: date,
   });
 
 export const updateMatricula = (id, data) =>
   ApiClient.put(`/academico/matricula/${id}/`, data);
 
-// funciones para manejo de beca
+// ------------------------------------
+// ---funciones para manejo de becas---
+// ------------------------------------
 
 export const getBecas = () => ApiClient.get(`/academico/beca/`);
 
@@ -86,7 +90,9 @@ export const createBeca = (data) => ApiClient.post(`/academico/beca/`, data);
 export const setBecaActive = (id, value) =>
   ApiClient.patch(`/academico/beca/${id}/`, { es_activo: value });
 
-//funciones para manejo de becados
+// --------------------------------------
+// ---funciones para manejo de becados---
+// --------------------------------------
 
 export const getBecados = (page) =>
   ApiClient.get(`/academico/becado/?page=${page}`);
@@ -110,16 +116,15 @@ export const setActiveBecado = (id, value, date) =>
     fecha_fin: date,
   });
 
-// path('grados/', views.grado_list),
-// path('grados/<int:pk>/', views. grado_detail),
-// path('matricula/', views.matricula_list),
-// path('matricula/<int:pk>/', views.matricula_detail),
-// path('beca/', views.beca_list),
-// path('beca/<int:pk>/', views.beca_detail),
-// path('becado/', becadoListCreateView.as_view(), name='becado-list-create'),
-// path('becado/<int:pk>/', BecadoDetailView.as_view(), name='becado-detalle'),
-// path('becado/beca/<int:pk>/', views.becado_detail),
-// path('cliente/', ClienteListCreateView.as_view()),
-// path('cliente/<int:pk>/', ClienteDetailView.as_view()),
-// path('responsable/', views.responsable_list),
-// path('responsable/<int:pk>/', views.responsable_detail),
+// ------------------------------------------------
+// ---funciones para manejo de periodo academico---
+// ------------------------------------------------
+
+export const createPeriodo = (data) =>
+  ApiClient.post(`/academico/periodo/`, data);
+
+export const updatePeriodo = (id, data) =>
+  ApiClient.patch(`/academico/periodo/${id}/`, data);
+
+export const getPeriodo = (value) =>
+  ApiClient.get(`/academico/periodo/${value ? "?es_activo=" + value : ""}`);
