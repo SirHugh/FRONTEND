@@ -5,14 +5,17 @@ import userIcon from "../assets/icons/UsuariosIcon.svg";
 import studentIcon from "../assets/icons/AlumnoIcon.svg";
 import boxIcon from "../assets/icons/CajaIcon.svg";
 import academicIcon from "../assets/icons/academicoIcon.svg"; // Importa el icono para la sección académica
+import useAuth from "../hooks/useAuth"; // Importa tu hook de autenticación
 
 const MainPage = () => {
+  const { user } = useAuth(); // Obtiene la información del usuario
+  const userGroups = user?.groups || [];
+
   // Datos para las tarjetas
   const cardData = [
-    //{ title: 'Usuarios', icon: userIcon },
-    { title: "Alumnos", icon: studentIcon, linkTo: "/alumnos" },
-    { title: "Caja", icon: boxIcon, linkTo: "/caja" },
-    { title: "Matricular Alumno", icon: academicIcon, linkTo: "/Matriculas" }, // Nueva tarjeta para la sección académica
+    { title: "Alumnos", icon: studentIcon, linkTo: "/alumnos", allowedGroup: "ACADEMICO" },
+    { title: "Caja", icon: boxIcon, linkTo: "/caja", allowedGroup: "CAJA" },
+    { title: "Matricular Alumno", icon: academicIcon, linkTo: "/Matriculas", allowedGroup: "ACADEMICO" }, // Nueva tarjeta para la sección académica
   ];
 
   return (
@@ -26,12 +29,14 @@ const MainPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Renderizar tarjetas */}
             {cardData.map((card, index) => (
-              <Card
-                key={index}
-                icon={card.icon}
-                title={card.title}
-                linkTo={card.linkTo}
-              />
+              userGroups.includes(card.allowedGroup) && (
+                <Card
+                  key={index}
+                  icon={card.icon}
+                  title={card.title}
+                  linkTo={card.linkTo}
+                />
+              )
             ))}
           </div>
         </div>

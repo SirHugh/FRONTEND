@@ -1,12 +1,14 @@
 import React, { useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
+import useAuth from "../hooks/useAuth";
 import backgroundImage from "../assets/loginBackground.jpg"; // Importa tu imagen de fondo aquí
 import logo from "../assets/logo.png"; // Importa tu logo aquí
 
 const LoginPage = () => {
-  const { loginUser } = useContext(AuthContext);
+  const { loginUser, isAuthenticated } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { user, logoutUser } = useAuth();
 
   return (
     <div className="min-h-screen relative flex items-center justify-center">
@@ -20,6 +22,7 @@ const LoginPage = () => {
       <div className="absolute inset-0 bg-blue-500 opacity-70 z-0"></div>
 
       {/* Contenedor del formulario */}
+      { !user && (
       <div className="relative z-10 max-w-md w-full">
         {/* Formulario */}
         <div className="bg-white bg-opacity-100 px-8 py-6 rounded-md shadow-lg">
@@ -61,7 +64,9 @@ const LoginPage = () => {
             </div>
           </form>
         </div>
+        
       </div>
+      )}
 
       {/* Logo y texto */}
       <div className="absolute top-0 left-0 ml-6 mt-6 text-white font-bold italic flex items-center font-serif z-10">
