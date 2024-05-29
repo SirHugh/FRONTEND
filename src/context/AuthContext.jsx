@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { getAuthToken, getRefreshToken } from "../services/AuthService";
 import { ApiClient } from "../services/ApiClient";
+import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     }).catch(function (error) {
       if (error.response.status === 401) {
         // La respuesta fue hecha y el servidor respondió con un código de estado 401
-        alert("No se encuentra usuario activo con estas credenciales");
+        toast.error("No se encuentra usuario activo con estas credenciales");
       }
     });
 
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }) => {
         "Bearer " + res.data.access;
       history("/");
     } else {
-      alert("Opps, Algo ha salido Mal!");
+      toast.error("Opps, Algo ha salido Mal!");
     }
   };
 

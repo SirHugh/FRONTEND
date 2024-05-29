@@ -18,14 +18,24 @@ export const updateProducto = (id, data) =>
 // servicios para el manejo de aranceles
 // ---------------------
 
-export const getArancel = (value, active, page) =>
+export const getArancel = (active, id_matricula, month, page, search) =>
   ApiClient.get(
-    `/caja/arancel/?page=&${page ? page : ""}search=${
-      value ? value : ""
-    }&es_activo=${active}`
+    `/caja/arancel/?es_activo=${active}${page ? "&page=" + page : ""}${
+      search ? "&search=" + search : ""
+    }${id_matricula ? "&id_matricula=" + id_matricula : ""}${
+      month ? "&month=" + month : ""
+    }`
   );
 
 export const createArancel = (data) => ApiClient.post("/caja/arancel/", data);
 
 export const updateArancel = (id, data) =>
   ApiClient.patch(`/caja/arancel/${id}/`, data);
+
+// ---------------------
+// servicios para el manejo de clientes
+// ---------------------
+
+export const getCliente = (cedula) => {
+  return ApiClient.get(`/academico/cliente/?cedula=${cedula}`);
+};

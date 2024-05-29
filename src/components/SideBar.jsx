@@ -147,9 +147,56 @@ const menuItems = [
         ),
         link: "/aranceles",
       },
+      {
+        text: "Factura",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Factura"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/factura",
+      },
       // Agrega más subelementos según sea necesario
     ],
   },
+  // {
+  //   text: "Facturación",
+  //   allowedGroup: "CAJA",
+  //   icon: (
+  //     <img
+  //       src={lockIcon}
+  //       alt="Factura"
+  //       className="w-5 h-5 mr-2 object-contain"
+  //     />
+  //   ),
+  //   subItems: [
+  //     {
+  //       text: "Registrar",
+  //       icon: (
+  //         <img
+  //           src={lockIcon}
+  //           alt="Opción 1"
+  //           className="w-5 h-5 mr-2 object-contain"
+  //         />
+  //       ),
+  //       link: "/NuevaFactura",
+  //     },
+  //     {
+  //       text: "Listar",
+  //       icon: (
+  //         <img
+  //           src={lockIcon}
+  //           alt="Opción 1"
+  //           className="w-5 h-5 mr-2 object-contain"
+  //         />
+  //       ),
+  //       link: "/NuevaFactura",
+  //     },
+  //     // Agrega más subelementos según sea necesario
+  //   ],
+  // },
   // Agrega más elementos de menú según sea necesario
 ];
 
@@ -205,7 +252,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <ul>
         {menuItems.map((item, index) => (
           <>
-            {(!item.allowedGroup || user?.groups?.find((group) => item.allowedGroup?.includes(group))) && (
+            {(!item.allowedGroup ||
+              user?.groups?.find((group) =>
+                item.allowedGroup?.includes(group)
+              )) && (
               <li
                 className="mb-12 pl-4"
                 key={index}

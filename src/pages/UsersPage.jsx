@@ -69,7 +69,6 @@ function UsersPage() {
 
   return (
     <>
-      <Toaster />
       <NewUserModal
         show={showNewUserModal}
         user={user}

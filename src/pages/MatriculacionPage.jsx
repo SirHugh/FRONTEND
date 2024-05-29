@@ -186,7 +186,6 @@ const MatriculacionPage = () => {
 
   return (
     <>
-      <Toaster position="top-right" />
       <DesmatricularModal
         show={showDesmatricularModal}
         onClose={() => setShowDesmatricularModal(false)}

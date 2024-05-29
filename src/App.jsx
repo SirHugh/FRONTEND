@@ -14,9 +14,11 @@ import GradosPage from "./pages/GradosPage";
 import BecasPage from "./pages/BecasPage";
 import CajaPage from "./pages/CajaPage";
 import UsersPage from "./pages/UsersPage";
-import ResponsablesPage from "./pages/ResponsablesPage"
+import ResponsablesPage from "./pages/ResponsablesPage";
 import ProductosPage from "./pages/ProductosPage";
 import ArancelesPage from "./pages/ArancelesPage";
+import { Toaster } from "react-hot-toast";
+import FacturaPage from "./pages/FacturaPage";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -34,13 +36,14 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-right"></Toaster>
       <div className="flex flex-row h-full">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <div className="flex flex-col w-screen">
           {/* Pasa la función toggleSidebar al componente Header */}
           <Header toggleSidebar={toggleSidebar} />
           <Routes>
-          <Route path="/" element={<MainPage />} exact />
+            <Route path="/" element={<MainPage />} exact />
             <Route path="/login" element={<LoginPage />} />
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ACADEMICO} />}>
               <Route path="/alumnos" element={<AlumnosPage />} exact />
@@ -54,6 +57,7 @@ function App() {
               <Route path="/caja" element={<CajaPage />} />
               <Route path="/productos" element={<ProductosPage />} />
               <Route path="/aranceles" element={<ArancelesPage />} />
+              <Route path="/factura" element={<FacturaPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
               <Route path="/usuarios" element={<UsersPage />} />

@@ -129,7 +129,6 @@ function BecasPage() {
 
   return (
     <>
-      <Toaster />
       <div>
         <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
           <TbCertificate style={{ color: blueColor }} />

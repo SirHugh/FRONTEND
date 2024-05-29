@@ -113,7 +113,6 @@ const NewUserModal = ({
 
   return (
     <>
-      <Toaster />
       <Modal show={show} onClose={OnClose} size="lg">
         <Modal.Header>
           <div className="flex flex-row items-center gap-3">
