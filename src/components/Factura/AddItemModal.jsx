@@ -1,15 +1,16 @@
-import { Button, Modal, Table } from "flowbite-react";
+import { Button, Checkbox, Modal, Table } from "flowbite-react";
 import { useState } from "react";
 import { getMatricula } from "../../services/AcademicoService";
 import toast from "react-hot-toast";
 import AsyncSelect from "react-select/async";
 import { getArancel } from "../../services/CajaService";
+import { CurrencyFormatter, DateFormatter } from "../Constants";
 
 const AddItemModal = ({ show, onClose, action, setData }) => {
-  const [checked, setChecked] = useState(false);
   const [items, setItems] = useState([]);
   const [inputValue, setValue] = useState("");
   const [selectedValue, setSelecteValue] = useState(null);
+  const [itemsApply, setItemsApply] = useState([]);
 
   const loadOptions = async () => {
     if (inputValue < 2) return;
@@ -39,12 +40,29 @@ const AddItemModal = ({ show, onClose, action, setData }) => {
     }
   };
 
+  const handleCheck = (e, index) => {
+    const { checked } = e.target;
+    if (!checked) {
+      setItemsApply((prevValues) =>
+        prevValues.filter((s) => s !== items[index])
+      );
+      console.log(itemsApply);
+      return;
+    }
+    setItemsApply((prevValues) => [...prevValues, items[index]]);
+    console.log(itemsApply);
+  };
+
   const close = () => {
-    setChecked(false);
+    setItems([]);
+    setItemsApply([]);
+    setValue("");
+    setSelecteValue(null);
     onClose();
   };
 
   const handleAction = () => {
+    setData((prevValues) => [...prevValues, ...itemsApply]);
     close();
     action();
   };
@@ -91,17 +109,28 @@ const AddItemModal = ({ show, onClose, action, setData }) => {
                 <Table.HeadCell>nro. cuota</Table.HeadCell>
                 <Table.HeadCell>Vencimiento</Table.HeadCell>
                 <Table.HeadCell>monto</Table.HeadCell>
-                <Table.HeadCell></Table.HeadCell>
                 <Table.HeadCell>Agregar</Table.HeadCell>
               </Table.Head>
               <Table.Body>
-                {items.map((item) => (
-                  <Table.Row key={item.id_arancel}>
+                {items.map((item, index) => (
+                  <Table.Row
+                    className="hover:bg-slate-100"
+                    key={item.id_arancel}
+                  >
                     <Table.Cell>{item.nombre}</Table.Cell>
                     <Table.Cell>{item.nro_cuota}</Table.Cell>
-                    <Table.Cell>{item.fecha_vencimiento}</Table.Cell>
-                    <Table.Cell>{item.monto}</Table.Cell>
-                    <Table.Cell>{}</Table.Cell>
+                    <Table.Cell>
+                      {DateFormatter(new Date(item.fecha_vencimiento))}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {CurrencyFormatter(Number(item.monto))}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Checkbox
+                        name="aplicar"
+                        onChange={(e) => handleCheck(e, index)}
+                      />
+                    </Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>
@@ -109,7 +138,10 @@ const AddItemModal = ({ show, onClose, action, setData }) => {
           </div>
         </Modal.Body>
         <Modal.Footer className="flex max-h-fit p-3 justify-end">
-          <Button disabled={!checked} onClick={handleAction}>
+          <Button
+            disabled={itemsApply.length == 0 ? true : false}
+            onClick={handleAction}
+          >
             Agregar
           </Button>
         </Modal.Footer>

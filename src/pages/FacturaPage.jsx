@@ -9,15 +9,18 @@ import Cliente from "../components/Factura/Cliente";
 import toast from "react-hot-toast";
 import AddItemModal from "../components/Factura/AddItemModal";
 import { useState } from "react";
+import DetalleFactura from "../components/Factura/DetalleFactura";
 
 function FacturaPage() {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [detalleList, setDetalleList] = useState([]);
 
   return (
     <>
       <AddItemModal
         show={showAddModal}
         onClose={() => setShowAddModal(false)}
+        setData={setDetalleList}
       />
       <div className="flex flex-col px-8 gap-y-2 bg-blue-100 w-full h-full ">
         <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
@@ -46,8 +49,8 @@ function FacturaPage() {
         <div className="flex flex-col gap-4 bg-white p-4 border rounded-lg">
           <div>Detalle de la Factura</div>
           <div className="flex flex-row gap-4">
-            <div className="grid grid-cols-3 gap-4 w-full ">
-              tabla de detalle
+            <div className=" w-full ">
+              <DetalleFactura items={detalleList} setItems={setDetalleList} />
             </div>
             <div className="flex flex-col border-l-2 w-14 items-center gap-2 text-3xl">
               <MdLibraryAdd
