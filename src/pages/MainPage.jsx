@@ -5,6 +5,9 @@ import userIcon from "../assets/icons/UsuariosIcon.svg";
 import studentIcon from "../assets/icons/AlumnoIcon.svg";
 import boxIcon from "../assets/icons/CajaIcon.svg";
 import academicIcon from "../assets/icons/academicoIcon.svg"; // Importa el icono para la sección académica
+import usersIcon from "../assets/icons/usersIcon.svg";
+import backpackIcon from "../assets/icons/backpack.svg";
+import honourIcon from "../assets/icons/honour.svg";
 import useAuth from "../hooks/useAuth"; // Importa tu hook de autenticación
 
 const MainPage = () => {
@@ -14,8 +17,11 @@ const MainPage = () => {
   // Datos para las tarjetas
   const cardData = [
     { title: "Alumnos", icon: studentIcon, linkTo: "/alumnos", allowedGroup: "ACADEMICO" },
-    { title: "Caja", icon: boxIcon, linkTo: "/caja", allowedGroup: "CAJA" },
-    { title: "Matricular Alumno", icon: academicIcon, linkTo: "/Matriculas", allowedGroup: "ACADEMICO" }, // Nueva tarjeta para la sección académica
+    { title: "Matriculaciones", icon: academicIcon, linkTo: "/Matriculas", allowedGroup: "ACADEMICO" },
+    { title: "Becas", icon: honourIcon, linkTo: "/becas", allowedGroup: "ACADEMICO" },
+    { title: "Facturación", icon: boxIcon, linkTo: "/factura", allowedGroup: "CAJA" },
+    { title: "Productos", icon: backpackIcon, linkTo: "/productos", allowedGroup: "CAJA" },
+    { title: "Usuarios", icon: usersIcon, linkTo: "/usuarios", allowedGroup: "ADMIN" },
   ];
 
   return (
