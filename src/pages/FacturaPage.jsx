@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import AddItemModal from "../components/Factura/AddItemModal";
 import { useState } from "react";
 import DetalleFactura from "../components/Factura/DetalleFactura";
+import Encabezado from "../components/Factura/Encabezado";
 
 function FacturaPage() {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -17,6 +18,7 @@ function FacturaPage() {
 
   return (
     <>
+      {console.log("Mes", new Date().getMonth())}
       <AddItemModal
         show={showAddModal}
         onClose={() => setShowAddModal(false)}
@@ -29,7 +31,7 @@ function FacturaPage() {
         </div>
         {/* encabezado de la factura */}
         <div className="flex flex-col bg-white p-4 border rounded-lg">
-          Encabezado
+          <Encabezado />
         </div>
         {/* datos del cliente */}
         <div className="flex flex-col gap-4 bg-white p-4 border rounded-lg">
