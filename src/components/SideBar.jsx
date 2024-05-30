@@ -158,6 +158,17 @@ const menuItems = [
         ),
         link: "/factura",
       },
+      {
+        text: "Timbrado",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Timbrado"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/timbrado",
+      },
       // Agrega más subelementos según sea necesario
     ],
   },

@@ -19,6 +19,7 @@ import ProductosPage from "./pages/ProductosPage";
 import ArancelesPage from "./pages/ArancelesPage";
 import { Toaster } from "react-hot-toast";
 import FacturaPage from "./pages/FacturaPage";
+import TimbradoPage from "./pages/TimbradoPage";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -58,6 +59,7 @@ function App() {
               <Route path="/productos" element={<ProductosPage />} />
               <Route path="/aranceles" element={<ArancelesPage />} />
               <Route path="/factura" element={<FacturaPage />} />
+              <Route path="/timbrado" element={<TimbradoPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
               <Route path="/usuarios" element={<UsersPage />} />

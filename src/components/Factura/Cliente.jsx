@@ -68,7 +68,7 @@ const Cliente = ({ cliente, edit }) => {
           name="ruc"
           value={form.ruc}
           onChange={handleChange}
-          disabled={lclEdit}
+          readOnly={lclEdit}
         />
       </Label>
       <Label>
@@ -78,7 +78,7 @@ const Cliente = ({ cliente, edit }) => {
           name="nombre"
           value={form.nombre}
           onChange={handleChange}
-          disabled={lclEdit}
+          readOnly={lclEdit}
         />
       </Label>
       <Label>
@@ -88,7 +88,7 @@ const Cliente = ({ cliente, edit }) => {
           name="apellido"
           value={form.apellido}
           onChange={handleChange}
-          disabled={lclEdit}
+          readOnly={lclEdit}
         />
       </Label>
       <Label>
@@ -98,7 +98,7 @@ const Cliente = ({ cliente, edit }) => {
           name="telefono"
           value={form.telefono}
           onChange={handleChange}
-          disabled={lclEdit}
+          readOnly={lclEdit}
         />
       </Label>
       <Label>
@@ -108,7 +108,7 @@ const Cliente = ({ cliente, edit }) => {
           name="email"
           value={form.email}
           onChange={handleChange}
-          disabled={lclEdit}
+          readOnly={lclEdit}
         />
       </Label>
       <Label>
@@ -118,7 +118,7 @@ const Cliente = ({ cliente, edit }) => {
           name="direccion"
           value={form.direccion}
           onChange={handleChange}
-          disabled={lclEdit}
+          readOnly={lclEdit}
         />
       </Label>
       <Label>
@@ -128,7 +128,7 @@ const Cliente = ({ cliente, edit }) => {
           value={form.tipo}
           onChange={handleChange}
           className=""
-          disabled={lclEdit}
+          readOnly={lclEdit}
         >
           <option value=""></option>
           <option value="F">Fisico</option>

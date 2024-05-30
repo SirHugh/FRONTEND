@@ -39,3 +39,19 @@ export const updateArancel = (id, data) =>
 export const getCliente = (cedula) => {
   return ApiClient.get(`/academico/cliente/?cedula=${cedula}`);
 };
+
+// ---------------------
+// servicios para el manejo de timbrados
+// ---------------------
+
+export const createTimbrado = (data) => {
+  return ApiClient.post(`/caja/timbrado/`, data);
+};
+
+export const getTimbrado = (id) => {
+  return ApiClient.get(`/caja/timbrado/${id ? id + "/" : ""}`);
+};
+
+export const updateTimbrado = (id, data) => {
+  return ApiClient.patch(`/caja/timbrado/${id}/`, data);
+};
