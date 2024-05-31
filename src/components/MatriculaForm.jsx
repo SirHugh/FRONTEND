@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { updateMatricula, getGrados } from "../services/AcademicoService";
-import { Button, Checkbox, TextInput, Select } from "flowbite-react";
+import { Button, Checkbox } from "flowbite-react";
+import toast, { Toaster } from "react-hot-toast";
+import { BiError } from 'react-icons/bi';
 
 const MatriculaForm = ({ matricula, onClose }) => {
   const [formData, setFormData] = useState({
-    id_alumno: matricula.id_alumno.id_alumno,
     id_grado: matricula.id_grado.id_grado,
-    fecha_inscripcion: matricula.fecha_inscripcion,
-    anio_lectivo: matricula.anio_lectivo,
-    es_activo: matricula.es_activo,
-    fecha_desmatriculacion: matricula.fecha_desmatriculacion,
     trabaja: matricula.trabaja,
     es_interno: matricula.es_interno,
   });
@@ -29,8 +26,8 @@ const MatriculaForm = ({ matricula, onClose }) => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const val = type === "checkbox" ? checked : value;
+    const { name, value, checked } = e.target;
+    const val = name === "trabaja" || name === "es_interno" ? checked : value;
     setFormData((prevData) => ({
       ...prevData,
       [name]: val,
@@ -42,106 +39,77 @@ const MatriculaForm = ({ matricula, onClose }) => {
     try {
       await updateMatricula(matricula.id_matricula, formData);
       onClose(); // Cerrar el formulario después de la actualización exitosa
+      toast.success("Matrícula actualizada exitosamente!", { duration: 5000 });
     } catch (error) {
       console.error("Error al actualizar la matrícula:", error);
+      toast.error("Error al actualizar la matrícula", {
+        duration: 5000,
+        icon: <BiError color="red" fontSize="5.5rem" />,
+      });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="id_alumno">ID del alumno:</label>
-        <TextInput
-          type="text"
-          value={formData.id_alumno}
-          name="id_alumno"
-          onChange={handleChange}
-          readOnly={true}
-        />
-      </div>
-      <div>
-        <label htmlFor="id_grado">Grado:</label>
-        <Select
-          value={formData.id_grado}
-          name="id_grado"
-          onChange={handleChange}
-        >
-          {grados.map((grado) => (
-            <option key={grado.id_grado} value={grado.id_grado}>
-              {grado.nombre}
-            </option>
-          ))}
-        </Select>
-      </div>
-      <div>
-        <label htmlFor="fecha_inscripcion">Fecha de Inscripción:</label>
-        <TextInput
-          type="date"
-          value={formData.fecha_inscripcion}
-          name="fecha_inscripcion"
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="anio_lectivo">Año Lectivo:</label>
-        <TextInput
-          type="number"
-          value={formData.anio_lectivo}
-          name="anio_lectivo"
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="es_activo">Es Activo:</label>
-        <Checkbox
-          checked={formData.es_activo}
-          name="es_activo"
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="fecha_desmatriculacion">
-          Fecha de Desmatriculación:
-        </label>
-        <TextInput
-          type="date"
-          value={formData.fecha_desmatriculacion || ""}
-          name="fecha_desmatriculacion"
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="trabaja">Trabaja:</label>
-        <Checkbox
-          checked={formData.trabaja}
-          name="trabaja"
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="es_interno">Es Interno:</label>
-        <Checkbox
-          checked={formData.es_interno}
-          name="es_interno"
-          onChange={handleChange}
-        />
-      </div>
-      <div className="flex justify-end">
-        <Button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Guardar
-        </Button>
-        <Button
-          type="button"
-          className="ml-2 bg-gray-300 px-4 py-2 rounded"
-          onClick={onClose}
-        >
-          Cancelar
-        </Button>
-      </div>
-    </form>
+    <div>
+      <Toaster />
+      <h2 className="text-2xl font-bold mb-6">Editar Matrícula</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="id_grado" className="block text-base font-medium text-gray-700">
+            Grado
+          </label>
+          <select
+            value={formData.id_grado}
+            name="id_grado"
+            onChange={handleChange}
+            className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            {grados.map((grado) => (
+              <option key={grado.id_grado} value={grado.id_grado}>
+                {grado.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center">
+          <Checkbox
+            checked={formData.trabaja}
+            name="trabaja"
+            onChange={handleChange}
+            className="mr-2"
+          />
+          <label htmlFor="trabaja" className="text-base font-medium text-gray-700">
+            Trabaja
+          </label>
+        </div>
+        <div className="flex items-center">
+          <Checkbox
+            checked={formData.es_interno}
+            name="es_interno"
+            onChange={handleChange}
+            className="mr-2"
+          />
+          <label htmlFor="es_interno" className="text-base font-medium text-gray-700">
+            Es Interno
+          </label>
+        </div>
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Guardar
+          </Button>
+          <Button
+            type="button"
+            className="ml-2 bg-gray-300 px-4 py-2 rounded"
+            onClick={onClose}
+          >
+            Cancelar
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 
