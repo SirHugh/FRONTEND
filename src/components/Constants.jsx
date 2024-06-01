@@ -27,8 +27,9 @@ export const CurrencyFormatter = (value) =>
     currency: "PYG",
   });
 
-export function GeneradorPagos({ date, periodoActual, cantidad }) {
-  const pagosArray = [];
-
-  return pagosArray;
-}
+export const formatNumber = (num, digits) => {
+  return num.toLocaleString("en-US", {
+    minimumIntegerDigits: digits,
+    useGrouping: false,
+  });
+};

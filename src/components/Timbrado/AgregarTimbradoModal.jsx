@@ -1,89 +1,204 @@
 import { Button, Label, Modal, TextInput } from "flowbite-react";
-import { useState } from "react";
-import ReactInputMask from "react-input-mask";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { createTimbrado, updateTimbrado } from "../../services/CajaService";
+import { formatNumber } from "../Constants";
 
-function AgregarTimbradoModal({ show, onClose, edit, timbrado }) {
-  const [formData, setFormData] = useState(
-    timbrado || {
-      nro_timbrado: "",
-      fecha_desde: "",
-      fecha_hasta: "",
-      es_activo: false,
-      numero_inicial: "",
-      numero_final: "",
+function AgregarTimbradoModal({ show, onClose, timbrado, title }) {
+  const [formData, setFormData] = useState(timbrado);
+
+  useEffect(() => {
+    if (timbrado) {
+      setFormData(timbrado);
     }
-  );
+  }, [timbrado]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevValues) => ({ ...prevValues, [name]: value }));
-  };
-
-  const handleSubmit = () => {
     console.log(formData);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      if (formData.id_timbrado) {
+        const res = await updateTimbrado(formData.id_timbrado, formData);
+        console.log("Actalizado", res.data);
+        close();
+        toast.success("Timbrado Actualizado");
+        return true;
+      }
+      const res = await createTimbrado(formData);
+      console.log("Guardado", res.data);
+      toast.success("Timbrado agregado.");
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+    close();
+  };
+
+  const close = () => {
+    onClose();
+  };
+
   return (
-    <Modal show={show} onClose={onClose} size={"md"} popup>
-      <Modal.Header>Agregar Timbrado</Modal.Header>
+    <Modal show={show} onClose={close} size={"md"} popup>
+      <Modal.Header>
+        {formData.id_timbrado ? "Actualizar Timbrado" : "Agregar Timbrado"}
+      </Modal.Header>
       <Modal.Body>
         <div>
-          <Label>
-            Numero de Timbrado
-            <TextInput
-              name="nro_timbrado"
-              value={formData.nro_timbrado}
-              onChange={(e) => handleChange(e)}
-            />
-          </Label>
-          <Label>
-            Fecha de Inicio
-            <TextInput
-              type="date"
-              name="fecha_desde"
-              value={formData.fecha_desde}
-              onChange={(e) => handleChange(e)}
-            />
-          </Label>
-          <Label>
-            validez(hasta)
-            <TextInput
-              type="date"
-              name="fecha_hasta"
-              value={formData.fecha_hasta}
-              onChange={(e) => handleChange(e)}
-            />
-          </Label>
-          <Label>
-            Primer numero:
-            <ReactInputMask
-              className="flex w-full border border-x-gray-400 rounded-lg p-2"
-              name="numero_inicial"
-              value={formData.numero_inicial}
-              onChange={(e) => handleChange(e)}
-              mask="999-999-9999999"
-              placeholder="000-000-0000000"
-            />
-          </Label>
-
-          <Label>
-            Ultimo numero:
-            <ReactInputMask
-              className="flex w-full border border-x-gray-400 rounded-lg p-2"
-              name="numero_final"
-              value={formData.numero_final}
-              onChange={(e) => handleChange(e)}
-              mask="999-999-9999999"
-              placeholder="000-000-0000000"
-            />
-          </Label>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-y-4">
+            <Label>
+              Numero de Timbrado <c className="text-red-700">*</c>
+              <TextInput
+                type="number"
+                name="nro_timbrado"
+                value={formData.nro_timbrado}
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </Label>
+            <Label>
+              Fecha de Inicio <c className="text-red-700">*</c>
+              <TextInput
+                type="date"
+                name="fecha_desde"
+                value={formData.fecha_desde}
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </Label>
+            <Label>
+              validez(hasta) <c className="text-red-700">*</c>
+              <TextInput
+                type="date"
+                name="fecha_hasta"
+                value={formData.fecha_hasta}
+                onChange={(e) => handleChange(e)}
+                required
+                onBlur={() => {
+                  formData.fecha_hasta < formData.fecha_desde
+                    ? (toast.error(
+                        "La fecha de valides debe ser mayor a la fecha de inicio."
+                      ),
+                      setFormData({ ...formData, ["fecha_hasta"]: "" }))
+                    : "";
+                }}
+              />
+            </Label>
+            <Label>
+              Primer numero <c className="text-red-700">*</c>
+            </Label>
+            <div className="flex flex-row gap-4">
+              <div>
+                <TextInput
+                  type="number"
+                  min={1}
+                  max={999}
+                  id="establecimiento"
+                  name="establecimiento"
+                  value={formatNumber(formData.establecimiento, 3)}
+                  onChange={(e) => handleChange(e)}
+                  placeholder="000"
+                  autoComplete="off"
+                  required
+                  helperText={
+                    <c className="font-extralight ">establecimiento</c>
+                  }
+                />
+              </div>
+              <div>
+                <TextInput
+                  type="number"
+                  min={1}
+                  max={999}
+                  id="punto_expedicion"
+                  name="punto_expedicion"
+                  value={formatNumber(formData.punto_expedicion, 3)}
+                  onChange={(e) => handleChange(e)}
+                  placeholder="000"
+                  autoComplete="off"
+                  required
+                  helperText={<c className="font-extralight ">p. expedición</c>}
+                />
+              </div>
+              <div>
+                <TextInput
+                  type="number"
+                  min={1}
+                  max={9999999}
+                  id="numero_inicial"
+                  name="numero_inicial"
+                  value={formatNumber(formData.numero_inicial, 7)}
+                  onChange={(e) => handleChange(e)}
+                  placeholder="0000000"
+                  autoComplete="off"
+                  required
+                  helperText={<c className="font-extralight ">numeración</c>}
+                />
+              </div>
+            </div>
+            <Label>
+              Último numero
+              <div className="flex flex-row gap-4">
+                <div>
+                  <TextInput
+                    type="number"
+                    typeof="number"
+                    min={1}
+                    max={999}
+                    mask="999"
+                    id="establecimiento"
+                    name="establecimiento"
+                    value={formatNumber(formData.establecimiento, 3)}
+                    onChange={(e) => handleChange(e)}
+                    placeholder="000"
+                    autoComplete="off"
+                    readOnly
+                    required
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    type="number"
+                    min={1}
+                    max={999}
+                    id="punto_expedicion"
+                    name="punto_expedicion"
+                    value={formatNumber(formData.punto_expedicion, 3)}
+                    onChange={(e) => handleChange(e)}
+                    placeholder="000"
+                    autoComplete="off"
+                    required
+                    readOnly
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    type="number"
+                    min={0}
+                    max={9999999}
+                    id="numero_final"
+                    name="numero_final"
+                    value={formatNumber(formData.numero_final || 0, 7)}
+                    onChange={(e) => handleChange(e)}
+                    placeholder="0000000"
+                    autoComplete="off"
+                  />
+                </div>
+              </div>
+            </Label>
+            <span className="text-red-700">* campos obligatorios</span>
+            <div className="flex justify-end px-3 pt-5">
+              <Button type="submit">Guardar</Button>
+            </div>
+          </form>
         </div>
       </Modal.Body>
-      <Modal.Footer className="justify-end">
-        <Button onClick={handleSubmit} disabled>
-          Guardar
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 }

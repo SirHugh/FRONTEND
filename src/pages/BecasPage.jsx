@@ -274,12 +274,6 @@ function BecasPage() {
                 required
               />
             </div>
-            {/*<div className="flex flex-row gap-1">
-              <Button className="flex flex-wrap p-2 bg-blue-500 ">
-                <FaFileDownload className="mr-2 h-5 w-5" />
-                Descargar
-              </Button>
-              </div>*/}
           </div>
           <div className="h-1/3">
             <Table className="w-full bg-white ">

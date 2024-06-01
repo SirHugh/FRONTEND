@@ -48,8 +48,10 @@ export const createTimbrado = (data) => {
   return ApiClient.post(`/caja/timbrado/`, data);
 };
 
-export const getTimbrado = (id) => {
-  return ApiClient.get(`/caja/timbrado/${id ? id + "/" : ""}`);
+export const getTimbrado = (page, id) => {
+  return ApiClient.get(
+    `/caja/timbrado/${id ? id + "/" : ""}${page ? "?page=" + page : ""}`
+  );
 };
 
 export const updateTimbrado = (id, data) => {
