@@ -90,7 +90,6 @@ function GradosPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <Toaster />
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2 text-xl font-bold">
           <HiOutlinePlus className="text-blue-500 text-2xl" />
@@ -119,6 +118,7 @@ function GradosPage() {
               <th className="px-4 py-2">Nombre</th>
               <th className="px-4 py-2">Nivel</th>
               <th className="px-4 py-2">Turno</th>
+              <th className="px-4 py-2">Seccion</th>
               <th className="px-4 py-2">Estado</th>
               <th className="px-4 py-2">Acciones</th>
             </tr>
@@ -130,7 +130,7 @@ function GradosPage() {
                 className="cursor-pointer hover:bg-gray-100"
                 onClick={() => listAlumnos(grado.id_grado, grado)}
               >
-                <td style={{ width: "20%" }} className="px-4 py-2">
+                <td style={{ width: "10%" }} className="px-4 py-2">
                   {grado.grado}°
                 </td>
                 <td style={{ width: "20%" }} className="px-4 py-2">
@@ -141,6 +141,9 @@ function GradosPage() {
                 </td>
                 <td style={{ width: "20%" }} className="px-4 py-2">
                   {grado.turno}
+                </td>
+                <td style={{ width: "10%" }} className="px-4 py-2">
+                  {grado.seccion}
                 </td>
                 <td
                   style={{ width: "20%", position: "relative" }}

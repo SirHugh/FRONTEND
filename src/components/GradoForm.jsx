@@ -59,7 +59,6 @@ function GradoForm({ onClose, initialData, isEdit }) {
       <div className="flex items-center justify-center min-h-screen">
         <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
         <div className="bg-white w-full max-w-lg mx-auto p-8 rounded-md shadow-xl z-50">
-          <Toaster />
           <h2 className="text-2xl font-bold mb-6">{isEdit ? "Editar Grado" : "Crear Nuevo Grado"}</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
