@@ -32,6 +32,10 @@ export const createResponsables = (data) =>
 
 export const getResponsables = () => ApiClient.get("/academico/responsable/");
 
+export const searchResponsables = (page, searchTerm) => {
+  return ApiClient.get(`/academico/responsable/?page=${page}&search=${searchTerm}`);
+};
+
 export const updateResponsable = (id, data) =>
   ApiClient.put(`/academico/responsable/${id}/`, data);
 

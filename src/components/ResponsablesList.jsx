@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { getResponsables } from "../services/AcademicoService";
+import { searchResponsables } from "../services/AcademicoService";
 import { Table } from "flowbite-react";
 import { BiEdit } from "react-icons/bi";
 import { MdSearch } from "react-icons/md";
 import PaginationButtons from "../components/PaginationButtons"; // Componente de paginación reutilizable
 import useAuth from "../hooks/useAuth"; // Hook para manejar autenticación
+import ClienteResponsableForm from "./ClienteResponsableForm";
+import { Link } from "react-router-dom";
 
 const ResponsablesList = () => {
   const [responsables, setResponsables] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedResponsable, setSelectedResponsable] = useState(null);
   const { authTokens } = useAuth();
   const itemsPerPage = 10; // Número de elementos por página
 
   useEffect(() => {
     const loadResponsables = async () => {
       try {
-        const res = await getResponsables(currentPage + 1, searchTerm); // currentPage + 1 para la paginación 1-based
+        const res = await searchResponsables(currentPage + 1, searchTerm); // currentPage + 1 para la paginación 1-based
         if (res.status === 200) {
+          console.log("Datos de responsables recibidos:", res.data);
           setResponsables(res.data.slice(0, itemsPerPage));
           setTotalPages(Math.ceil(res.data.length / itemsPerPage));
         } else {
@@ -36,33 +40,49 @@ const ResponsablesList = () => {
     setCurrentPage(0); // Resetear a la primera página en una nueva búsqueda
   };
 
+  const handleEditClick = (responsable) => {
+    setSelectedResponsable(responsable);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedResponsable(null);
+  };
+
   return (
     <div className="w-full mx-auto bg-white rounded-lg shadow-lg p-6">
+      {selectedResponsable ? (
+        <ClienteResponsableForm
+          responsable={selectedResponsable}
+          onClose={handleCloseModal}
+        />
+      ) : null}
+
       <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
         <h1 className="">RESPONSABLES</h1>
       </div>
       <div className="w-80 relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <MdSearch className="size-6" />
-            </div>
-            <input
-              type="search"
-              id="search"
-              name="search"
-              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Buscar Cliente..."
-              onChange={(e) => {
-                handleSearch(e);
-              }}
-              required
-            />
-          </div>
+        <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+          <MdSearch className="size-6" />
+        </div>
+        <input
+          type="search"
+          id="search"
+          name="search"
+          className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Buscar Cliente..."
+          onChange={(e) => {
+            handleSearch(e);
+          }}
+          required
+        />
+      </div>
       <div className="overflow-x-auto w-full px-10 max-w-12xl bg-white">
         <Table className="divide-y">
           <Table.Head className="bg-gray-500">
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Cliente</Table.HeadCell>
-            <Table.HeadCell>Alumno</Table.HeadCell>
+            <Table.HeadCell>Cedula / RUC</Table.HeadCell>
+            <Table.HeadCell>ID Alumno</Table.HeadCell>
             <Table.HeadCell>Ocupación</Table.HeadCell>
             <Table.HeadCell>Tipo de Relación</Table.HeadCell>
             <Table.HeadCell>Acciones</Table.HeadCell>
@@ -74,12 +94,25 @@ const ResponsablesList = () => {
                 className="hover:border-l-blue-500 hover:border-l-4"
               >
                 <Table.Cell>{responsable.id_responsable}</Table.Cell>
-                <Table.Cell>{responsable.id_cliente.nombre} {responsable.id_cliente.apellido}</Table.Cell>
-                <Table.Cell>{responsable.id_alumno.nombre}</Table.Cell>
+                <Table.Cell>
+                  {responsable.id_cliente.nombre} {responsable.id_cliente.apellido}
+                </Table.Cell>
+                <Table.Cell>
+                  {responsable.id_cliente.cedula > 0 ? responsable.id_cliente.cedula : responsable.id_cliente.ruc}
+                </Table.Cell>
+                <Table.Cell>
+                  <Link to={`/alumnos/${responsable.id_alumno}`}>
+                    {responsable.id_alumno}
+                  </Link>
+                </Table.Cell>
                 <Table.Cell>{responsable.ocupacion}</Table.Cell>
                 <Table.Cell>{responsable.tipo_relacion}</Table.Cell>
                 <Table.Cell>
-                  <BiEdit className="text-2xl" title="Editar" />
+                  <BiEdit
+                    className="text-2xl cursor-pointer"
+                    title="Editar"
+                    onClick={() => handleEditClick(responsable)}
+                  />
                 </Table.Cell>
               </Table.Row>
             ))}

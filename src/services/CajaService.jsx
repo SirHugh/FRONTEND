@@ -40,6 +40,10 @@ export const getCliente = (cedula) => {
   return ApiClient.get(`/academico/cliente/?cedula=${cedula}`);
 };
 
+export const updateCliente = (cedula, data) => {
+  return ApiClient.put(`/academico/cliente/${cedula}/`, data);
+};
+
 // ---------------------
 // servicios para el manejo de timbrados
 // ---------------------
