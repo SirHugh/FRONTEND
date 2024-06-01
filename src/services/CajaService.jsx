@@ -40,8 +40,8 @@ export const getCliente = (cedula) => {
   return ApiClient.get(`/academico/cliente/?cedula=${cedula}`);
 };
 
-export const updateCliente = (cedula, data) => {
-  return ApiClient.put(`/academico/cliente/${cedula}/`, data);
+export const updateCliente = (id, data) => {
+  return ApiClient.put(`/academico/cliente/${id}/`, data);
 };
 
 // ---------------------

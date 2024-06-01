@@ -21,6 +21,8 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
     ocupacion: "",
     tipo_relacion: "",
     es_activo: false,
+    id_alumno_id: "",
+    id_cliente_id: "",
   });
 
   useEffect(() => {
@@ -40,6 +42,8 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
         ocupacion: responsable.ocupacion,
         tipo_relacion: responsable.tipo_relacion,
         es_activo: responsable.es_activo,
+        id_alumno_id: responsable.id_alumno,
+        id_cliente_id: responsable.id_cliente.id_cliente
       });
     }
   }, [responsable]);
@@ -64,8 +68,10 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateCliente(clienteData.cedula, clienteData);
-      await updateResponsable(responsable.id_responsable, responsableData);
+        console.log("Datos a enviar, cliente: ", clienteData)
+        console.log("Datos a enviar, responsable: ", responsableData)
+      await updateCliente(responsable.id_cliente.id_cliente, clienteData);
+      //await updateResponsable(responsable.id_responsable, responsableData);
 
       toast.success("Datos actualizados exitosamente!", { duration: 5000 });
       onClose();
@@ -195,7 +201,7 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
             </div>*/}
             
             {/* Campos del Responsable */}
-            <div>
+            {/*<div>
               <label htmlFor="ocupacion" className="block text-base font-medium text-gray-700">
                 Ocupación
               </label>
@@ -208,6 +214,7 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
                 className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
               />
             </div>
+            */}
            {/* <div>
               <label htmlFor="tipo_relacion" className="block text-base font-medium text-gray-700">
                 Tipo de Relación

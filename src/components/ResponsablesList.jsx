@@ -79,11 +79,12 @@ const ResponsablesList = () => {
       <div className="overflow-x-auto w-full px-10 max-w-12xl bg-white">
         <Table className="divide-y">
           <Table.Head className="bg-gray-500">
-            <Table.HeadCell>ID</Table.HeadCell>
-            <Table.HeadCell>Cliente</Table.HeadCell>
+            <Table.HeadCell>Nombre</Table.HeadCell>
             <Table.HeadCell>Cedula / RUC</Table.HeadCell>
+            <Table.HeadCell>Telefono</Table.HeadCell>
+            <Table.HeadCell>Email</Table.HeadCell>
+            <Table.HeadCell>Dirección</Table.HeadCell>
             <Table.HeadCell>ID Alumno</Table.HeadCell>
-            <Table.HeadCell>Ocupación</Table.HeadCell>
             <Table.HeadCell>Tipo de Relación</Table.HeadCell>
             <Table.HeadCell>Acciones</Table.HeadCell>
           </Table.Head>
@@ -93,19 +94,20 @@ const ResponsablesList = () => {
                 key={responsable.id_responsable}
                 className="hover:border-l-blue-500 hover:border-l-4"
               >
-                <Table.Cell>{responsable.id_responsable}</Table.Cell>
                 <Table.Cell>
                   {responsable.id_cliente.nombre} {responsable.id_cliente.apellido}
                 </Table.Cell>
                 <Table.Cell>
-                  {responsable.id_cliente.cedula > 0 ? responsable.id_cliente.cedula : responsable.id_cliente.ruc}
+                  {responsable.id_cliente.ruc != ""? responsable.id_cliente.ruc : responsable.id_cliente.cedula}
                 </Table.Cell>
+                <Table.Cell>{responsable.id_cliente.telefono}</Table.Cell>
+                <Table.Cell>{responsable.id_cliente.email}</Table.Cell>
+                <Table.Cell>{responsable.id_cliente.direccion}</Table.Cell>
                 <Table.Cell>
                   <Link to={`/alumnos/${responsable.id_alumno}`}>
                     {responsable.id_alumno}
                   </Link>
                 </Table.Cell>
-                <Table.Cell>{responsable.ocupacion}</Table.Cell>
                 <Table.Cell>{responsable.tipo_relacion}</Table.Cell>
                 <Table.Cell>
                   <BiEdit
