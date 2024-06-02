@@ -58,7 +58,7 @@ const ActividadesTab = () => {
           onClick={() => { setSelectedProducto(null); setShowModal(true); }}
         >
           <FaPlus className="mr-2 h-5 w-5" />
-          <h1>Agregar Producto</h1>
+          <h1>Agregar Actividad</h1>
         </Button>
       </div>
       <div className="overflow-x-auto w-full px-10 max-w-12xl bg-white">

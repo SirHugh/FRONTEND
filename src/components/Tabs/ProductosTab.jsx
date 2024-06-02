@@ -1,10 +1,12 @@
+// ProductosTab.js
 import React, { useState, useEffect } from "react";
 import { Table, Button } from "flowbite-react";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiError } from "react-icons/bi";
 import PaginationButtons from "../PaginationButtons";
 import ProductoModal from "../ProductoModal";
 import { getProducto, createProducto, updateProducto } from "../../services/CajaService";
 import { FaPlus } from "react-icons/fa";
+import toast, { Toaster } from "react-hot-toast";
 
 const ProductosTab = () => {
   const [productos, setProductos] = useState([]);
@@ -36,13 +38,19 @@ const ProductosTab = () => {
     try {
       if (selectedProducto) {
         await updateProducto(selectedProducto.id_producto, producto);
+        toast.success("Datos actualizados exitosamente!", { duration: 5000 });
       } else {
         await createProducto(producto);
+        toast.success("Producto registrado exitosamente!", { duration: 5000 });
       }
       setShowModal(false);
       const res = await getProducto("", "");
       setProductos(res.data.slice(0, itemsPerPage));
     } catch (error) {
+      toast.error("Ha ocurrido un error al guardar los datos.", {
+        duration: 5000,
+        icon: <BiError color="red" fontSize="5.5rem" />,
+      });
       console.error("Error al guardar el producto:", error.response ? error.response.data : error.message);
     }
   };

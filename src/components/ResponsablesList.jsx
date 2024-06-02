@@ -22,7 +22,6 @@ const ResponsablesList = () => {
       try {
         const res = await searchResponsables(currentPage + 1, searchTerm); // currentPage + 1 para la paginación 1-based
         if (res.status === 200) {
-          console.log("Datos de responsables recibidos:", res.data);
           setResponsables(res.data.slice(0, itemsPerPage));
           setTotalPages(Math.ceil(res.data.length / itemsPerPage));
         } else {
@@ -54,6 +53,7 @@ const ResponsablesList = () => {
         <ClienteResponsableForm
           responsable={selectedResponsable}
           onClose={handleCloseModal}
+          show= {true}
         />
       ) : null}
 
