@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { updateResponsable } from "../services/AcademicoService";
 import { updateCliente } from "../services/CajaService";
-import { TextInput, Checkbox, Button } from "flowbite-react";
+import { TextInput, Checkbox, Button, Label, Modal } from "flowbite-react";
 import toast, { Toaster } from "react-hot-toast";
 import { BiError } from "react-icons/bi";
 
-const ClienteResponsableForm = ({ responsable, onClose }) => {
+const ClienteResponsableForm = ({ responsable, onClose, show }) => {
   const [clienteData, setClienteData] = useState({
     cedula: "",
     ruc: "",
@@ -68,8 +68,6 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        console.log("Datos a enviar, cliente: ", clienteData)
-        console.log("Datos a enviar, responsable: ", responsableData)
       await updateCliente(responsable.id_cliente.id_cliente, clienteData);
       //await updateResponsable(responsable.id_responsable, responsableData);
 
@@ -84,155 +82,84 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
     }
   };
 
-  return (
-    <div className="absolute z-50 inset-0 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen">
-        <Toaster />
-        <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
-        <div className="bg-white w-full max-w-lg mx-auto p-8 rounded-md shadow-xl z-50">
-          <h2 className="text-2xl font-bold mb-6">Editar Responsable</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Campos del Cliente */}
-            {/*<div>
-              <label htmlFor="cedula" className="block text-base font-medium text-gray-700">
-                Cédula
-              </label>
-              <TextInput
-                type="text"
-                id="cedula"
-                name="cedula"
-                value={clienteData.cedula}
-                onChange={handleClienteChange}
-                readOnly
-                className="w-full rounded-md border border-gray-300 bg-gray-100 py-2 px-4 text-base font-medium text-gray-700 outline-none"
-              />
-            </div>
-            */}
-            <div>
-              <label htmlFor="ruc" className="block text-base font-medium text-gray-700">
-                RUC
-              </label>
+return (
+      <Modal show={show} onClose={onClose} size="lg">
+        <Modal.Header>
+          <div className="flex flex-row items-center gap-3">
+            <h2 className="text-2xl font-bold">Editar Responsable</h2>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          <Toaster />
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div className="flex flex-row gap-4 items-center">
+              <Label htmlFor="ruc" className="w-1/4">RUC:</Label>
               <TextInput
                 type="text"
                 id="ruc"
                 name="ruc"
                 value={clienteData.ruc}
                 onChange={handleClienteChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
+                className="w-3/4"
               />
             </div>
-            <div>
-              <label htmlFor="nombre" className="block text-base font-medium text-gray-700">
-                Nombre
-              </label>
+            <div className="flex flex-row gap-4 items-center">
+              <Label htmlFor="nombre" className="w-1/4">Nombre:</Label>
               <TextInput
                 type="text"
                 id="nombre"
                 name="nombre"
                 value={clienteData.nombre}
                 onChange={handleClienteChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
+                className="w-3/4"
               />
             </div>
-            <div>
-              <label htmlFor="apellido" className="block text-base font-medium text-gray-700">
-                Apellido
-              </label>
+            <div className="flex flex-row gap-4 items-center">
+              <Label htmlFor="apellido" className="w-1/4">Apellido:</Label>
               <TextInput
                 type="text"
                 id="apellido"
                 name="apellido"
                 value={clienteData.apellido}
                 onChange={handleClienteChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
+                className="w-3/4"
               />
             </div>
-            <div>
-              <label htmlFor="telefono" className="block text-base font-medium text-gray-700">
-                Teléfono
-              </label>
+            <div className="flex flex-row gap-4 items-center">
+              <Label htmlFor="telefono" className="w-1/4">Teléfono:</Label>
               <TextInput
                 type="text"
                 id="telefono"
                 name="telefono"
                 value={clienteData.telefono}
                 onChange={handleClienteChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
+                className="w-3/4"
               />
             </div>
-            <div>
-              <label htmlFor="email" className="block text-base font-medium text-gray-700">
-                Email
-              </label>
+            <div className="flex flex-row gap-4 items-center">
+              <Label htmlFor="email" className="w-1/4">Email:</Label>
               <TextInput
                 type="email"
                 id="email"
                 name="email"
                 value={clienteData.email}
                 onChange={handleClienteChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
+                className="w-3/4"
               />
             </div>
-            <div>
-              <label htmlFor="direccion" className="block text-base font-medium text-gray-700">
-                Dirección
-              </label>
+            <div className="flex flex-row gap-4 items-center">
+              <Label htmlFor="direccion" className="w-1/4">Dirección:</Label>
               <TextInput
                 type="text"
                 id="direccion"
                 name="direccion"
                 value={clienteData.direccion}
                 onChange={handleClienteChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
+                className="w-3/4"
               />
             </div>
-            {/*<div>
-              <label htmlFor="tipo" className="block text-base font-medium text-gray-700">
-                Tipo
-              </label>
-              <TextInput
-                type="text"
-                id="tipo"
-                name="tipo"
-                value={clienteData.tipo}
-                onChange={handleClienteChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
-              />
-            </div>*/}
-            
-            {/* Campos del Responsable */}
-            {/*<div>
-              <label htmlFor="ocupacion" className="block text-base font-medium text-gray-700">
-                Ocupación
-              </label>
-              <TextInput
-                type="text"
-                id="ocupacion"
-                name="ocupacion"
-                value={responsableData.ocupacion}
-                onChange={handleResponsableChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
-              />
-            </div>
-            */}
-           {/* <div>
-              <label htmlFor="tipo_relacion" className="block text-base font-medium text-gray-700">
-                Tipo de Relación
-              </label>
-              <TextInput
-                type="text"
-                id="tipo_relacion"
-                name="tipo_relacion"
-                value={responsableData.tipo_relacion}
-                onChange={handleResponsableChange}
-                className="w-full rounded-md border border-gray-300 bg-white py-2 px-4 text-base font-medium text-gray-700 outline-none"
-              />
-            </div>
-        */}
-            <div className="flex items-center">
-              <label htmlFor="es_activo" className="block text-base font-medium text-gray-700">
-                Activo
-              </label>
+            <div className="flex items-center gap-4">
+              <Label htmlFor="es_activo" className="w-1/4">Activo:</Label>
               <Checkbox
                 id="es_activo"
                 name="es_activo"
@@ -241,8 +168,8 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
                 className="ml-3"
               />
             </div>
-            <div className="flex justify-end">
-              <Button type="button" color="gray" onClick={onClose} className="mr-2">
+            <div className="flex justify-end gap-2">
+              <Button type="button" color="gray" onClick={onClose}>
                 Cancelar
               </Button>
               <Button type="submit" color="blue">
@@ -250,10 +177,9 @@ const ClienteResponsableForm = ({ responsable, onClose }) => {
               </Button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
-  );
-};
+        </Modal.Body>
+      </Modal>
+    );
+  };
 
 export default ClienteResponsableForm;

@@ -14,6 +14,8 @@ export const createProducto = (data) => ApiClient.post(`/caja/producto/`, data);
 export const updateProducto = (id, data) =>
   ApiClient.patch(`/caja/producto/${id}/`, data);
 
+export const createProductoGrado = (data) => ApiClient.post(`/caja/productogrado/`, data);
+
 // ---------------------
 // servicios para el manejo de aranceles
 // ---------------------
