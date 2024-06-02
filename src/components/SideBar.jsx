@@ -25,12 +25,12 @@ const menuItems = [
     link: "/",
   },
   {
-    text: "Seguridad",
+    text: "Administración",
     allowedGroup: "ADMIN",
     icon: (
       <img
         src={lockIcon}
-        alt="Seguridad"
+        alt="Administración"
         className="w-5 h-5 mr-2 object-contain"
       />
     ),
@@ -45,6 +45,17 @@ const menuItems = [
           />
         ),
         link: "/usuarios",
+      },
+      {
+        text: "Información",
+        icon: (
+          <img
+            src={lockIcon}
+            alt="Opción 1"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/basics",
       },
       // Agrega más subelementos según sea necesario
     ],

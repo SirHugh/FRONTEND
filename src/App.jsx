@@ -20,6 +20,7 @@ import ArancelesPage from "./pages/ArancelesPage";
 import { Toaster } from "react-hot-toast";
 import FacturaPage from "./pages/FacturaPage";
 import TimbradoPage from "./pages/TimbradoPage";
+import BasicsInfoPage from "./pages/BasicsInfoPage";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -63,6 +64,7 @@ function App() {
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
               <Route path="/usuarios" element={<UsersPage />} />
+              <Route path="/basics" element={<BasicsInfoPage />} />
             </Route>
           </Routes>
         </div>

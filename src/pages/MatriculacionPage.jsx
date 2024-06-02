@@ -12,7 +12,7 @@ import QrCode from "../components/matriculacion/QrCode";
 import useAuth from "../hooks/useAuth";
 import * as XLSX from "xlsx";
 import { FaFileDownload } from "react-icons/fa";
-import { Button, Table } from "flowbite-react";
+import { Button, Label, Select, Table, TextInput } from "flowbite-react";
 import MatriculaForm from "../components/MatriculaForm";
 import Confirmacion from "../components/matriculacion/Confirmacion";
 import toast, { Toaster } from "react-hot-toast";
@@ -247,59 +247,57 @@ const MatriculacionPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center mb-4">
-          <label htmlFor="anio" className="mr-2">
-            Busqueda
-          </label>
-          <input
-            name="search"
-            id="search"
-            className="w-60 h-12 bg-white p-3 focus-within:border-white"
-            value={filtros.search}
-            onChange={(e) => handleChange(e)}
-            placeholder="Nombre. Apellido. Grado"
-          ></input>
-          <button>
-            <MdSearch />
-          </button>
-
-          <div className="w-80 relative">
-            <select
-              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              value={filtros.grado || ""}
-              name="grado"
-              onChange={(e) => handleChange(e)}
-            >
-              <option value="">Todos</option>
-              {grados.map((grado) => (
-                <option key={grado.id_grado} value={grado.id_grado}>
-                  {grado.nombre}
-                </option>
-              ))}
-            </select>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-row gap-3">
+            <Label className="mr-2">
+              Busqueda
+              <TextInput
+                icon={MdSearch}
+                name="search"
+                id="search"
+                value={filtros.search}
+                onChange={(e) => handleChange(e)}
+                placeholder="Nombre. Apellido. CI."
+              />
+            </Label>
+            <Label htmlFor="anio" className="mr-2">
+              Grado
+              <Select
+                value={filtros.grado || ""}
+                name="grado"
+                onChange={(e) => handleChange(e)}
+              >
+                <option value="">Todos</option>
+                {grados.map((grado) => (
+                  <option key={grado.id_grado} value={grado.id_grado}>
+                    {grado.nombre}
+                  </option>
+                ))}
+              </Select>
+            </Label>
+            <Label className="mr-2">
+              Periodo
+              <Select
+                value={filtros.year}
+                name="year"
+                onChange={(e) => handleChange(e)}
+              >
+                <option value="">Seleccionar Año</option>
+                {Array.from(
+                  { length: 15 },
+                  (_, i) => new Date().getFullYear() - i
+                ).map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </Select>
+            </Label>
           </div>
-
-          <div className="w-80 relative">
-            <select
-              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              value={filtros.year}
-              name="year"
-              onChange={(e) => handleChange(e)}
-            >
-              <option value="">Seleccionar Año</option>
-              {Array.from(
-                { length: 15 },
-                (_, i) => new Date().getFullYear() - i
-              ).map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* </div> */}
 
           <Button
-            className="flex flex-wrap p-2 bg-blue-500"
+            className="flex flex-wrap bg-blue-500 self-end"
             onClick={exportAlumnos}
           >
             <FaFileDownload className="mr-2 h-5 w-5" />
@@ -319,7 +317,7 @@ const MatriculacionPage = () => {
                 <span className="sr-only">Acciones</span>
               </Table.HeadCell>
               <Table.HeadCell>
-                <span className="sr-only">Confirmar / Desmatricular</span>
+                <span className="sr-only">Confirmar </span>
               </Table.HeadCell>
             </Table.Head>
             <Table.Body>
