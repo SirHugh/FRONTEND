@@ -34,7 +34,6 @@ function TimbradoPage() {
       const page = Math.min(currentPage + 1, totalPages);
       try {
         const res = await getTimbrado(page);
-
         setTimbradoList(res.data.results);
         setTotalPages(Math.ceil(res.data.count / 10));
       } catch (error) {
@@ -62,6 +61,8 @@ function TimbradoPage() {
         es_activo: !timbrado.es_activo,
       });
       console.log(res);
+      toast.success("Timbrado Actualizado");
+      setReload(!reload);
     } catch (error) {
       toast.error(error.response.data.error);
       console.log(error);
@@ -77,7 +78,6 @@ function TimbradoPage() {
   const onCloseActivate = () => {
     setTimbrado(defaultData);
     setShowActivate(false);
-    setReload(!reload);
   };
 
   return (

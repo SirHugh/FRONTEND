@@ -20,9 +20,9 @@ const QrCode = ({ show, onClose }) => {
   }, []);
 
   return (
-    <Modal show={show} onClose={onClose} className="bg-white" size="sm" popup>
+    <Modal show={show} onClose={onClose} size="md" popup>
       <Modal.Header>
-        <h1>Añadir Alumno</h1>
+        <h1>Inscripcion Movil</h1>
       </Modal.Header>
       <Modal.Body>
         <div className="p-2">
