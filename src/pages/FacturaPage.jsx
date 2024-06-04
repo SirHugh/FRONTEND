@@ -47,15 +47,21 @@ function FacturaPage() {
     const fetchBasics = async () => {
       try {
         const res = await getActiveTimbrado();
-        setTimbrado(res.data[0]);
-        setFactura({
-          ...factura,
-          comprobante: {
-            ...factura.comprobante,
-            ["nro_factura"]: res.data[0].ultimo_numero + 1,
-            ["id_timbrado"]: res.data[0].id_timbrado,
-          },
-        });
+        if (res.data[0]) {
+          setTimbrado(res.data[0]);
+          setFactura({
+            ...factura,
+            comprobante: {
+              ...factura.comprobante,
+              ["nro_factura"]: res.data[0].ultimo_numero + 1,
+              ["id_timbrado"]: res.data[0].id_timbrado,
+            },
+          });
+        } else
+          toast.error("No se encontro timbrado habilitado", {
+            duration: 5000,
+            icon: <BiError color="red" fontSize="1.5rem" />,
+          });
         const res2 = await getBasicInfo();
         setInfo(res2.data);
       } catch (error) {
@@ -115,6 +121,10 @@ function FacturaPage() {
     }
     if (factura.comprobante.monto === 0) {
       toast.error("Debe seleccionar al menos un concepto de pago");
+      return false;
+    }
+    if (factura.comprobante.id_timbrado === "") {
+      toast.error("Debe habilitar un timbrado");
       return false;
     }
     return true;
