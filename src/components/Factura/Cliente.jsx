@@ -3,7 +3,7 @@ import { useState } from "react";
 import { getCliente } from "../../services/CajaService";
 import toast from "react-hot-toast";
 
-const Cliente = ({ cliente, edit }) => {
+const Cliente = ({ cliente, setCliente, edit }) => {
   const [lclEdit, setLclEdit] = useState(edit || true);
   const [form, setForm] = useState(
     cliente || {
@@ -42,6 +42,7 @@ const Cliente = ({ cliente, edit }) => {
         return;
       }
       setForm(res.data[0]);
+      setCliente(res.data[0]);
     } catch (error) {
       toast.error(error.message);
       console.log(error);

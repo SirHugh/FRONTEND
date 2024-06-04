@@ -62,7 +62,7 @@ const AddItemModal = ({ show, onClose, action, setData }) => {
   };
 
   const handleAction = () => {
-    setData((prevValues) => [...prevValues, ...itemsApply]);
+    setData(itemsApply);
     close();
     action();
   };

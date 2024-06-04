@@ -14,7 +14,8 @@ export const createProducto = (data) => ApiClient.post(`/caja/producto/`, data);
 export const updateProducto = (id, data) =>
   ApiClient.patch(`/caja/producto/${id}/`, data);
 
-export const createProductoGrado = (data) => ApiClient.post(`/caja/productogrado/`, data);
+export const createProductoGrado = (data) =>
+  ApiClient.post(`/caja/productogrado/`, data);
 
 // ---------------------
 // servicios para el manejo de aranceles
@@ -62,4 +63,16 @@ export const getTimbrado = (page, id) => {
 
 export const updateTimbrado = (id, data) => {
   return ApiClient.patch(`/caja/timbrado/${id}/`, data);
+};
+
+export const getActiveTimbrado = () => {
+  return ApiClient.get(`/caja/timbrado/?es_activo=true`);
+};
+
+// ---------------------
+// servicios para el manejo de timbrados
+// ---------------------
+
+export const createComprobante = (data) => {
+  return ApiClient.post(`/caja/comprobante/`, data);
 };

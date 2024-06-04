@@ -16,10 +16,8 @@ function DetalleFactura({ items, setItems }) {
           <Table.Head className="">
             <Table.HeadCell>N°</Table.HeadCell>
             <Table.HeadCell>Concepto</Table.HeadCell>
-            <Table.HeadCell>Precio Unitario</Table.HeadCell>
-            <Table.HeadCell>Cantidad</Table.HeadCell>
-            <Table.HeadCell>Total</Table.HeadCell>
-            <Table.HeadCell></Table.HeadCell>
+            <Table.HeadCell>Importe Total</Table.HeadCell>
+            <Table.HeadCell className="sr-only"></Table.HeadCell>
           </Table.Head>
           <Table.Body>
             {items?.map((item, index) => (
@@ -33,9 +31,7 @@ function DetalleFactura({ items, setItems }) {
                     Months[new Date(item.fecha_vencimiento).getMonth()].name}
                 </Table.Cell>
                 <Table.Cell>{CurrencyFormatter(Number(item.monto))}</Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell></Table.Cell>
-                <Table.Cell>
+                <Table.Cell className="flex justify-end">
                   <HiOutlineTrash
                     className="cursor-pointer"
                     color="red"
