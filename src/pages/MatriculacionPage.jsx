@@ -342,17 +342,19 @@ const MatriculacionPage = () => {
                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                       {matricula.es_activo &&
                       matricula.anio_lectivo === periodoActual?.periodo
-                        ? "Activo"
-                        : "Inactivo"}
+                        ? "Activo" : matricula.fecha_desmatriculacion != null ? "Cancelado" :
+                         "Inactivo"}
                     </span>
                   </Table.Cell>
                   <Table.Cell>
+                    { matricula.fecha_desmatriculacion == null &&
                     <button
                       className="text-blue-500"
                       onClick={() => handleEditMatricula(matricula)}
                     >
                       Editar
                     </button>
+                    }
                   </Table.Cell>
                   <Table.Cell>
                     {!matricula.fecha_desmatriculacion && (
