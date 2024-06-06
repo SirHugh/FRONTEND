@@ -131,7 +131,7 @@ export const AlumnosList = () => {
         <h1 className="">ALUMNOS</h1>
       </div>
       <div className="flex flex-col items-center justify-center mb-2">
-        <div className="flex w-full p-3">
+        <div className="flex w-full p-4">
           <div className="w-80 relative">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <MdSearch className="size-6" />
