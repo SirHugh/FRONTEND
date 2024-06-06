@@ -3,8 +3,8 @@ import { searchResponsables } from "../services/AcademicoService";
 import { Table } from "flowbite-react";
 import { BiEdit } from "react-icons/bi";
 import { MdSearch } from "react-icons/md";
-import PaginationButtons from "../components/PaginationButtons"; // Componente de paginación reutilizable
-import useAuth from "../hooks/useAuth"; // Hook para manejar autenticación
+import PaginationButtons from "../components/PaginationButtons";
+import useAuth from "../hooks/useAuth";
 import ClienteResponsableForm from "./ClienteResponsableForm";
 import { Link } from "react-router-dom";
 
@@ -15,15 +15,15 @@ const ResponsablesList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedResponsable, setSelectedResponsable] = useState(null);
   const { authTokens } = useAuth();
-  const itemsPerPage = 10; // Número de elementos por página
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const loadResponsables = async () => {
       try {
-        const res = await searchResponsables(currentPage + 1, searchTerm); // currentPage + 1 para la paginación 1-based
+        const res = await searchResponsables(currentPage + 1, searchTerm);
         if (res.status === 200) {
-          setResponsables(res.data.slice(0, itemsPerPage));
-          setTotalPages(Math.ceil(res.data.length / itemsPerPage));
+          setResponsables(res.data.results);
+          setTotalPages(Math.ceil(res.data.count / itemsPerPage));
         } else {
           console.error("Error al cargar los responsables:", res.message);
         }
@@ -36,7 +36,7 @@ const ResponsablesList = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(0); // Resetear a la primera página en una nueva búsqueda
+    setCurrentPage(0);
   };
 
   const handleEditClick = (responsable) => {
@@ -49,14 +49,13 @@ const ResponsablesList = () => {
 
   return (
     <div className="w-full mx-auto bg-white rounded-lg shadow-lg p-6">
-      {selectedResponsable ? (
+      {selectedResponsable && (
         <ClienteResponsableForm
           responsable={selectedResponsable}
           onClose={handleCloseModal}
-          show= {true}
+          show={true}
         />
-      ) : null}
-
+      )}
       <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
         <h1 className="">RESPONSABLES</h1>
       </div>
@@ -68,11 +67,9 @@ const ResponsablesList = () => {
           type="search"
           id="search"
           name="search"
-          className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Buscar Cliente..."
-          onChange={(e) => {
-            handleSearch(e);
-          }}
+          onChange={handleSearch}
           required
         />
       </div>
@@ -89,35 +86,43 @@ const ResponsablesList = () => {
             <Table.HeadCell>Acciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="bg-white divide-y">
-            {responsables.map((responsable) => (
-              <Table.Row
-                key={responsable.id_responsable}
-                className="hover:border-l-blue-500 hover:border-l-4"
-              >
-                <Table.Cell>
-                  {responsable.id_cliente.nombre} {responsable.id_cliente.apellido}
-                </Table.Cell>
-                <Table.Cell>
-                  {responsable.id_cliente.ruc != ""? responsable.id_cliente.ruc : responsable.id_cliente.cedula}
-                </Table.Cell>
-                <Table.Cell>{responsable.id_cliente.telefono}</Table.Cell>
-                <Table.Cell>{responsable.id_cliente.email}</Table.Cell>
-                <Table.Cell>{responsable.id_cliente.direccion}</Table.Cell>
-                <Table.Cell>
-                  <Link to={`/alumnos/${responsable.id_alumno}`}>
-                    {responsable.id_alumno}
-                  </Link>
-                </Table.Cell>
-                <Table.Cell>{responsable.tipo_relacion}</Table.Cell>
-                <Table.Cell>
-                  <BiEdit
-                    className="text-2xl cursor-pointer"
-                    title="Editar"
-                    onClick={() => handleEditClick(responsable)}
-                  />
+            {responsables.length > 0 ? (
+              responsables.map((responsable) => (
+                <Table.Row
+                  key={responsable.id_responsable}
+                  className="hover:border-l-blue-500 hover:border-l-4"
+                >
+                  <Table.Cell>
+                    {responsable.id_cliente.nombre} {responsable.id_cliente.apellido}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {responsable.id_cliente.ruc !== "" ? responsable.id_cliente.ruc : responsable.id_cliente.cedula}
+                  </Table.Cell>
+                  <Table.Cell>{responsable.id_cliente.telefono}</Table.Cell>
+                  <Table.Cell>{responsable.id_cliente.email}</Table.Cell>
+                  <Table.Cell>{responsable.id_cliente.direccion}</Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/alumnos/${responsable.id_alumno}`}>
+                      {responsable.id_alumno}
+                    </Link>
+                  </Table.Cell>
+                  <Table.Cell>{responsable.tipo_relacion}</Table.Cell>
+                  <Table.Cell>
+                    <BiEdit
+                      className="text-2xl cursor-pointer"
+                      title="Editar"
+                      onClick={() => handleEditClick(responsable)}
+                    />
+                  </Table.Cell>
+                </Table.Row>
+              ))
+            ) : (
+              <Table.Row>
+                <Table.Cell colSpan={8} className="text-center">
+                  No hay responsables disponibles
                 </Table.Cell>
               </Table.Row>
-            ))}
+            )}
           </Table.Body>
         </Table>
       </div>
@@ -125,7 +130,7 @@ const ResponsablesList = () => {
         <PaginationButtons
           totalPages={totalPages}
           currentPage={currentPage}
-          onPageChange={setCurrentPage} // Pasar setCurrentPage como prop
+          onPageChange={(page) => setCurrentPage(page)}
         />
       </div>
     </div>
