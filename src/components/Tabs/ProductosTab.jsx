@@ -1,4 +1,3 @@
-// ProductosTab.js
 import React, { useState, useEffect } from "react";
 import { Table, Button } from "flowbite-react";
 import { BiEdit, BiError } from "react-icons/bi";
@@ -6,7 +5,8 @@ import PaginationButtons from "../PaginationButtons";
 import ProductoModal from "../ProductoModal";
 import { getProducto, createProducto, updateProducto } from "../../services/CajaService";
 import { FaPlus } from "react-icons/fa";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { CurrencyFormatter, DateFormatter } from "../Constants"; // Import CurrencyFormatter
 
 const ProductosTab = () => {
   const [productos, setProductos] = useState([]);
@@ -20,7 +20,7 @@ const ProductosTab = () => {
   useEffect(() => {
     const loadProductos = async () => {
       try {
-        const res = await getProducto("", "");
+        const res = await getProducto("", "PR");
         if (res.status === 200) {
           setProductos(res.data.slice(0, itemsPerPage));
           setTotalPages(Math.ceil(res.data.length / itemsPerPage));
@@ -37,6 +37,7 @@ const ProductosTab = () => {
   const handleSave = async (producto) => {
     try {
       if (selectedProducto) {
+        console.log("TRATA DE ACTUALIZAR producto de id: " + selectedProducto.id_producto + " " +JSON.stringify(producto));
         await updateProducto(selectedProducto.id_producto, producto);
         toast.success("Datos actualizados exitosamente!", { duration: 5000 });
       } else {
@@ -44,7 +45,7 @@ const ProductosTab = () => {
         toast.success("Producto registrado exitosamente!", { duration: 5000 });
       }
       setShowModal(false);
-      const res = await getProducto("", "");
+      const res = await getProducto("", "PR");
       setProductos(res.data.slice(0, itemsPerPage));
     } catch (error) {
       toast.error("Ha ocurrido un error al guardar los datos.", {
@@ -79,7 +80,6 @@ const ProductosTab = () => {
             <Table.HeadCell>Stock</Table.HeadCell>
             <Table.HeadCell>Precio</Table.HeadCell>
             <Table.HeadCell>Activo</Table.HeadCell>
-            <Table.HeadCell>Mensual</Table.HeadCell>
             <Table.HeadCell>Acciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="bg-white divide-y">
@@ -93,9 +93,8 @@ const ProductosTab = () => {
                 <Table.Cell>{producto.descripcion}</Table.Cell>
                 <Table.Cell>{producto.tipo}</Table.Cell>
                 <Table.Cell>{producto.stock}</Table.Cell>
-                <Table.Cell>{producto.precio}</Table.Cell>
+                <Table.Cell>{CurrencyFormatter(producto.precio)}</Table.Cell>
                 <Table.Cell>{producto.es_activo ? "Sí" : "No"}</Table.Cell>
-                <Table.Cell>{producto.es_mensual ? "Sí" : "No"}</Table.Cell>
                 <Table.Cell>
                   <BiEdit
                     className="text-2xl cursor-pointer"
@@ -121,6 +120,7 @@ const ProductosTab = () => {
           producto={selectedProducto}
           onSave={handleSave}
           onClose={() => setShowModal(false)}
+          tipo="PR" // Pasamos el tipo de producto
         />
       )}
     </div>

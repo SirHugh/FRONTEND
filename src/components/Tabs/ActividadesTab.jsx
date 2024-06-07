@@ -5,6 +5,7 @@ import PaginationButtons from "../PaginationButtons";
 import ProductoModal from "../ProductoModal";
 import { getProducto, createProducto, updateProducto } from "../../services/CajaService";
 import { FaPlus } from "react-icons/fa";
+import { CurrencyFormatter, DateFormatter } from "../Constants"; // Import CurrencyFormatter
 
 const ActividadesTab = () => {
   const [productos, setProductos] = useState([]);
@@ -71,7 +72,6 @@ const ActividadesTab = () => {
             <Table.HeadCell>Stock</Table.HeadCell>
             <Table.HeadCell>Precio</Table.HeadCell>
             <Table.HeadCell>Activo</Table.HeadCell>
-            <Table.HeadCell>Mensual</Table.HeadCell>
             <Table.HeadCell>Acciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="bg-white divide-y">
@@ -85,9 +85,8 @@ const ActividadesTab = () => {
                 <Table.Cell>{producto.descripcion}</Table.Cell>
                 <Table.Cell>{producto.tipo}</Table.Cell>
                 <Table.Cell>{producto.stock}</Table.Cell>
-                <Table.Cell>{producto.precio}</Table.Cell>
+                <Table.Cell>{CurrencyFormatter(producto.precio)}</Table.Cell>
                 <Table.Cell>{producto.es_activo ? "Sí" : "No"}</Table.Cell>
-                <Table.Cell>{producto.es_mensual ? "Sí" : "No"}</Table.Cell>
                 <Table.Cell>
                   <BiEdit
                     className="text-2xl cursor-pointer"
@@ -113,6 +112,7 @@ const ActividadesTab = () => {
           producto={selectedProducto}
           onSave={handleSave}
           onClose={() => setShowModal(false)}
+          tipo={"AC"}
         />
       )}
     </div>

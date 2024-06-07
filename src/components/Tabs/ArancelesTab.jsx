@@ -1,50 +1,57 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button } from "flowbite-react";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiError } from "react-icons/bi";
 import PaginationButtons from "../PaginationButtons";
-import ArancelModal_ from "../ArancelModal_";
 import ProductoModal from "../ProductoModal";
-import { getArancel, createArancel, updateArancel } from "../../services/CajaService";
+import { getProducto, createProducto, updateProducto } from "../../services/CajaService";
 import { FaPlus } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { CurrencyFormatter, DateFormatter } from "../Constants"; // Import CurrencyFormatter
 
 const ArancelesTab = () => {
-  const [aranceles, setAranceles] = useState([]);
+  const [productos, setProductos] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedArancel, setSelectedArancel] = useState(null);
+  const [selectedProducto, setSelectedProducto] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   const itemsPerPage = 10;
 
   useEffect(() => {
-    const loadAranceles = async () => {
+    const loadProductos = async () => {
       try {
-        const res = await getArancel(true, null, null, currentPage, "");
+        const res = await getProducto("", "AR");
         if (res.status === 200) {
-          setAranceles(res.data.results || []); // Asegúrate de que siempre es una matriz
-          setTotalPages(Math.ceil(res.data.count / itemsPerPage));
+          setProductos(res.data.slice(0, itemsPerPage));
+          setTotalPages(Math.ceil(res.data.length / itemsPerPage));
         } else {
-          console.error("Error al cargar los aranceles:", res.message);
+          console.error("Error al cargar los productos:", res.message);
         }
       } catch (error) {
-        console.error("Error al obtener los aranceles:", error);
+        console.error("Error al obtener los productos:", error);
       }
     };
-    loadAranceles();
+    loadProductos();
   }, [currentPage]);
 
-  const handleSave = async (arancel) => {
+  const handleSave = async (producto) => {
     try {
-      if (selectedArancel) {
-        await updateArancel(selectedArancel.id_arancel, arancel);
+      if (selectedProducto) {
+        await updateProducto(selectedProducto.id_producto, producto);
+        toast.success("Datos actualizados exitosamente!", { duration: 5000 });
       } else {
-        await createArancel(arancel);
+        await createProducto(producto);
+        toast.success("Producto registrado exitosamente!", { duration: 5000 });
       }
       setShowModal(false);
-      const res = await getArancel(true, null, null, currentPage, "");
-      setAranceles(res.data.results || []);
+      const res = await getProducto("", "AR");
+      setProductos(res.data.slice(0, itemsPerPage));
     } catch (error) {
-      console.error("Error al guardar el arancel:", error.response ? error.response.data : error.message);
+      toast.error("Ha ocurrido un error al guardar los datos.", {
+        duration: 5000,
+        icon: <BiError color="red" fontSize="5.5rem" />,
+      });
+      console.error("Error al guardar el producto:", error.response ? error.response.data : error.message);
     }
   };
 
@@ -56,7 +63,7 @@ const ArancelesTab = () => {
       <div className="flex flex-row justify-end h-16 p-3 gap-3 items-center">
         <Button
           className="flex flex-wrap bg-blue-500"
-          onClick={() => { setSelectedArancel(null); setShowModal(true); }}
+          onClick={() => { setSelectedProducto(null); setShowModal(true); }}
         >
           <FaPlus className="mr-2 h-5 w-5" />
           <h1>Agregar Arancel</h1>
@@ -66,47 +73,39 @@ const ArancelesTab = () => {
         <Table className="divide-y">
           <Table.Head className="bg-gray-500">
             <Table.HeadCell>ID</Table.HeadCell>
-            <Table.HeadCell>Matricula</Table.HeadCell>
-            <Table.HeadCell>Producto</Table.HeadCell>
-            <Table.HeadCell>Comprobante</Table.HeadCell>
-            <Table.HeadCell>Fecha Vencimiento</Table.HeadCell>
-            <Table.HeadCell>Nro Cuota</Table.HeadCell>
-            <Table.HeadCell>Monto</Table.HeadCell>
+            <Table.HeadCell>Nombre</Table.HeadCell>
+            <Table.HeadCell>Descripción</Table.HeadCell>
+            <Table.HeadCell>Tipo</Table.HeadCell>
+            <Table.HeadCell>Precio</Table.HeadCell>
+            <Table.HeadCell>Tipo de pago</Table.HeadCell>
             <Table.HeadCell>Activo</Table.HeadCell>
             <Table.HeadCell>Acciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="bg-white divide-y">
-            {aranceles && aranceles.length > 0 ? (
-              aranceles.map((arancel) => (
-                <Table.Row
-                  key={arancel.id_arancel}
-                  className="hover:border-l-blue-500 hover:border-l-4"
-                >
-                  <Table.Cell>{arancel.id_arancel}</Table.Cell>
-                  <Table.Cell>{arancel.id_matricula}</Table.Cell>
-                  <Table.Cell>{arancel.id_producto}</Table.Cell>
-                  <Table.Cell>{arancel.id_comprobante}</Table.Cell>
-                  <Table.Cell>{arancel.fecha_vencimiento}</Table.Cell>
-                  <Table.Cell>{arancel.nro_cuota}</Table.Cell>
-                  <Table.Cell>{arancel.monto}</Table.Cell>
-                  <Table.Cell>{arancel.es_activo ? "Sí" : "No"}</Table.Cell>
-                  <Table.Cell>
-                    <BiEdit
-                      className="text-2xl cursor-pointer"
-                      title="Editar"
-                      onClick={() => {
-                        setSelectedArancel(arancel);
-                        setShowModal(true);
-                      }}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              ))
-            ) : (
-              <Table.Row>
-                <Table.Cell colSpan="9">No hay aranceles disponibles</Table.Cell>
+            {productos.map((producto) => (
+              <Table.Row
+                key={producto.id_producto}
+                className="hover:border-l-blue-500 hover:border-l-4"
+              >
+                <Table.Cell>{producto.id_producto}</Table.Cell>
+                <Table.Cell>{producto.nombre}</Table.Cell>
+                <Table.Cell>{producto.descripcion}</Table.Cell>
+                <Table.Cell>{producto.tipo}</Table.Cell>
+                <Table.Cell>{CurrencyFormatter(producto.precio)}</Table.Cell>
+                <Table.Cell>{producto.es_mensual != null  ? "Único" : "Mensual"}</Table.Cell>
+                <Table.Cell>{producto.es_activo ? "Sí" : "No"}</Table.Cell>
+                <Table.Cell>
+                  <BiEdit
+                    className="text-2xl cursor-pointer"
+                    title="Editar"
+                    onClick={() => {
+                      setSelectedProducto(producto);
+                      setShowModal(true);
+                    }}
+                  />
+                </Table.Cell>
               </Table.Row>
-            )}
+            ))}
           </Table.Body>
         </Table>
         <PaginationButtons
@@ -117,9 +116,10 @@ const ArancelesTab = () => {
       </div>
       {showModal && (
         <ProductoModal
-          arancel={selectedArancel}
+          producto={selectedProducto}
           onSave={handleSave}
           onClose={() => setShowModal(false)}
+          tipo="AR" // Pasamos el tipo de producto
         />
       )}
     </div>

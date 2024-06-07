@@ -64,12 +64,7 @@ function GradosPage() {
     try {
       await updateGrado(id, data);
       setShowModal(false);
-      const res = await getGrados();
-      if (res.status === 200) {
-        setGrados(res.data);
-      } else {
-        console.error("Error al cargar los grados:", res.message);
-      }
+      loadGrados();
     } catch (error) {
       console.error("Error al actualizar el grado:", error);
     }
