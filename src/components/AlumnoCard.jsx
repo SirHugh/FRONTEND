@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const AlumnoCard = ({ alumno, onSubmit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedAlumno, setEditedAlumno] = useState(alumno);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const handleEdit = () => {
     setIsEditing(!isEditing);
@@ -16,12 +17,18 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
     });
   };
 
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(editedAlumno); // Llama a la función de manejo para enviar los datos actualizados
+    const updatedAlumno = {
+      ...editedAlumno,
+      fotocarnet: selectedFile || editedAlumno.fotocarnet
+    };
+    onSubmit(updatedAlumno); // Llama a la función de manejo para enviar los datos actualizados
   };
-  
-  ;
 
   return (
     <div className="bg-white-100 p-4 rounded-md shadow-md">
@@ -37,7 +44,12 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
               alt="Foto carnet"
             />
             <h6 className="mt-4">Subir una foto diferente...</h6>
-            <input type="file" className="form-control" disabled={!isEditing} />
+            <input
+              type="file"
+              className="form-control"
+              disabled={!isEditing}
+              onChange={handleFileChange}
+            />
           </div>
         </div>
 
@@ -177,7 +189,6 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
                     value={editedAlumno.barrio}
                     onChange={handleChange}
                     readOnly={!isEditing}
-                    required
                   />
                   <label
                     htmlFor="barrio"
@@ -196,7 +207,6 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
                     value={editedAlumno.direccion}
                     onChange={handleChange}
                     readOnly={!isEditing}
-                    required
                   />
                   <label
                     htmlFor="direccion"
@@ -315,7 +325,6 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
                       value={editedAlumno.telefono}
                       onChange={handleChange}
                       readOnly={!isEditing}
-                      required
                     />
                     <label
                       htmlFor="telefono"
