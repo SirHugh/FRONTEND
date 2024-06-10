@@ -126,6 +126,17 @@ const menuItems = [
         ),
         link: "/responsables",
       },
+      {
+        text: "DashBoards",
+        icon: (
+          <img
+            src={userIcon}
+            alt="DashBoards"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/academicoDashBoards",
+      },
       // Agrega más subelementos según sea necesario
     ],
   },

@@ -9,6 +9,7 @@ import usersIcon from "../assets/icons/usersIcon.svg";
 import backpackIcon from "../assets/icons/backpack.svg";
 import honourIcon from "../assets/icons/honour.svg";
 import useAuth from "../hooks/useAuth"; // Importa tu hook de autenticación
+import MatriculacionesDashboard from "../components/Dashboards/MatriculacionesDashboard";
 
 const MainPage = () => {
   const { user } = useAuth(); // Obtiene la información del usuario
