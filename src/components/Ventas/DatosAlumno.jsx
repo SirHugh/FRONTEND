@@ -1,5 +1,5 @@
 import AsyncSelect from "react-select/async";
-import { getMatricula } from "../../services/AcademicoService";
+import { searchMatricula } from "../../services/AcademicoService";
 import { useState } from "react";
 
 function DatosAlumno({ setData }) {
@@ -8,7 +8,7 @@ function DatosAlumno({ setData }) {
 
   const loadOptions = async () => {
     if (inputValue.length < 2) return;
-    return getMatricula("", "", inputValue, 1).then((result) => {
+    return searchMatricula(true, inputValue, 1).then((result) => {
       const res = result.data.results;
       return res;
     });

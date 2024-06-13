@@ -1,7 +1,6 @@
-import React from 'react';
-import MatriculacionesDashboard from '../components/Dashboards/MatriculacionesDashboard';
-import AlumnosPorGradoDashboard from '../components/Dashboards/AlumnosPorGradoDashboard';
-import AlumnosPorBecaDashboard from '../components/Dashboards/AlumnosPorBecaDashboard';
+import MatriculacionesDashboard from "../components/Dashboards/MatriculacionesDashboard";
+import AlumnosPorGradoDashboard from "../components/Dashboards/AlumnosPorGradoDashboard";
+import AlumnosPorBecaDashboard from "../components/Dashboards/AlumnosPorBecaDashboard";
 // Importa otros dashboards aquí cuando estén disponibles
 
 const DashBoardsPage = () => {

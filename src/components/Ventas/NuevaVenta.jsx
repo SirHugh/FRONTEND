@@ -1,4 +1,4 @@
-import { Button, Label, Modal, Select, TextInput } from "flowbite-react";
+import { Button, Label, Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import moment from "moment";
@@ -12,7 +12,7 @@ import PagoCard from "./PagoCard";
 import { BiError } from "react-icons/bi";
 import { createVenta } from "../../services/CajaService";
 
-function NuevaVenta({ show, onClose, action }) {
+function NuevaVenta({ onClose }) {
   const { user } = useAuth();
   const [detalleList, setDetalleList] = useState([]);
   const [nro_cuotas, setNro_cuotas] = useState([]);

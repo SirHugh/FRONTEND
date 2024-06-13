@@ -86,3 +86,13 @@ export const createComprobante = (data) => {
 export const createVenta = (data) => {
   return ApiClient.post(`/caja/venta/`, data);
 };
+
+export const getVenta = (id, page, search) => {
+  return ApiClient.get(
+    `/caja/venta/${
+      id
+        ? id + "/"
+        : `?${page ? "page=" + page : ""}${search ? "&search=" + search : ""}`
+    }`
+  );
+};

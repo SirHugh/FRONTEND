@@ -1,6 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { getMatricula } from '../../services/AcademicoService';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { useEffect, useState } from "react";
+import { getMatricula } from "../../services/AcademicoService";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 
 const MatriculacionesDashboard = () => {
   const [data, setData] = useState([]);
@@ -10,14 +19,14 @@ const MatriculacionesDashboard = () => {
     const fetchData = async () => {
       const currentYear = new Date().getFullYear();
       const lastYear = currentYear - 1;
-      const grado = '';  // Puedes ajustar el grado si es necesario
-      const search = ''; // Puedes ajustar el search si es necesario
-      const page = '';   // Puedes ajustar el page si es necesario
+      const grado = ""; // Puedes ajustar el grado si es necesario
+      const search = ""; // Puedes ajustar el search si es necesario
+      const page = ""; // Puedes ajustar el page si es necesario
 
       try {
         const [currentYearResponse, lastYearResponse] = await Promise.all([
           getMatricula(currentYear, grado, search, page),
-          getMatricula(lastYear, grado, search, page)
+          getMatricula(lastYear, grado, search, page),
         ]);
 
         const currentYearMatriculas = currentYearResponse.data;
@@ -26,27 +35,36 @@ const MatriculacionesDashboard = () => {
         const newMatriculasCurrentYear = currentYearMatriculas.length;
         const newMatriculasLastYear = lastYearMatriculas.length;
 
-        const retainedStudents = currentYearMatriculas.filter(matricula =>
-          lastYearMatriculas.some(lastYearMatricula =>
-            lastYearMatricula.id_alumno === matricula.id_alumno
+        const retainedStudents = currentYearMatriculas.filter((matricula) =>
+          lastYearMatriculas.some(
+            (lastYearMatricula) =>
+              lastYearMatricula.id_alumno === matricula.id_alumno
           )
         ).length;
 
         const retentionRate = (retainedStudents / newMatriculasLastYear) * 100;
-        const newStudentsRate = ((newMatriculasCurrentYear - retainedStudents) / newMatriculasCurrentYear) * 100;
+        const newStudentsRate =
+          ((newMatriculasCurrentYear - retainedStudents) /
+            newMatriculasCurrentYear) *
+          100;
 
         setData([
-          { name: 'Año Anterior: '+ lastYear, Matriculaciones: newMatriculasLastYear },
-          { name: 'Año Actual: ' + currentYear, Matriculaciones: newMatriculasCurrentYear },
+          {
+            name: "Año Anterior: " + lastYear,
+            Matriculaciones: newMatriculasLastYear,
+          },
+          {
+            name: "Año Actual: " + currentYear,
+            Matriculaciones: newMatriculasCurrentYear,
+          },
         ]);
 
         setStats({
           retentionRate: retentionRate.toFixed(2),
           newStudentsRate: newStudentsRate.toFixed(2),
         });
-
       } catch (error) {
-        console.error('Error fetching matriculas data:', error);
+        console.error("Error fetching matriculas data:", error);
       }
     };
 
