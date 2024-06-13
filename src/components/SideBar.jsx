@@ -148,7 +148,7 @@ const menuItems = [
         link: "/productos",
       },
       {
-        text: "Aranceles",
+        text: "Ventas",
         icon: (
           <img
             src={cashIcon}
@@ -156,7 +156,7 @@ const menuItems = [
             className="w-5 h-5 mr-2 object-contain"
           />
         ),
-        link: "/aranceles",
+        link: "/ventas",
       },
       {
         text: "Factura",

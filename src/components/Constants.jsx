@@ -13,6 +13,14 @@ export const Months = [
   { id: 11, name: "DICIEMBRE" },
 ];
 
+// export const DateFormatter = (date) =>
+//   new Date(date).toLocaleDateString("es-ES", {
+//     weekday: "short",
+//     year: "numeric",
+//     month: "short",
+//     day: "numeric",
+//   });
+
 export const DateFormatter = (date) =>
   new Intl.DateTimeFormat("es-ES", {
     weekday: "short",

@@ -28,6 +28,7 @@ const Confirmacion = ({ show, onClose, periodoActual, matricula }) => {
             ? fecha_inicio_periodo.getMonth()
             : fecha_inscripcion.getMonth();
 
+          console.log("desde", desde);
           const hasta = !item.es_mensual ? fecha_fin_periodo.getMonth() : false;
           item.desde = desde;
           hasta && (item.hasta = hasta);

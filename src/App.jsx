@@ -21,6 +21,7 @@ import { Toaster } from "react-hot-toast";
 import FacturaPage from "./pages/FacturaPage";
 import TimbradoPage from "./pages/TimbradoPage";
 import BasicsInfoPage from "./pages/BasicsInfoPage";
+import VentasPage from "./pages/VentasPage";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -58,7 +59,7 @@ function App() {
             <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
               <Route path="/caja" element={<CajaPage />} />
               <Route path="/productos" element={<ProductosPage />} />
-              <Route path="/aranceles" element={<ArancelesPage />} />
+              <Route path="/ventas" element={<VentasPage />} />
               <Route path="/factura" element={<FacturaPage />} />
               <Route path="/timbrado" element={<TimbradoPage />} />
             </Route>

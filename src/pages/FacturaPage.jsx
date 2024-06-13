@@ -16,12 +16,10 @@ import { Button } from "flowbite-react";
 import moment from "moment";
 import useAuth from "../hooks/useAuth";
 import { BiError } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
 import SummaryModal from "../components/Factura/SummaryModal";
 
 function FacturaPage() {
   const { user } = useAuth();
-  const history = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [detalleList, setDetalleList] = useState([]);
@@ -166,7 +164,7 @@ function FacturaPage() {
         setData={(data) => onSetData(data)}
         action={() => {}}
       />
-      <div className="flex flex-col px-8 gap-y-2 pb-3 bg-blue-100 w-full h-full ">
+      <div className="flex flex-col px-8 gap-y-2 pb-3 bg-slate-200 w-full h-full ">
         <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
           <FaFileInvoiceDollar className="text-cyan-600" />
           <h1 className="">Registro de Factura</h1>

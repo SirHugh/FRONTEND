@@ -3,7 +3,11 @@ import { Table, Button } from "flowbite-react";
 import { BiEdit, BiError } from "react-icons/bi";
 import PaginationButtons from "../PaginationButtons";
 import ProductoModal from "../ProductoModal";
-import { getProducto, createProducto, updateProducto } from "../../services/CajaService";
+import {
+  getProducto,
+  createProducto,
+  updateProducto,
+} from "../../services/CajaService";
 import { FaPlus } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { CurrencyFormatter, DateFormatter } from "../Constants"; // Import CurrencyFormatter
@@ -37,12 +41,17 @@ const ProductosTab = () => {
   const handleSave = async (producto) => {
     try {
       if (selectedProducto) {
-        console.log("TRATA DE ACTUALIZAR producto de id: " + selectedProducto.id_producto + " " +JSON.stringify(producto));
+        console.log(
+          "TRATA DE ACTUALIZAR producto de id: " +
+            selectedProducto.id_producto +
+            " " +
+            JSON.stringify(producto)
+        );
         await updateProducto(selectedProducto.id_producto, producto);
-        toast.success("Datos actualizados exitosamente!", { duration: 5000 });
+        toast.success("Producto actualizado!", { duration: 5000 });
       } else {
         await createProducto(producto);
-        toast.success("Producto registrado exitosamente!", { duration: 5000 });
+        toast.success("Producto registrado!", { duration: 5000 });
       }
       setShowModal(false);
       const res = await getProducto("", "PR");
@@ -52,7 +61,7 @@ const ProductosTab = () => {
         duration: 5000,
         icon: <BiError color="red" fontSize="5.5rem" />,
       });
-      console.error("Error al guardar el producto:", error.response ? error.response.data : error.message);
+      console.log("Error al guardar el producto:", error);
     }
   };
 
@@ -64,7 +73,10 @@ const ProductosTab = () => {
       <div className="flex flex-row justify-end h-16 p-3 gap-3 items-center">
         <Button
           className="flex flex-wrap bg-blue-500"
-          onClick={() => { setSelectedProducto(null); setShowModal(true); }}
+          onClick={() => {
+            setSelectedProducto(null);
+            setShowModal(true);
+          }}
         >
           <FaPlus className="mr-2 h-5 w-5" />
           <h1>Agregar Producto</h1>

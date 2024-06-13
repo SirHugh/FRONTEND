@@ -1,5 +1,5 @@
 import { Table } from "flowbite-react";
-import { CurrencyFormatter, DateFormatter, Months } from "../Constants";
+import { CurrencyFormatter, Months } from "../Constants";
 import { HiOutlineTrash } from "react-icons/hi";
 
 function DetalleFactura({ items, setItems }) {

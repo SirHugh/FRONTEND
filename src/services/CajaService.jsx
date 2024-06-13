@@ -4,15 +4,17 @@ import { ApiClient } from "./ApiClient";
 // servicios para el manejo de productos
 // ---------------------
 
-export const getProducto = (grado, tipo) =>
+export const getProducto = (grado, tipo, page, search) =>
   ApiClient.get(
-    `/caja/producto/?tipo=${tipo}${grado ? "&grados=" + grado : ""}`
+    `/caja/producto/?tipo=${tipo}${grado ? "&grados=" + grado : ""}${
+      page ? "&page=" + page : ""
+    }${search ? "&search=" + search : ""}`
   );
 
 export const createProducto = (data) => ApiClient.post(`/caja/producto/`, data);
 
 export const updateProducto = (id, data) =>
-  ApiClient.patch(`/caja/producto/${id}/`, data);
+  ApiClient.put(`/caja/producto/${id}`, data);
 
 export const createProductoGrado = (data) =>
   ApiClient.post(`/caja/productogrado/`, data);
@@ -70,9 +72,17 @@ export const getActiveTimbrado = () => {
 };
 
 // ---------------------
-// servicios para el manejo de timbrados
+// servicios para el manejo de Factura
 // ---------------------
 
 export const createComprobante = (data) => {
   return ApiClient.post(`/caja/comprobante/`, data);
+};
+
+// ---------------------
+// servicios para el manejo de Factura
+// ---------------------
+
+export const createVenta = (data) => {
+  return ApiClient.post(`/caja/venta/`, data);
 };
