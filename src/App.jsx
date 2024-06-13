@@ -21,6 +21,7 @@ import { Toaster } from "react-hot-toast";
 import FacturaPage from "./pages/FacturaPage";
 import TimbradoPage from "./pages/TimbradoPage";
 import BasicsInfoPage from "./pages/BasicsInfoPage";
+import DashBoardsPage from "./pages/DashBoardsPage";
 import VentasPage from "./pages/VentasPage";
 
 const GROUPS = {
@@ -55,6 +56,7 @@ function App() {
               <Route path="/grados" element={<GradosPage />} />
               <Route path="/becas" element={<BecasPage />} />
               <Route path="/responsables" element={<ResponsablesPage />} />
+              <Route path="/academicoDashboards" element={<DashBoardsPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
               <Route path="/caja" element={<CajaPage />} />

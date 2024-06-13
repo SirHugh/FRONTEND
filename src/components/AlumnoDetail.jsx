@@ -26,7 +26,6 @@ const AlumnoDetail = () => {
   const handleDelete = async (alumnoId) => {
     try {
       await deleteAlumno(alumnoId);
-      // Mostrar el modal de éxito después de eliminar el alumno
       setShowDeleteModal(false);
       setShowSuccessModal(true);
     } catch (error) {
@@ -37,20 +36,15 @@ const AlumnoDetail = () => {
   const handleSubmit = async (updatedAlumno) => {
     try {
       const alumnoFormData = new FormData();
-      const alumno = updatedAlumno;
-
-    for (var key in alumno) {
-      if(key == "fotocarnet"){
-        if(alumno[key] instanceof File){
-          alumnoFormData.append(key, alumno[key]);
+      for (var key in updatedAlumno) {
+        if (key === "fotocarnet" && updatedAlumno[key] instanceof File) {
+          alumnoFormData.append(key, updatedAlumno[key]);
+        } else {
+          alumnoFormData.append(key, updatedAlumno[key] ? updatedAlumno[key] : "");
         }
-      }else{
-        alumnoFormData.append(key, alumno[key] ? alumno[key]  : "");
       }
-    }
       await updateAlumno(updatedAlumno.id_alumno, alumnoFormData);
       setShowSuccessModal(true);
-      // Si es necesario, realizar alguna acción después de actualizar
     } catch (error) {
       console.error('Error updating alumno:', error);
     }
@@ -62,7 +56,6 @@ const AlumnoDetail = () => {
 
   const closeSuccessModal = () => {
     setShowSuccessModal(false);
-    // Redirigir a la página de alumnos
     window.location.href = '/alumnos';
   };
 
@@ -70,24 +63,24 @@ const AlumnoDetail = () => {
     <div>
       {alumno ? (
         <div className="flex justify-center items-center">
-        <div className="bg-white p-4 rounded-md ">
-          <AlumnoCard alumno={alumno} onDelete={toggleDeleteModal} onSubmit={handleSubmit} />
-          <DeleteModal
-            show={showDeleteModal}
-            onDelete={() => handleDelete(alumno.id_alumno)}
-            onCancel={toggleDeleteModal}
-            message={"¿Estás seguro de que deseas eliminar este alumno? Esta acción no se puede deshacer."}
-          />
-          <SuccessModal
-            show={showSuccessModal}
-            onClose={closeSuccessModal}
-            title={"Datos actualizados"}
-            message={"Los datos del alumno han sido modificados exitosamente."}
-          />
-        </div>
+          <div className="bg-white p-4 rounded-md ">
+            <AlumnoCard alumno={alumno} onDelete={toggleDeleteModal} onSubmit={handleSubmit} />
+            <DeleteModal
+              show={showDeleteModal}
+              onDelete={() => handleDelete(alumno.id_alumno)}
+              onCancel={toggleDeleteModal}
+              message={"¿Estás seguro de que deseas eliminar este alumno? Esta acción no se puede deshacer."}
+            />
+            <SuccessModal
+              show={showSuccessModal}
+              onClose={closeSuccessModal}
+              title={"Datos actualizados"}
+              message={"Los datos del alumno han sido modificados exitosamente."}
+            />
+          </div>
         </div>
       ) : (
-        <p>Cargando detalles del alumno...</p>
+        <p>Cargando datos del alumno...</p>
       )}
     </div>
   );
