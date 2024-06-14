@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import PagoCard from "./PagoCard";
 import { BiError } from "react-icons/bi";
 import { createVenta } from "../../services/CajaService";
+import { MdAddShoppingCart } from "react-icons/md";
 
 function NuevaVenta({ onClose }) {
   const { user } = useAuth();
@@ -181,7 +182,7 @@ function NuevaVenta({ onClose }) {
   return (
     <div className="flex flex-col px-4 gap-y-2 pb-3 bg-slate-200 w-full h-full ">
       <div className="flex flex-row p-3 gap-3 text-2xl font-bold items-center">
-        <FaFileInvoiceDollar className="text-cyan-600" />
+        <MdAddShoppingCart className="text-cyan-600" />
         <h1 className="">Registro de Venta</h1>
       </div>
       <div className="flex flex-row justify-between gap-2">

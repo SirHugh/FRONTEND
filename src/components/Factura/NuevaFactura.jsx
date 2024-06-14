@@ -20,6 +20,7 @@ import { BiError } from "react-icons/bi";
 import SummaryModal from "./SummaryModal";
 import Cliente from "./Cliente";
 import AddItemModal from "./AddItemModal";
+import { GrTableAdd } from "react-icons/gr";
 
 function NuevaFactura({ onClose }) {
   const { user } = useAuth();
@@ -171,9 +172,9 @@ function NuevaFactura({ onClose }) {
         setData={(data) => onSetData(data)}
         action={() => {}}
       />
-      <div className="flex flex-col px-8 gap-y-2 pb-3 bg-slate-200 w-full h-full ">
-        <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
-          <FaFileInvoiceDollar className="text-cyan-600" />
+      <div className="flex flex-col px-4 gap-y-2 pb-3 bg-slate-200 w-full h-full ">
+        <div className="flex flex-row p-3 gap-3 text-2xl font-bold items-center">
+          <GrTableAdd className="text-blue-500" />
           <h1 className="">Registro de Factura</h1>
         </div>
         {/* encabezado de la factura */}

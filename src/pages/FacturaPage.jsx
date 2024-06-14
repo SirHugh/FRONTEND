@@ -6,6 +6,7 @@ import { BiBlock, BiCartAdd } from "react-icons/bi";
 import TablaFacturas from "../components/Factura/TablaFacturas";
 import NuevaFactura from "../components/Factura/NuevaFactura";
 import { FaCashRegister } from "react-icons/fa6";
+import { GrTableAdd } from "react-icons/gr";
 
 function FacturaPage() {
   const [ShowAgregar, setShowAgregar] = useState(false);
@@ -45,7 +46,7 @@ function FacturaPage() {
             </>
           ) : (
             <>
-              <BiCartAdd className="mr-2 h-5 w-5" />
+              <GrTableAdd className="mr-2 h-5 w-5" />
               <h1>Nueva Factura</h1>
             </>
           )}
