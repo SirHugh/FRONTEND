@@ -170,11 +170,11 @@ const menuItems = [
         link: "/ventas",
       },
       {
-        text: "Factura",
+        text: "Facturación",
         icon: (
           <img
             src={cashIcon}
-            alt="Factura"
+            alt="Facturación"
             className="w-5 h-5 mr-2 object-contain"
           />
         ),

@@ -72,17 +72,13 @@ function NuevaVenta({ onClose }) {
     let monto = total || formData.venta.monto;
     let cuota = monto / cantidad_cuotas;
 
-    console.log("cuota", cuota);
     const resto = cuota % 50;
-    console.log("resto", resto);
     if (resto !== 0) {
       cuota = cuota + 50 - resto;
     }
 
     let arrayAux = [];
-    console.log("Mes desde", desdeMesActual);
     const desde = new Date().getMonth() + (desdeMesActual == 1 ? 0 : 1);
-    console.log("desde", desde);
     const hasta = desde + Number(cantidad_cuotas);
     let nro_pago = 1;
 
@@ -105,7 +101,6 @@ function NuevaVenta({ onClose }) {
       monto = monto - cuota < 0 ? monto : monto - cuota;
       nro_pago++;
     }
-    console.log("arrayAux", arrayAux);
     if (rtn) {
       return arrayAux;
     }
@@ -117,7 +112,6 @@ function NuevaVenta({ onClose }) {
       ...formData,
       venta: { ...formData.venta, id_matricula: m },
     });
-    console.log(formData);
   };
 
   const handleCredito = (e) => {
@@ -126,7 +120,6 @@ function NuevaVenta({ onClose }) {
   };
 
   useEffect(() => {
-    console.log("NewDate", new Date("2024", "12", "01"));
     if (esCredito) {
       setEsCredito(true);
       const cantidad =
@@ -170,14 +163,14 @@ function NuevaVenta({ onClose }) {
     if (!validate()) {
       return;
     }
-    if (!window.confirm("Are you sure you want to proceed?")) {
-      console.log("Proceeding with the action...");
+    if (!window.confirm("Desea Confirmar la Venta?")) {
+      toast.error("Operacion Cancelada");
       return;
     }
     console.log("formdata", formData);
     try {
-      const res = await createVenta(formData);
-      console.log("res", res);
+      await createVenta(formData);
+      toast.success("Venta Registrada");
       onClose();
     } catch (error) {
       toast.error(error.message);

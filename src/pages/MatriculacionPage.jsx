@@ -15,7 +15,7 @@ import { FaFileDownload } from "react-icons/fa";
 import { Button, Label, Select, Table, TextInput } from "flowbite-react";
 import MatriculaForm from "../components/MatriculaForm";
 import Confirmacion from "../components/matriculacion/Confirmacion";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import DesmatricularModal from "../components/matriculacion/Desmatricular";
 import { DateFormatter } from "../components/Constants";
 import moment from "moment";
@@ -125,7 +125,6 @@ const MatriculacionPage = () => {
     });
     setCurrentPage(0);
     setTotalPages(1);
-    console.log(filtros);
   };
 
   //Editar matricula
@@ -342,19 +341,21 @@ const MatriculacionPage = () => {
                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                       {matricula.es_activo &&
                       matricula.anio_lectivo === periodoActual?.periodo
-                        ? "Activo" : matricula.fecha_desmatriculacion != null ? "Cancelado" :
-                         "Inactivo"}
+                        ? "Activo"
+                        : matricula.fecha_desmatriculacion != null
+                        ? "Cancelado"
+                        : "Inactivo"}
                     </span>
                   </Table.Cell>
                   <Table.Cell>
-                    { matricula.fecha_desmatriculacion == null &&
-                    <button
-                      className="text-blue-500"
-                      onClick={() => handleEditMatricula(matricula)}
-                    >
-                      Editar
-                    </button>
-                    }
+                    {matricula.fecha_desmatriculacion == null && (
+                      <button
+                        className="text-blue-500"
+                        onClick={() => handleEditMatricula(matricula)}
+                      >
+                        Editar
+                      </button>
+                    )}
                   </Table.Cell>
                   <Table.Cell>
                     {!matricula.fecha_desmatriculacion && (

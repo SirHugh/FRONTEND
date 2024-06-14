@@ -79,6 +79,16 @@ export const createComprobante = (data) => {
   return ApiClient.post(`/caja/comprobante/`, data);
 };
 
+export const getComprobante = (id, page, search) => {
+  return ApiClient.get(
+    `/caja/comprobante/${
+      id
+        ? id + "/"
+        : `?${page ? "page=" + page : ""}${search ? "&search=" + search : ""}`
+    }`
+  );
+};
+
 // ---------------------
 // servicios para el manejo de Factura
 // ---------------------
