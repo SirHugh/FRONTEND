@@ -4,11 +4,13 @@ import { ApiClient } from "./ApiClient";
 // servicios para el manejo de productos
 // ---------------------
 
-export const getProducto = (grado, tipo, page, search) =>
+export const getProducto = (grado, tipo, page, search, activo) =>
   ApiClient.get(
     `/caja/producto/?tipo=${tipo}${grado ? "&grados=" + grado : ""}${
       page ? "&page=" + page : ""
-    }${search ? "&search=" + search : ""}`
+    }${search ? "&search=" + search : ""}${
+      activo ? "&es_activo=" + activo : ""
+    }`
   );
 
 export const createProducto = (data) => ApiClient.post(`/caja/producto/`, data);
@@ -103,6 +105,18 @@ export const getVenta = (id, page, search) => {
       id
         ? id + "/"
         : `?${page ? "page=" + page : ""}${search ? "&search=" + search : ""}`
+    }`
+  );
+};
+
+// ---------------------
+// servicios para el manejo de Factura
+// ---------------------
+
+export const getPagoVenta = (id, mes, activo) => {
+  return ApiClient.get(
+    `/caja/venta/pago/?matricula=${id}${mes ? "&mes=" + mes : ""}${
+      activo ? "&activo=" + activo : ""
     }`
   );
 };

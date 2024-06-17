@@ -1,8 +1,4 @@
-import {
-  FaFileInvoiceDollar,
-  FaRegEdit,
-  FaRegPlusSquare,
-} from "react-icons/fa";
+import { FaRegEdit, FaRegPlusSquare } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import DetalleFactura from "./DetalleFactura";
@@ -26,7 +22,10 @@ function NuevaFactura({ onClose }) {
   const { user } = useAuth();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
-  const [detalleList, setDetalleList] = useState([]);
+  const [detalleList, setDetalleList] = useState({
+    aranceles: [],
+    ventas: [],
+  });
   const [timbrado, setTimbrado] = useState();
   const [info, setInfo] = useState();
   const [factura, setFactura] = useState({
@@ -74,20 +73,33 @@ function NuevaFactura({ onClose }) {
   }, []);
 
   useEffect(() => {
-    const total = detalleList?.reduce(
+    let total = detalleList.aranceles?.reduce(
       (total, item) => total + Number(item.monto),
       0
     );
 
-    let aux_array = [];
-    detalleList.forEach((detalle) => {
-      aux_array.push(detalle.id_arancel);
+    total =
+      total +
+      detalleList.ventas?.reduce(
+        (total, item) => total + Number(item.monto),
+        0
+      );
+
+    let aux_aranceles = [];
+    detalleList.aranceles.forEach((detalle) => {
+      aux_aranceles.push(detalle.id_arancel);
+    });
+
+    let aux_ventas = [];
+    detalleList.ventas.forEach((venta) => {
+      aux_ventas.push(venta.id_pago);
     });
 
     setFactura({
       ...factura,
       comprobante: { ...factura.comprobante, ["monto"]: total },
-      aranceles: aux_array,
+      aranceles: aux_aranceles,
+      pagoventas: aux_ventas,
     });
 
     console.log(factura);
@@ -105,20 +117,24 @@ function NuevaFactura({ onClose }) {
     });
   };
 
-  const onSetData = (data) => {
-    const filteredData = data.filter(
-      (detalle) => !detalleList.some((d) => d.id_arancel === detalle.id_arancel)
+  const onSetData = (detalle) => {
+    const filteredAranceles = detalle.aranceles.filter(
+      (arancel) =>
+        !detalleList.aranceles.some((d) => d.id_arancel == arancel.id_arancel)
     );
-    setDetalleList([...detalleList, ...filteredData]);
+    const filteredVentas = detalle.ventas.filter(
+      (venta) => !detalleList.ventas.some((d) => d.id_pago == venta.id_pago)
+    );
+    setDetalleList({
+      ...detalleList,
+      aranceles: [...detalleList.aranceles, ...filteredAranceles],
+      ventas: [...detalleList.ventas, ...filteredVentas],
+    });
   };
 
   const validate = () => {
     if (factura.comprobante.id_cliente === "") {
       toast.error("Debe seleccionar un cliente");
-      return false;
-    }
-    if (factura.aranceles.length === 0) {
-      toast.error("Debe seleccionar al menos un concepto de pago");
       return false;
     }
     if (factura.comprobante.monto === 0) {
@@ -140,6 +156,7 @@ function NuevaFactura({ onClose }) {
       toast.error("Operacion Cancelada");
       return;
     }
+    console.log("data", factura);
     try {
       await createComprobante(factura);
       toast.success("Factura creada exitosamente!", { duration: 5000 });
@@ -169,8 +186,9 @@ function NuevaFactura({ onClose }) {
       <AddItemModal
         show={showAddModal}
         onClose={() => setShowAddModal(false)}
-        setData={(data) => onSetData(data)}
+        setData={(detalle) => onSetData(detalle)}
         action={() => {}}
+        cliente={factura.comprobante.id_cliente}
       />
       <div className="flex flex-col px-4 gap-y-2 pb-3 bg-slate-200 w-full h-full ">
         <div className="flex flex-row p-3 gap-3 text-2xl font-bold items-center">

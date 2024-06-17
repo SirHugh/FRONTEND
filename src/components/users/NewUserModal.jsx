@@ -84,8 +84,6 @@ const NewUserModal = ({
     const gr = user.groups;
     const data = { user: newUser, groups: gr };
 
-    // Add your code here to send the form data to the server
-    // For example, using the fetch API
     if (newUser.id) {
       try {
         const response = await updateUser(newUser.id, data);
@@ -232,17 +230,6 @@ const NewUserModal = ({
                 ))}
               </Select>
             </div>
-            {/* <div className="flex flex-row gap-4 items-center">
-              <Label className="w-1/5" htmlFor="is_active">
-                Es Activo:
-              </Label>
-              <Checkbox
-                type="checkbox"
-                name="is_active"
-                checked={user.is_active}
-                onChange={handleChange}
-              />
-            </div> */}
             <div className="flex justify-end">
               <Button type="submit">Guardar</Button>
             </div>

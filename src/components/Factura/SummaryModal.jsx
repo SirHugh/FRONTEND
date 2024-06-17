@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import jsPDF from "jspdf";
 import { Button, Label, Modal, Table } from "flowbite-react";
 
@@ -73,7 +72,7 @@ const SummaryModal = ({ show, onClose, comprobante, detalleList }) => {
           <Table>
             <Table.Head></Table.Head>
             <Table.Body>
-              {detalleList.map((detalle) => (
+              {detalleList.aranceles?.map((detalle) => (
                 <Table.Row key={detalle.id_arancel}>
                   <Table.Cell> {detalle.id_arancel}</Table.Cell>
                   <Table.Cell> {detalle.alumno}</Table.Cell>

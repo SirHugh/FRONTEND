@@ -33,7 +33,9 @@ export const createResponsables = (data) =>
 export const getResponsables = () => ApiClient.get("/academico/responsable/");
 
 export const searchResponsables = (page, searchTerm) => {
-  return ApiClient.get(`/academico/responsable/?page=${page}&search=${searchTerm}`);
+  return ApiClient.get(
+    `/academico/responsable/?page=${page}&search=${searchTerm}`
+  );
 };
 
 export const updateResponsable = (id, data) =>
@@ -79,6 +81,9 @@ export const setMatriculaActive = (id, value, date) =>
 
 export const updateMatricula = (id, data) =>
   ApiClient.put(`/academico/matricula/${id}/`, data);
+
+export const getMatriculaResposable = (id) =>
+  ApiClient.get(`/academico/matricula/responsable/${id}/`);
 
 // ------------------------------------
 // ---funciones para manejo de becas---

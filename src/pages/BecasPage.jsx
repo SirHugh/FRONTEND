@@ -7,7 +7,7 @@ import {
   getBecas,
   searchBecado,
 } from "../services/AcademicoService";
-import { FaFileDownload, FaRegEdit } from "react-icons/fa";
+import { FaRegEdit } from "react-icons/fa";
 import PaginationButtons from "../components/PaginationButtons";
 import { Button, Table } from "flowbite-react";
 import { TbCertificate, TbCertificateOff, TbListSearch } from "react-icons/tb";
@@ -15,7 +15,8 @@ import AlumnoSetActiveModal from "../components/Becas/AlumnoActivoModal";
 import AgregarBecadoModal from "../components/Becas/AgregarBecadoModal";
 import BecaActiveModal from "../components/Becas/BecaActiveModal";
 import AgregarBecaModal from "../components/Becas/AgregarBecaModal";
-import { Toaster } from "react-hot-toast";
+import { getProducto } from "../services/CajaService";
+import { CurrencyFormatter } from "../components/Constants";
 
 function BecasPage() {
   const [becas, setBecas] = useState([]);
@@ -31,6 +32,7 @@ function BecasPage() {
     monto: 0,
     porcentaje: 0,
     es_activo: false,
+    arancel: [],
   };
   const [beca, setBeca] = useState(becaType);
   const [edit, setEdit] = useState(false);
@@ -40,12 +42,16 @@ function BecasPage() {
   const [becado, setBecado] = useState();
   const [becadosTitle, setBecadosTitle] = useState();
   const blueColor = "#3B82F6";
+  const [aranceles, setAranceles] = useState([]);
 
   useEffect(() => {
     const load = async () => {
       try {
         const res1 = await getBecas();
         setBecas(res1.data);
+        console.log("Becas", res1.data);
+        const res2 = await getProducto("", "AR", "", "", true);
+        setAranceles(res2.data);
       } catch (error) {
         console.error("Error al cargar los becados:", error);
       }
@@ -147,24 +153,13 @@ function BecasPage() {
         </div>
         <div>
           <div className="w-full  mx-auto bg-white rounded-lg shadow-lg">
-            <Table>
+            <Table className="table-auto">
               <Table.Head>
                 <Table.HeadCell>NOMBRE</Table.HeadCell>
                 <Table.HeadCell>DESCRIPCION</Table.HeadCell>
-                <Table.HeadCell>MONTO</Table.HeadCell>
-                <Table.HeadCell>PORCENTAJE</Table.HeadCell>
-                <Table.HeadCell>
-                  <span className="sr-only">Mostrar</span>
-                </Table.HeadCell>
-                <Table.HeadCell>
-                  <span className="sr-only">Agregar</span>
-                </Table.HeadCell>
-                <Table.HeadCell>
-                  <span className="sr-only">Editar</span>
-                </Table.HeadCell>
-                <Table.HeadCell>
-                  <span className="sr-only">Estado</span>
-                </Table.HeadCell>
+                <Table.HeadCell>Aranceles</Table.HeadCell>
+                <Table.HeadCell>Descuento</Table.HeadCell>
+                <Table.HeadCell>Acciones</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">
                 {becas.map((b) => (
@@ -174,73 +169,82 @@ function BecasPage() {
                       b.es_activo == false ? `bg-red-400` : ``
                     }`}
                   >
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Table.Cell className="w-1/6 font-medium text-gray-900 dark:text-white">
                       {b.nombre}
                     </Table.Cell>
-                    <Table.Cell>{b.descripcion}</Table.Cell>
-                    <Table.Cell>{b.monto}. Gs.</Table.Cell>
+                    <Table.Cell className="w-2/6">{b.descripcion}</Table.Cell>
                     <Table.Cell>
-                      {b.porcentaje ? b.porcentaje + " %" : ""}
+                      {aranceles
+                        .filter((arancel) =>
+                          b.arancel.includes(arancel.id_producto)
+                        )
+                        .map((ar) => (
+                          <p key={ar.id_producto}>{ar.nombre}</p>
+                        ))}
                     </Table.Cell>
                     <Table.Cell>
-                      <a
-                        onClick={() => cargarBecados(b)}
-                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
-                      >
-                        <TbListSearch
-                          title="Mostrar Lista"
-                          className="size-6"
-                          style={{ color: blueColor }}
-                        />
-                      </a>
+                      {b.tipo_monto == 1
+                        ? b.monto + " %."
+                        : CurrencyFormatter(b.monto)}
                     </Table.Cell>
-                    <Table.Cell>
-                      <a
-                        disabled
-                        onClick={() => {
-                          b.es_activo ? handdleAddBecado(b) : "";
-                        }}
-                        className={`font-medium  hover:underline dark:text-cyan-500  ${
-                          b.es_activo
-                            ? "cursor-pointer text-blue-500"
-                            : "text-gray-600"
-                        }`}
-                      >
-                        <MdGroupAdd
-                          title="Agregar Estudiante"
-                          className="size-6"
-                        />
-                      </a>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <a
-                        onClick={() => handdleEdit(b)}
-                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
-                      >
-                        <FaRegEdit
-                          title="Modificar Beca"
-                          className="size-6"
-                          style={{ color: blueColor }}
-                        />
-                      </a>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <a
-                        onClick={() => handdleActivate(b)}
-                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
-                      >
-                        {b.es_activo ? (
-                          <FaToggleOn
-                            title="Desactivar"
-                            className="size-6 text-blue-500"
+                    <Table.Cell className="p-0">
+                      <div className="flex flex-row gap-5 px-5 items-center ">
+                        <a
+                          onClick={() => cargarBecados(b)}
+                          className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
+                        >
+                          <TbListSearch
+                            title="Mostrar Lista"
+                            className="size-6"
+                            style={{ color: blueColor }}
                           />
-                        ) : (
-                          <FaToggleOff
-                            title="Activar"
-                            className="size-6 text-red-800"
+                        </a>
+
+                        <a
+                          disabled
+                          onClick={() => {
+                            b.es_activo ? handdleAddBecado(b) : "";
+                          }}
+                          className={`font-medium  hover:underline dark:text-cyan-500  ${
+                            b.es_activo
+                              ? "cursor-pointer text-blue-500"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          <MdGroupAdd
+                            title="Agregar Estudiante"
+                            className="size-6"
                           />
-                        )}
-                      </a>
+                        </a>
+
+                        <a
+                          onClick={() => handdleEdit(b)}
+                          className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
+                        >
+                          <FaRegEdit
+                            title="Modificar Beca"
+                            className="size-6"
+                            style={{ color: blueColor }}
+                          />
+                        </a>
+
+                        <a
+                          onClick={() => handdleActivate(b)}
+                          className="font-medium text-cyan-600 hover:underline dark:text-cyan-500  cursor-pointer"
+                        >
+                          {b.es_activo ? (
+                            <FaToggleOn
+                              title="Desactivar"
+                              className="size-6 text-blue-500"
+                            />
+                          ) : (
+                            <FaToggleOff
+                              title="Activar"
+                              className="size-6 text-red-800"
+                            />
+                          )}
+                        </a>
+                      </div>
                     </Table.Cell>
                   </Table.Row>
                 ))}
@@ -357,6 +361,7 @@ function BecasPage() {
         edit={edit}
         changed={changed}
         setChanged={setChanged}
+        aranceles={aranceles}
       />
 
       <BecaActiveModal

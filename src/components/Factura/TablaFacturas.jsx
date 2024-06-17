@@ -25,6 +25,7 @@ function TablaFacturas({ search }) {
       }
     };
     load();
+    console.log(facturas);
   }, [currentPage, search]);
 
   const handleShowDetail = (id) => {
@@ -32,7 +33,7 @@ function TablaFacturas({ search }) {
   };
 
   return (
-    <div className="flex flex-col w-full px-5 ">
+    <div className="flex flex-col w-full px-5 bg-slate-200">
       <Table>
         <Table.Head>
           <Table.HeadCell>Codigo</Table.HeadCell>
@@ -48,8 +49,8 @@ function TablaFacturas({ search }) {
               <Table.Row
                 onClick={() => handleShowDetail(factura.id_comprobante)}
                 key={factura.id_comprobante}
-                className={`hover:bg-slate-200 border cursor-pointer ${
-                  showDetail === factura.id_comprobante ? "bg-slate-200" : ""
+                className={`hover:bg-blue-200 bg-white border cursor-pointer justify-center ${
+                  showDetail === factura.id_comprobante ? "" : ""
                 }`}
               >
                 <Table.Cell>{factura.id_comprobante}</Table.Cell>
@@ -68,10 +69,10 @@ function TablaFacturas({ search }) {
               <Table.Row
                 className={`${
                   showDetail === factura.id_comprobante ? "" : "hidden"
-                } transition-transform`}
+                } transition-all`}
               >
-                <Table.Cell colSpan={4} className="bg-white pt-0 ">
-                  <div className="flex flex-row p-2 gap-2 rounded-b-lg bg-slate-200">
+                <Table.Cell colSpan={6} className="bg-transparent pt-0 px-5 ">
+                  <div className="flex flex-row p-2 gap-2 rounded-b-lg ">
                     <div
                       className={`flex flex-col gap-2 ${
                         factura.aranceles.length == 0 ? "hidden" : ""
@@ -87,7 +88,7 @@ function TablaFacturas({ search }) {
                         </Table.Head>
                         <Table.Body>
                           {factura.aranceles?.map((arancel, index) => (
-                            <Table.Row key={index} className="border">
+                            <Table.Row className="bg-white border" key={index}>
                               <Table.Cell>{arancel.nro_cuota}</Table.Cell>
                               <Table.Cell>{arancel.alumno}</Table.Cell>
                               <Table.Cell>{arancel.nombre}</Table.Cell>
@@ -106,45 +107,35 @@ function TablaFacturas({ search }) {
                     >
                       <h1 className="font-bold">Ventas</h1>
                       <div className="flex flex-row gap-2">
-                        {factura.Ventas?.map((pago, index) => (
-                          <Card
-                            key={index}
-                            className={`max-w-sm ${
-                              pago.es_activo ? "bg-red-300" : "bg-green-300"
-                            }`}
-                          >
-                            <p>
-                              <b>Mes: </b>{" "}
-                              {
-                                Months[
-                                  new Date(pago.fecha_vencimiento).getMonth()
-                                ]?.name
-                              }
-                            </p>
-                            <p>
-                              <b>N° pago: </b>
-                              {pago.nro_pago}
-                            </p>
-                            <p>
-                              <b>Vencimiento: </b>
-                              {pago.fecha_vencimiento}
-                            </p>
-                            <p>
-                              <b>Monto: </b>
-                              {CurrencyFormatter(Number(pago.monto))}{" "}
-                            </p>
-                            <p
-                              className={`${
-                                pago.es_activo
-                                  ? "text-red-700"
-                                  : "text-green-700"
-                              }`}
-                            >
-                              <b>Estado: </b>
-                              {pago.es_activo ? "Pendiente" : "Cancelado"}
-                            </p>
-                          </Card>
-                        ))}
+                        <Table>
+                          <Table.Head>
+                            <Table.HeadCell>N° Pago</Table.HeadCell>
+                            <Table.HeadCell>Alumno</Table.HeadCell>
+                            <Table.HeadCell>Concepto</Table.HeadCell>
+                            <Table.HeadCell>Monto</Table.HeadCell>
+                          </Table.Head>
+                          <Table.Body>
+                            {factura.ventas?.map((pago, index) => (
+                              <Table.Row
+                                className="bg-white border"
+                                key={index}
+                              >
+                                <Table.Cell>
+                                  {pago.nro_pago + "/" + pago.nroPagos}
+                                </Table.Cell>
+                                <Table.Cell>{pago.alumno}</Table.Cell>
+                                <Table.Cell>
+                                  {pago.descripcion.map((d, index) => (
+                                    <p key={index}>{d.producto}</p>
+                                  ))}
+                                </Table.Cell>
+                                <Table.Cell>
+                                  {CurrencyFormatter(Number(pago.monto))}
+                                </Table.Cell>
+                              </Table.Row>
+                            ))}
+                          </Table.Body>
+                        </Table>
                       </div>
                     </div>
                   </div>

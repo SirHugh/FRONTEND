@@ -1,6 +1,5 @@
 import { Button, Label, Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaFileInvoiceDollar } from "react-icons/fa";
 import moment from "moment";
 import DatosAlumno from "./DatosAlumno";
 import useAuth from "../../hooks/useAuth";
