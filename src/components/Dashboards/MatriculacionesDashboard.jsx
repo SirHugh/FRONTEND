@@ -10,6 +10,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { CurrencyFormatter } from "../Constants";
 
 const MatriculacionesDashboard = () => {
   const [data, setData] = useState([]);
@@ -26,8 +27,8 @@ const MatriculacionesDashboard = () => {
         // Fetch grados to determine the first and last grades
         const gradosResponse = await getGrados();
         const grados = gradosResponse.data;
-        const lastGrade = 9;
-        const firstGrade = 1;
+        const lastGrade = 9; //9no grado
+        const firstGrade = 1; //1er grado
 
         const [currentYearResponse, lastYearResponse] = await Promise.all([
           getMatricula(currentYear, "", search, page),
@@ -37,6 +38,9 @@ const MatriculacionesDashboard = () => {
         const currentYearMatriculas = currentYearResponse.data;
         const lastYearMatriculas = lastYearResponse.data;
 
+        console.log("Matriculaciones ACTUALES: "+JSON.stringify(currentYearMatriculas));
+        console.log("Matriculaciones pasadas: "+JSON.stringify(lastYearMatriculas));
+
         // Filter out first grade students from current year and last grade students from last year
         const lastYearMatriculasExcludingLastGrade = lastYearMatriculas.filter(
           (matricula) => matricula.id_grado.grado !== lastGrade
@@ -45,19 +49,14 @@ const MatriculacionesDashboard = () => {
           (matricula) => matricula.id_grado.grado !== firstGrade
         );
 
-        // Calculate retention rate
-        const lastYearUPCStudents = lastYearMatriculasExcludingLastGrade.filter(
-          (matricula) => matricula.es_interno
-        );
-
         const retainedStudents = currentYearMatriculasExcludingFirstGrade.filter((matricula) =>
-          lastYearUPCStudents.some(
+          lastYearMatriculasExcludingLastGrade.some(
             (lastYearMatricula) =>
-              lastYearMatricula.id_alumno === matricula.id_alumno
+              lastYearMatricula.id_alumno.id_alumno === matricula.id_alumno.id_alumno
           )
         ).length;
 
-        const retentionRate = (retainedStudents / lastYearUPCStudents.length) * 100;
+        const retentionRate = (retainedStudents / lastYearMatriculasExcludingLastGrade.length) * 100;
 
         // Calculate new students rate
         const newStudentsCurrentYear = currentYearMatriculas.filter(
