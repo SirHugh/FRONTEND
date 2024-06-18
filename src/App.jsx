@@ -21,6 +21,7 @@ import TimbradoPage from "./pages/TimbradoPage";
 import BasicsInfoPage from "./pages/BasicsInfoPage";
 import DashBoardsPage from "./pages/DashBoardsPage";
 import VentasPage from "./pages/VentasPage";
+import PeriodoPage from "./pages/PeriodoPage";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -66,6 +67,7 @@ function App() {
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
               <Route path="/usuarios" element={<UsersPage />} />
               <Route path="/basics" element={<BasicsInfoPage />} />
+              <Route path="/periodo" element={<PeriodoPage />} />
             </Route>
           </Routes>
         </div>

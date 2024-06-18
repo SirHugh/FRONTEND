@@ -57,6 +57,17 @@ const menuItems = [
         ),
         link: "/basics",
       },
+      {
+        text: "Periodo Académico",
+        icon: (
+          <img
+            src={lockIcon}
+            alt="Periodo Académico"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/periodo",
+      },
       // Agrega más subelementos según sea necesario
     ],
   },
