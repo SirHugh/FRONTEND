@@ -1,6 +1,6 @@
 import MatriculacionesDashboard from "../components/Dashboards/MatriculacionesDashboard";
 import AlumnosPorGradoDashboard from "../components/Dashboards/AlumnosPorGradoDashboard";
-import AlumnosPorBecaDashboard from "../components/Dashboards/AlumnosPorBecaDashboard";
+import RetencionesDashboard from "../components/Dashboards/RetencionesDashboard";
 // Importa otros dashboards aquí cuando estén disponibles
 
 const DashBoardsPage = () => {
@@ -14,10 +14,10 @@ const DashBoardsPage = () => {
         <div className="border border-gray-300 rounded-lg p-6 bg-white shadow">
           <AlumnosPorGradoDashboard />
         </div>
-       {/* <div className="border border-gray-300 rounded-lg p-6 bg-white shadow">
-          <AlumnosPorBecaDashboard />
+       <div className="border border-gray-300 rounded-lg p-6 bg-white shadow">
+          <RetencionesDashboard />
         </div>
-         Añade otros dashboards aquí */}
+      
       </div>
     </div>
   );

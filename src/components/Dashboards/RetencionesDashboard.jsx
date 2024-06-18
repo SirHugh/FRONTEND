@@ -72,21 +72,8 @@ const MatriculacionesDashboard = () => {
           },
         ]);
 
-        // Data for foundation vs total chart
-        const currentYearUPCStudents = currentYearMatriculas.filter(
-          (matricula) => matricula.es_interno
-        ).length;
-
-        setDataFoundation([
-          {
-            name: "Año Actual: " + currentYear,
-            Total: currentYearMatriculas.length,
-            "Fundación UPC": currentYearUPCStudents,
-          },
-        ]);
-
         setStats({
-          newStudentsRate: newStudentsRate.toFixed(2),
+          retentionRate: retentionRate.toFixed(2),
         });
       } catch (error) {
         console.error("Error fetching matriculas data:", error);
@@ -98,21 +85,23 @@ const MatriculacionesDashboard = () => {
 
   return (
     <div className="p-6">
+      <h2 className="text-xl font-bold mb-4">Estadísticas de matriculaciones</h2>
 
-<h2 className="text-xl font-bold mb-4">Alumnos de la fundación</h2>
+      <h3 className="text-lg font-semibold mb-4">Nivel de Retención</h3>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={dataFoundation}>
+        <BarChart data={dataRetention}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="Total" fill="#8884d8" />
-          <Bar dataKey="Fundación UPC" fill="#82ca9d" />
+          <Bar dataKey="Matriculaciones" fill="#8884d8" />
+          <Bar dataKey="Retenidos" fill="#82ca9d" />
         </BarChart>
       </ResponsiveContainer>
+
       <div className="mt-8">
-        <h3>Porcentaje de Alumnos Nuevos: {stats.newStudentsRate}%</h3>
+        <h3>Porcentaje de Retención: {stats.retentionRate}%</h3>
       </div>
     </div>
   );

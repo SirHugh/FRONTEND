@@ -11,7 +11,7 @@ import honourIcon from "../assets/icons/honour.svg";
 import useAuth from "../hooks/useAuth"; // Importa tu hook de autenticación
 import MatriculacionesDashboard from "../components/Dashboards/MatriculacionesDashboard";
 import AlumnosPorGradoDashboard from "../components/Dashboards/AlumnosPorGradoDashboard";
-import AlumnosPorBecaDashboard from "../components/Dashboards/AlumnosPorBecaDashboard";
+import RetencionesDashboard from "../components/Dashboards/RetencionesDashboard";
 
 const MainPage = () => {
   const { user } = useAuth(); // Obtiene la información del usuario
@@ -31,7 +31,7 @@ const MainPage = () => {
   const dashboardData = [
     { component: MatriculacionesDashboard, title: "Matriculaciones", allowedGroup: "ACADEMICO" },
     { component: AlumnosPorGradoDashboard, title: "Alumnos por Grado", allowedGroup: "ACADEMICO" },
-    //{ component: AlumnosPorBecaDashboard, title: "Alumnos por Beca", allowedGroup: "ACADEMICO" },
+    { component: RetencionesDashboard, title: "Porcentaje de retención", allowedGroup: "ACADEMICO" },
     // Agrega más dashboards según sea necesario
   ];
 
@@ -59,7 +59,7 @@ const MainPage = () => {
         </div>
       </main>
       <div className="p-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Renderizar dashboards */}
           {dashboardData.map((dashboard, index) => (
             userGroups.includes(dashboard.allowedGroup) && (
