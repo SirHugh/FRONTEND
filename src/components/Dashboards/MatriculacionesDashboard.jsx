@@ -10,10 +10,10 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { CurrencyFormatter } from "../Constants";
 
 const MatriculacionesDashboard = () => {
-  const [data, setData] = useState([]);
+  const [dataRetention, setDataRetention] = useState([]);
+  const [dataFoundation, setDataFoundation] = useState([]);
   const [stats, setStats] = useState({});
 
   useEffect(() => {
@@ -27,8 +27,8 @@ const MatriculacionesDashboard = () => {
         // Fetch grados to determine the first and last grades
         const gradosResponse = await getGrados();
         const grados = gradosResponse.data;
-        const lastGrade = 9; //9no grado
-        const firstGrade = 1; //1er grado
+        const lastGrade = 9; // 9no grado
+        const firstGrade = 1; // 1er grado
 
         const [currentYearResponse, lastYearResponse] = await Promise.all([
           getMatricula(currentYear, "", search, page),
@@ -38,9 +38,6 @@ const MatriculacionesDashboard = () => {
         const currentYearMatriculas = currentYearResponse.data;
         const lastYearMatriculas = lastYearResponse.data;
 
-        console.log("Matriculaciones ACTUALES: "+JSON.stringify(currentYearMatriculas));
-        console.log("Matriculaciones pasadas: "+JSON.stringify(lastYearMatriculas));
-
         // Filter out first grade students from current year and last grade students from last year
         const lastYearMatriculasExcludingLastGrade = lastYearMatriculas.filter(
           (matricula) => matricula.id_grado.grado !== lastGrade
@@ -49,6 +46,7 @@ const MatriculacionesDashboard = () => {
           (matricula) => matricula.id_grado.grado !== firstGrade
         );
 
+        // Calculate retained students
         const retainedStudents = currentYearMatriculasExcludingFirstGrade.filter((matricula) =>
           lastYearMatriculasExcludingLastGrade.some(
             (lastYearMatricula) =>
@@ -65,14 +63,25 @@ const MatriculacionesDashboard = () => {
 
         const newStudentsRate = (newStudentsCurrentYear / currentYearMatriculas.length) * 100;
 
-        setData([
+        // Data for retention level chart
+        setDataRetention([
           {
             name: "Año Anterior: " + lastYear,
             Matriculaciones: lastYearMatriculas.length,
+            Retenidos: retainedStudents,
           },
+        ]);
+
+        // Data for foundation vs total chart
+        const currentYearUPCStudents = currentYearMatriculas.filter(
+          (matricula) => matricula.es_interno
+        ).length;
+
+        setDataFoundation([
           {
             name: "Año Actual: " + currentYear,
-            Matriculaciones: currentYearMatriculas.length,
+            Total: currentYearMatriculas.length,
+            "Fundación UPC": currentYearUPCStudents,
           },
         ]);
 
@@ -91,17 +100,34 @@ const MatriculacionesDashboard = () => {
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold mb-4">Estadísticas de matriculaciones</h2>
-      <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={data}>
+
+      <h3 className="text-lg font-semibold mb-4">Nivel de Retención</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={dataRetention}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           <Legend />
           <Bar dataKey="Matriculaciones" fill="#8884d8" />
+          <Bar dataKey="Retenidos" fill="#82ca9d" />
         </BarChart>
       </ResponsiveContainer>
-      <div>
+
+      <h3 className="text-lg font-semibold mt-8 mb-4">Alumnos de Fundación vs. Total de Alumnos</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={dataFoundation}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="Total" fill="#8884d8" />
+          <Bar dataKey="Fundación UPC" fill="#82ca9d" />
+        </BarChart>
+      </ResponsiveContainer>
+
+      <div className="mt-8">
         <h3>Porcentaje de Retención: {stats.retentionRate}%</h3>
         <h3>Porcentaje de Alumnos Nuevos: {stats.newStudentsRate}%</h3>
       </div>
