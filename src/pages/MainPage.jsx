@@ -10,6 +10,8 @@ import backpackIcon from "../assets/icons/backpack.svg";
 import honourIcon from "../assets/icons/honour.svg";
 import useAuth from "../hooks/useAuth"; // Importa tu hook de autenticación
 import MatriculacionesDashboard from "../components/Dashboards/MatriculacionesDashboard";
+import AlumnosPorGradoDashboard from "../components/Dashboards/AlumnosPorGradoDashboard";
+import AlumnosPorBecaDashboard from "../components/Dashboards/AlumnosPorBecaDashboard";
 
 const MainPage = () => {
   const { user } = useAuth(); // Obtiene la información del usuario
@@ -23,6 +25,14 @@ const MainPage = () => {
     { title: "Facturación", icon: boxIcon, linkTo: "/factura", allowedGroup: "CAJA" },
     { title: "Productos", icon: backpackIcon, linkTo: "/productos", allowedGroup: "CAJA" },
     { title: "Usuarios", icon: usersIcon, linkTo: "/usuarios", allowedGroup: "ADMIN" },
+  ];
+
+  // Datos para los dashboards
+  const dashboardData = [
+    { component: MatriculacionesDashboard, title: "Matriculaciones", allowedGroup: "ACADEMICO" },
+    { component: AlumnosPorGradoDashboard, title: "Alumnos por Grado", allowedGroup: "ACADEMICO" },
+    //{ component: AlumnosPorBecaDashboard, title: "Alumnos por Beca", allowedGroup: "ACADEMICO" },
+    // Agrega más dashboards según sea necesario
   ];
 
   return (
@@ -48,6 +58,18 @@ const MainPage = () => {
           </div>
         </div>
       </main>
+      <div className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Renderizar dashboards */}
+          {dashboardData.map((dashboard, index) => (
+            userGroups.includes(dashboard.allowedGroup) && (
+              <div key={index} className="border border-gray-300 rounded-lg p-6 bg-white shadow">
+                <dashboard.component />
+              </div>
+            )
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
