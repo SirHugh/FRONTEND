@@ -19,6 +19,7 @@ function TablaFacturas({ search }) {
         const res = await getComprobante("", page, search);
         setTotalPages(Math.ceil(res.data.count / 10));
         setFacturas(res.data.results);
+        console.log(res);
       } catch (error) {
         toast.error(error.message);
         console.log(error);

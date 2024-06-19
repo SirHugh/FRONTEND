@@ -135,5 +135,9 @@ export const createPeriodo = (data) =>
 export const updatePeriodo = (id, data) =>
   ApiClient.patch(`/academico/periodo/${id}/`, data);
 
-export const getPeriodo = (value) =>
-  ApiClient.get(`/academico/periodo/${value ? "?es_activo=" + value : ""}`);
+export const getPeriodo = (value, page) =>
+  ApiClient.get(
+    `/academico/periodo/?${value ? "es_activo=" + value : ""}${
+      page ? "page=" + page : ""
+    }`
+  );

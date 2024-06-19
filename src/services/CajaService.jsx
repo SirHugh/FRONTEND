@@ -120,3 +120,29 @@ export const getPagoVenta = (id, mes, activo) => {
     }`
   );
 };
+
+// ---------------------
+// servicios para el manejo de flujo de caja
+// ---------------------
+
+export const getFlujoCajaCurrent = () => {
+  return ApiClient.get(`/caja/flujo_caja/?current=true`);
+};
+
+// ---------------------
+// servicios para el manejo de Compras
+// ---------------------
+
+export const createCompra = (data) => {
+  return ApiClient.post(`/caja/compra/`, data);
+};
+
+export const getCompra = (id, page, search) => {
+  return ApiClient.get(
+    `/caja/compra/${
+      id
+        ? id + "/"
+        : `?${page ? "page=" + page : ""}${search ? "&search=" + search : ""}`
+    }`
+  );
+};

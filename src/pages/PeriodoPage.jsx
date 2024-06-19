@@ -3,7 +3,11 @@ import AgregarPeriodoModal from "../components/AgregarPeriodoModal";
 import { Button, Table } from "flowbite-react";
 import { RiFileList3Line } from "react-icons/ri";
 import { FaPlus, FaToggleOff, FaToggleOn } from "react-icons/fa";
-import { getPeriodo, updatePeriodo, createPeriodo } from "../services/AcademicoService";
+import {
+  getPeriodo,
+  updatePeriodo,
+  createPeriodo,
+} from "../services/AcademicoService";
 import toast from "react-hot-toast";
 import PaginationButtons from "../components/PaginationButtons";
 import DesmatricularModal from "../components/matriculacion/Desmatricular";
@@ -62,7 +66,7 @@ function PeriodoPage() {
       toast.success("Periodo Actualizado");
       setReload(!reload);
     } catch (error) {
-      toast.error("Error al actualizar el periodo");
+      toast.error(error.response.data.error);
       console.log(error);
     }
     onCloseActivate();
@@ -70,7 +74,9 @@ function PeriodoPage() {
 
   const deactivateOtherPeriodos = async (currentId) => {
     try {
-      const otherPeriodos = periodoList.filter(prd => prd.id_periodo !== currentId && prd.es_activo);
+      const otherPeriodos = periodoList.filter(
+        (prd) => prd.id_periodo !== currentId && prd.es_activo
+      );
       for (let prd of otherPeriodos) {
         await updatePeriodo(prd.id_periodo, { es_activo: false });
       }
