@@ -118,7 +118,7 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
               required
             />
           </div>
-          {formData.tipo === "PR" && (
+          {/*{formData.tipo === "PR" && (
             <div>
               <Label htmlFor="stock" value="Stock" />
               <TextInput
@@ -127,10 +127,10 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
                 value={formData.stock}
                 onChange={handleChange}
                 type="number"
-                required
+                readOnly
               />
             </div>
-          )}
+          )}*/}
           {formData.tipo === "AR" && (
             <div>
               <Label htmlFor="es_mensual" value="Mes de pago" />
