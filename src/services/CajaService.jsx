@@ -130,11 +130,11 @@ export const createFlujoCaja = (data) => {
 };
 
 export const setFlujoCajaActive = (id, value) => {
-  return ApiClient.patch(`/caja/flujo_caja/${id}/`, { es_activo: value });
+  return ApiClient.patch(`/caja/flujo_caja/${id}`, { es_activo: value });
 };
 
-export const getFlujoCajaCurrent = () => {
-  return ApiClient.get(`/caja/flujo_caja/?current=true`);
+export const getFlujoCajaCurrent = (value) => {
+  return ApiClient.get(`/caja/flujo_caja/?current=${value}`);
 };
 
 export const getFlujoCaja = (id, page, fecha) => {

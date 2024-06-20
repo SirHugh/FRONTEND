@@ -16,7 +16,7 @@ function FacturaPage() {
 
   const handleAgregarFractura = async () => {
     try {
-      await getFlujoCajaCurrent();
+      await getFlujoCajaCurrent(false);
     } catch (error) {
       toast.error(error.response.data.error);
       console.log(error);

@@ -40,7 +40,7 @@ function NuevaCompra({ onClose }) {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await getFlujoCajaCurrent();
+        const res = await getFlujoCajaCurrent(false);
         console.log(res.data);
         setId_flujoCaja(res.data.id_flujoCaja);
       } catch (error) {

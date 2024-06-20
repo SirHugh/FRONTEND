@@ -1,9 +1,8 @@
 import { Button, TextInput } from "flowbite-react";
 import { useState } from "react";
-import { MdAddBusiness, MdSearch, MdStore, MdTableChart } from "react-icons/md";
-import { BiBlock } from "react-icons/bi";
+import { MdSearch, MdTableChart } from "react-icons/md";
 import TablaFlujoCaja from "../components/FlujoCaja/TablaFlujoCaja";
-import { FaCashRegister } from "react-icons/fa";
+import { FaBackward, FaCashRegister } from "react-icons/fa";
 import FlujoCaja from "../components/FlujoCaja/FlujoCaja";
 
 function FlujoCajaPage() {
@@ -42,8 +41,8 @@ function FlujoCajaPage() {
         >
           {ShowAgregar ? (
             <>
-              <BiBlock className="mr-2 h-5 w-5" />
-              <h1>s</h1>
+              <FaBackward className="mr-2 h-5 w-5" />
+              <h1>Volver</h1>
             </>
           ) : (
             <>

@@ -29,6 +29,13 @@ export const DateFormatter = (date) =>
     day: "numeric",
   }).format(date);
 
+export const TimeFormatter = (date) =>
+  new Intl.DateTimeFormat("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date);
+
 export const CurrencyFormatter = (value) =>
   value.toLocaleString("es-ES", {
     style: "currency",
