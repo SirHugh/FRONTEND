@@ -125,8 +125,28 @@ export const getPagoVenta = (id, mes, activo) => {
 // servicios para el manejo de flujo de caja
 // ---------------------
 
+export const createFlujoCaja = (data) => {
+  return ApiClient.post(`/caja/flujo_caja/`, data);
+};
+
+export const setFlujoCajaActive = (id, value) => {
+  return ApiClient.patch(`/caja/flujo_caja/${id}/`, { es_activo: value });
+};
+
 export const getFlujoCajaCurrent = () => {
   return ApiClient.get(`/caja/flujo_caja/?current=true`);
+};
+
+export const getFlujoCaja = (id, page, fecha) => {
+  return ApiClient.get(
+    `/caja/flujo_caja/${
+      id
+        ? id + "/"
+        : page
+        ? "?page=" + page + `${fecha ? "&fecha=" + fecha : ""}`
+        : ""
+    }`
+  );
 };
 
 // ---------------------

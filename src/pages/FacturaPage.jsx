@@ -1,21 +1,34 @@
 import { Button, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { MdSearch } from "react-icons/md";
-import { BiBlock, BiCartAdd } from "react-icons/bi";
+import { BiBlock } from "react-icons/bi";
 
 import TablaFacturas from "../components/Factura/TablaFacturas";
 import NuevaFactura from "../components/Factura/NuevaFactura";
-import { FaCashRegister } from "react-icons/fa6";
 import { GrTableAdd } from "react-icons/gr";
+import { getFlujoCajaCurrent } from "../services/CajaService";
+import toast from "react-hot-toast";
+import { FaFileInvoice } from "react-icons/fa";
 
 function FacturaPage() {
   const [ShowAgregar, setShowAgregar] = useState(false);
   const [search, setSearch] = useState("");
 
+  const handleAgregarFractura = async () => {
+    try {
+      await getFlujoCajaCurrent();
+    } catch (error) {
+      toast.error(error.response.data.error);
+      console.log(error);
+      return;
+    }
+    setShowAgregar(!ShowAgregar);
+  };
+
   return (
     <>
       <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
-        <FaCashRegister className="text-blue-500" />
+        <FaFileInvoice className="text-blue-500" />
         <h1 className="">Facturación</h1>
       </div>
       <div className="flex flex-row justify-between h-20 px-6 gap-3 border items-center">
@@ -35,9 +48,7 @@ function FacturaPage() {
         </div>
         <Button
           className="flex flex-wrap bg-blue-500"
-          onClick={() =>
-            ShowAgregar ? setShowAgregar(false) : setShowAgregar(true)
-          }
+          onClick={handleAgregarFractura}
         >
           {ShowAgregar ? (
             <>

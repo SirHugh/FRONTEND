@@ -35,8 +35,8 @@ function TablaCompras({ search }) {
       <Table>
         <Table.Head>
           <Table.HeadCell>Codigo</Table.HeadCell>
-          <Table.HeadCell>Fecha</Table.HeadCell>
-          <Table.HeadCell>Hora</Table.HeadCell>
+          <Table.HeadCell>Fecha de Compra</Table.HeadCell>
+          <Table.HeadCell>Fecha de Registro</Table.HeadCell>
           <Table.HeadCell>Financiamiento</Table.HeadCell>
           <Table.HeadCell>Monto</Table.HeadCell>
         </Table.Head>
@@ -52,11 +52,14 @@ function TablaCompras({ search }) {
               >
                 <Table.Cell>{compra.id_compra}</Table.Cell>
                 <Table.Cell>{DateFormatter(new Date(compra.fecha))}</Table.Cell>
-                <Table.Cell>{compra.hora}</Table.Cell>
+                <Table.Cell>
+                  {String(compra.tiempo_alta).substring(0, 10)}
+                  {" - "}
+                  {String(compra.tiempo_alta).substring(11, 16)}
+                </Table.Cell>
                 <Table.Cell>
                   {compra.id_flujoCaja ? "Caja" : "Externo"}
                 </Table.Cell>
-
                 <Table.Cell>
                   {CurrencyFormatter(Number(compra.monto))}
                 </Table.Cell>

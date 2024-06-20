@@ -23,7 +23,7 @@ import ListaDetalle from "./ListaDetalle";
 function NuevaCompra({ onClose }) {
   const { user } = useAuth();
   const [detalleList, setDetalleList] = useState([]);
-  const [id_flujoCaja, setId_flujoCaja] = useState(false);
+  const [id_flujoCaja, setId_flujoCaja] = useState(null);
   const [financiamiento, setFinanciamiento] = useState(0);
 
   const [formData, setFormData] = useState({
@@ -114,16 +114,16 @@ function NuevaCompra({ onClose }) {
       onClose();
     } catch (error) {
       toast.error(error.response.data.error);
-      console.log(error.response.data.error);
+      console.log(error);
     }
   };
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    if (name == "financiamiento") {
+    if (name === "financiamiento") {
       name = "id_flujoCaja";
       setFinanciamiento(parseInt(value));
-      Number(value) == 1 ? (value = id_flujoCaja) : (value = null);
+      Number(value) === 1 ? (value = id_flujoCaja) : (value = null);
     }
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -172,13 +172,15 @@ function NuevaCompra({ onClose }) {
                   name="financiamiento"
                   onChange={(e) => handleChange(e)}
                 >
-                  <option></option>
-                  <option value={1}>Extraccion de Caja</option>
+                  <option value={0}></option>
+                  <option disabled={id_flujoCaja ? false : true} value={1}>
+                    Extraccion de Caja
+                  </option>
                   <option value={2}>Fondo Externo</option>
                 </Select>
               </Label>
             </div>
-            <p className="text-red-700 font-normal">* Campos Obligatorios</p>
+            <small className="text-red-700 ">* Campos Obligatorios</small>
           </div>
           <div className="flex flex-col gap-4 divide-y bg-white p-4 border rounded-lg font-bold">
             <ListaDetalle

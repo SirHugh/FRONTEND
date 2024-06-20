@@ -5,6 +5,7 @@ import { getComprobante } from "../../services/CajaService";
 import PaginationButtons from "../PaginationButtons";
 import toast from "react-hot-toast";
 import { CurrencyFormatter, DateFormatter, Months } from "../Constants";
+import { split } from "postcss/lib/list";
 
 function TablaFacturas({ search }) {
   const [facturas, setFacturas] = useState([]);
@@ -41,6 +42,7 @@ function TablaFacturas({ search }) {
           <Table.HeadCell>N° Factura</Table.HeadCell>
           <Table.HeadCell>Cliente</Table.HeadCell>
           <Table.HeadCell>Fecha</Table.HeadCell>
+          <Table.HeadCell>Hora</Table.HeadCell>
           <Table.HeadCell>Tipo Pago</Table.HeadCell>
           <Table.HeadCell>Monto</Table.HeadCell>
         </Table.Head>
@@ -60,6 +62,7 @@ function TablaFacturas({ search }) {
                 <Table.Cell>
                   {DateFormatter(new Date(factura.fecha))}
                 </Table.Cell>
+                <Table.Cell>{String(factura.hora).substring(0, 5)}</Table.Cell>
                 <Table.Cell>
                   {factura.tipo_pago == "C" ? "Contado" : "Credito"}
                 </Table.Cell>
