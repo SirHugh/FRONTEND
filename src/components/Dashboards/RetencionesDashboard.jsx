@@ -13,7 +13,6 @@ import {
 
 const MatriculacionesDashboard = () => {
   const [dataRetention, setDataRetention] = useState([]);
-  const [dataFoundation, setDataFoundation] = useState([]);
   const [stats, setStats] = useState({});
 
   useEffect(() => {
@@ -27,8 +26,9 @@ const MatriculacionesDashboard = () => {
         // Fetch grados to determine the first and last grades
         const gradosResponse = await getGrados();
         const grados = gradosResponse.data;
-        const lastGrade = 9; // 9no grado
-        const firstGrade = 1; // 1er grado
+
+        const lastGrade = Math.max(...grados.map(grado => grado.grado));
+        const firstGrade = Math.min(...grados.map(grado => grado.grado));
 
         const [currentYearResponse, lastYearResponse] = await Promise.all([
           getMatricula(currentYear, "", search, page),

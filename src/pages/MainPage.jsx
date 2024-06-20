@@ -35,6 +35,9 @@ const MainPage = () => {
     // Agrega más dashboards según sea necesario
   ];
 
+  // Filtrar tarjetas permitidas para el usuario actual
+  const filteredCardData = cardData.filter(card => userGroups.includes(card.allowedGroup));
+
   return (
     <div className="min-h-full bg-gray-100">
       <header className="bg-white shadow-sm">
@@ -42,28 +45,24 @@ const MainPage = () => {
       </header>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Contenido adicional */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Renderizar tarjetas */}
-            {cardData.map((card, index) => (
-              userGroups.includes(card.allowedGroup) && (
-                <Card
-                  key={index}
-                  icon={card.icon}
-                  title={card.title}
-                  linkTo={card.linkTo}
-                />
-              )
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          {/* Renderizar tarjetas */}
+          {filteredCardData.map((card, index) => (
+            <Card
+              key={index}
+              icon={card.icon}
+              title={card.title}
+              linkTo={card.linkTo}
+            />
+          ))}
         </div>
       </main>
       <div className="p-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Renderizar dashboards */}
           {dashboardData.map((dashboard, index) => (
             userGroups.includes(dashboard.allowedGroup) && (
-              <div key={index} className="border border-gray-300 rounded-lg p-6 bg-white shadow">
+              <div key={index} className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm">
                 <dashboard.component />
               </div>
             )
