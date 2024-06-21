@@ -41,12 +41,17 @@ function FlujoCaja({ id_flujoCaja }) {
 
   const handleModal = () => {
     setShowModal(!showModal);
-    console.log("Modal Opened");
+  };
+
+  const handleClose = () => {
+    console.log("ModalShow", showModal);
+    setShowModal(false);
+    setReload(!reload);
   };
 
   return (
     <>
-      <AgregarFlujoModal show={showModal} onClose={() => setShowModal(false)} />
+      <AgregarFlujoModal show={showModal} onClose={() => handleClose()} />
       {!flujo ? (
         <div>
           {" "}
@@ -94,7 +99,13 @@ function FlujoCaja({ id_flujoCaja }) {
             </Button>
           </div>
 
-          <div className="grid grid-cols-3 text-slate-500 items-center py-7 gap-5 p-7 font-bold">
+          <div className="grid grid-cols-5 text-slate-500 items-center py-7 gap-5 p-7 font-bold">
+            <Card>
+              <small className="text-yellow-400">Monto Apertura</small>
+              <big className="self-center">
+                {CurrencyFormatter(Number(flujo.monto_apertura))}
+              </big>
+            </Card>
             <Card>
               <small className="text-green-600">Ingreso</small>
               <big className="self-center">
@@ -107,11 +118,20 @@ function FlujoCaja({ id_flujoCaja }) {
                 {CurrencyFormatter(Number(flujo.salida))}
               </big>
             </Card>
+
             <Card>
               <small className="text-cyan-700">Balance</small>
               <big className="self-center">
                 {CurrencyFormatter(
                   Number(flujo.entrada) - Number(flujo.salida)
+                )}
+              </big>
+            </Card>
+            <Card>
+              <small className="text-cyan-700">Saldo Final</small>
+              <big className="self-center">
+                {CurrencyFormatter(
+                  Number(flujo.monto_cierre) - Number(flujo.salida)
                 )}
               </big>
             </Card>

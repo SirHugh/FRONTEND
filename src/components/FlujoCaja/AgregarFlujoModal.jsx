@@ -1,5 +1,5 @@
 import { Button, Label, Modal, TextInput } from "flowbite-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { DateFormatter, TimeFormatter } from "../Constants";
 import { createFlujoCaja } from "../../services/CajaService";
@@ -26,15 +26,18 @@ function AgregarFlujoModal({ show, onClose }) {
       toast.error(error.message);
     }
     toast.success("Flujo de caja Iniciado Exitosamente");
+    close();
   };
 
   const close = () => {
     setMontoApertura(0);
     onClose();
+    console.log("paso por close FormModal");
   };
+
   return (
     <>
-      <Modal show={show} onClose={close} size={"md"} popup>
+      <Modal show={show} onClose={close} size={"md"} dismissible>
         <Modal.Header className="p-5">
           <big>Nuevo Flujo de Caja</big>
         </Modal.Header>
