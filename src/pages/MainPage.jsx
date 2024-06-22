@@ -38,14 +38,25 @@ const MainPage = () => {
   // Filtrar tarjetas permitidas para el usuario actual
   const filteredCardData = cardData.filter(card => userGroups.includes(card.allowedGroup));
 
+  // Función para determinar las clases de TailwindCSS según el número de tarjetas
+  const getGridClass = (numCards) => {
+    switch (numCards) {
+      case 1:
+        return "grid-cols-1";
+      case 2:
+        return "grid-cols-1 md:grid-cols-2";
+      case 3:
+        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
+      default:
+        return `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-${numCards}`;
+    }
+  };
+
   return (
     <div className="min-h-full bg-gray-100">
-      <header className="bg-white shadow-sm">
-        {/* Aquí va tu encabezado con enlaces y demás */}
-      </header>
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="p-4">
         {/* Contenido adicional */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div className={`grid gap-4 ${getGridClass(filteredCardData.length)}`}>
           {/* Renderizar tarjetas */}
           {filteredCardData.map((card, index) => (
             <Card

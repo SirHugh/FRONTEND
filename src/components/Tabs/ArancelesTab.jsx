@@ -75,7 +75,6 @@ const ArancelesTab = () => {
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Nombre</Table.HeadCell>
             <Table.HeadCell>Descripción</Table.HeadCell>
-            <Table.HeadCell>Tipo</Table.HeadCell>
             <Table.HeadCell>Precio</Table.HeadCell>
             <Table.HeadCell>Tipo de pago</Table.HeadCell>
             <Table.HeadCell>Activo</Table.HeadCell>
@@ -90,7 +89,6 @@ const ArancelesTab = () => {
                 <Table.Cell>{producto.id_producto}</Table.Cell>
                 <Table.Cell>{producto.nombre}</Table.Cell>
                 <Table.Cell>{producto.descripcion}</Table.Cell>
-                <Table.Cell>{producto.tipo}</Table.Cell>
                 <Table.Cell>{CurrencyFormatter(producto.precio)}</Table.Cell>
                 <Table.Cell>{producto.es_mensual != null  ? "Único" : "Mensual"}</Table.Cell>
                 <Table.Cell>{producto.es_activo ? "Sí" : "No"}</Table.Cell>

@@ -88,7 +88,6 @@ const ProductosTab = () => {
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Nombre</Table.HeadCell>
             <Table.HeadCell>Descripción</Table.HeadCell>
-            <Table.HeadCell>Tipo</Table.HeadCell>
             <Table.HeadCell>Stock</Table.HeadCell>
             <Table.HeadCell>Precio</Table.HeadCell>
             <Table.HeadCell>Activo</Table.HeadCell>
@@ -103,7 +102,6 @@ const ProductosTab = () => {
                 <Table.Cell>{producto.id_producto}</Table.Cell>
                 <Table.Cell>{producto.nombre}</Table.Cell>
                 <Table.Cell>{producto.descripcion}</Table.Cell>
-                <Table.Cell>{producto.tipo}</Table.Cell>
                 <Table.Cell>{producto.stock}</Table.Cell>
                 <Table.Cell>{CurrencyFormatter(producto.precio)}</Table.Cell>
                 <Table.Cell>{producto.es_activo ? "Sí" : "No"}</Table.Cell>

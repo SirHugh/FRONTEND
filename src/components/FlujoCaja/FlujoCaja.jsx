@@ -94,7 +94,15 @@ function FlujoCaja({ id_flujoCaja }) {
             </Button>
           </div>
 
-          <div className="grid grid-cols-3 text-slate-500 items-center py-7 gap-5 p-7 font-bold">
+          <div className="grid grid-cols-4 text-slate-500 items-center py-7 gap-5 p-7 font-bold">
+          <Card>
+              <small className="text-cyan-700">Monto apertura</small>
+              <big className="self-center">
+                {CurrencyFormatter(
+                  Number(flujo.monto_cierre)
+                )}
+              </big>
+            </Card>
             <Card>
               <small className="text-green-600">Ingreso</small>
               <big className="self-center">
@@ -111,7 +119,7 @@ function FlujoCaja({ id_flujoCaja }) {
               <small className="text-cyan-700">Balance</small>
               <big className="self-center">
                 {CurrencyFormatter(
-                  Number(flujo.entrada) - Number(flujo.salida)
+                  Number(flujo.monto_cierre) - Number(flujo.salida)
                 )}
               </big>
             </Card>
@@ -122,7 +130,6 @@ function FlujoCaja({ id_flujoCaja }) {
             </big>
             <Table className="">
               <Table.Head>
-                <Table.HeadCell>Codigo</Table.HeadCell>
                 <Table.HeadCell>Codigo</Table.HeadCell>
                 <Table.HeadCell>Factura</Table.HeadCell>
                 <Table.HeadCell>Hora</Table.HeadCell>
