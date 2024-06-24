@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { getMatricula, getGrados } from "../../services/AcademicoService";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
+  PieChart,
+  Pie,
+  Cell,
   Tooltip,
-  Legend,
-  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+
+const COLORS = ['#0088FE', '#00C49F'];
 
 const MatriculacionesDashboard = () => {
   const [dataRetention, setDataRetention] = useState([]);
@@ -56,20 +55,10 @@ const MatriculacionesDashboard = () => {
 
         const retentionRate = (retainedStudents / lastYearMatriculasExcludingLastGrade.length) * 100;
 
-        // Calculate new students rate
-        const newStudentsCurrentYear = currentYearMatriculas.filter(
-          (matricula) => !matricula.es_interno
-        ).length;
-
-        const newStudentsRate = (newStudentsCurrentYear / currentYearMatriculas.length) * 100;
-
         // Data for retention level chart
         setDataRetention([
-          {
-            name: "Año Anterior: " + lastYear,
-            Matriculaciones: lastYearMatriculas.length,
-            Retenidos: retainedStudents,
-          },
+          { name: 'Retenidos', value: retainedStudents },
+          { name: 'No Retenidos', value: lastYearMatriculasExcludingLastGrade.length - retainedStudents },
         ]);
 
         setStats({
@@ -88,16 +77,24 @@ const MatriculacionesDashboard = () => {
       <h2 className="text-xl font-bold mb-4">Estadísticas de matriculaciones</h2>
 
       <h3 className="text-lg font-semibold mb-4">Nivel de Retención</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={dataRetention}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
+      <ResponsiveContainer width="110%" height={300}>
+        <PieChart>
+          <Pie
+            data={dataRetention}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            outerRadius={100}
+            fill="#8884d8"
+            dataKey="value"
+          >
+            {dataRetention.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
           <Tooltip />
-          <Legend />
-          <Bar dataKey="Matriculaciones" fill="#8884d8" />
-          <Bar dataKey="Retenidos" fill="#82ca9d" />
-        </BarChart>
+        </PieChart>
       </ResponsiveContainer>
 
       <div className="mt-8">
