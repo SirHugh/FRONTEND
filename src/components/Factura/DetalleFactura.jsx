@@ -3,8 +3,6 @@ import { CurrencyFormatter, Months } from "../Constants";
 import { HiOutlineTrash } from "react-icons/hi";
 
 function DetalleFactura({ items, setItems }) {
-  const log = 0;
-
   const handleRemoveItem = (index, name) => {
     if (name == "aranceles") {
       const newArray = items.aranceles.filter((_, i) => i !== index);
@@ -15,8 +13,13 @@ function DetalleFactura({ items, setItems }) {
       }));
       return;
     }
-    const newArray = items.ventas.filter((_, i) => i !== index);
-    setItems({ ...items, ventas: [...newArray] });
+    if (name == "ventas") {
+      const newArray = items.ventas.filter((_, i) => i !== index);
+      setItems({ ...items, ventas: [...newArray] });
+      return;
+    }
+    const newArray = items.actividades.filter((_, i) => i !== index);
+    setItems({ ...items, actividades: [...newArray] });
   };
 
   return (
@@ -30,6 +33,7 @@ function DetalleFactura({ items, setItems }) {
             <Table.HeadCell className="sr-only"></Table.HeadCell>
           </Table.Head>
           <Table.Body>
+            {/* aranceles */}
             {items?.aranceles.map((item, index) => (
               <Table.Row className="hover:bg-slate-100" key={item.id_arancel}>
                 <Table.Cell>{item.alumno}</Table.Cell>
@@ -48,8 +52,9 @@ function DetalleFactura({ items, setItems }) {
                 </Table.Cell>
               </Table.Row>
             ))}
-            {items?.ventas?.map((item, index) => (
-              <Table.Row className="hover:bg-slate-100" key={item.id_arancel}>
+            {/* Ventas */}
+            {items?.ventas.map((item, index) => (
+              <Table.Row className="hover:bg-slate-100" key={item.id_venta}>
                 <Table.Cell>{item.alumno}</Table.Cell>
                 <Table.Cell>
                   {item.descripcion.map((d, index) => (
@@ -63,6 +68,22 @@ function DetalleFactura({ items, setItems }) {
                     color="red"
                     size={"1.4rem"}
                     onClick={() => handleRemoveItem(index, "ventas")}
+                  />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+            {/* actividades */}
+            {items?.actividades.map((item, index) => (
+              <Table.Row className="hover:bg-slate-100" key={item.id_actividad}>
+                <Table.Cell>{item.alumno}</Table.Cell>
+                <Table.Cell>{item.actividad}</Table.Cell>
+                <Table.Cell>{CurrencyFormatter(Number(item.monto))}</Table.Cell>
+                <Table.Cell className="flex justify-end">
+                  <HiOutlineTrash
+                    className="cursor-pointer"
+                    color="red"
+                    size={"1.4rem"}
+                    onClick={() => handleRemoveItem(index, "actividad")}
                   />
                 </Table.Cell>
               </Table.Row>

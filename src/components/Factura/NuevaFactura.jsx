@@ -25,6 +25,7 @@ function NuevaFactura({ onClose }) {
   const [detalleList, setDetalleList] = useState({
     aranceles: [],
     ventas: [],
+    actividades: [],
   });
   const [timbrado, setTimbrado] = useState();
   const [info, setInfo] = useState();
@@ -78,12 +79,15 @@ function NuevaFactura({ onClose }) {
       0
     );
 
-    total =
-      total +
-      detalleList.ventas?.reduce(
-        (total, item) => total + Number(item.monto),
-        0
-      );
+    total += detalleList.ventas?.reduce(
+      (total, item) => total + Number(item.monto),
+      0
+    );
+
+    total += detalleList.actividades?.reduce(
+      (total, item) => total + Number(item.monto),
+      0
+    );
 
     let aux_aranceles = [];
     detalleList.aranceles.forEach((detalle) => {
@@ -95,11 +99,22 @@ function NuevaFactura({ onClose }) {
       aux_ventas.push(venta.id_pago);
     });
 
+    let aux_actividades = [];
+    detalleList.actividades.forEach((actividad) => {
+      const a = {
+        id_actividad: actividad.id_actividad,
+        id_matricula: actividad.id_matricula,
+        monto: actividad.monto,
+      };
+      aux_actividades.push(a);
+    });
+
     setFactura({
       ...factura,
       comprobante: { ...factura.comprobante, ["monto"]: total },
       aranceles: aux_aranceles,
       pagoventas: aux_ventas,
+      actividades: aux_actividades,
     });
 
     console.log(factura);
@@ -125,10 +140,18 @@ function NuevaFactura({ onClose }) {
     const filteredVentas = detalle.ventas.filter(
       (venta) => !detalleList.ventas.some((d) => d.id_pago == venta.id_pago)
     );
+
+    const filteredActividades = detalle.actividades.filter(
+      (actividad) =>
+        !detalleList.actividades.some(
+          (d) => d.id_actividad == actividad.id_actividad
+        )
+    );
     setDetalleList({
       ...detalleList,
       aranceles: [...detalleList.aranceles, ...filteredAranceles],
       ventas: [...detalleList.ventas, ...filteredVentas],
+      actividades: [...detalleList.actividades, ...filteredActividades],
     });
   };
 

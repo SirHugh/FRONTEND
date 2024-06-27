@@ -15,20 +15,26 @@ import {
 } from "../../services/AcademicoService";
 import toast from "react-hot-toast";
 import AsyncSelect from "react-select/async";
-import { getArancel, getPagoVenta } from "../../services/CajaService";
+import {
+  getArancel,
+  getPagoPendienteActividad,
+  getPagoVenta,
+} from "../../services/CajaService";
 import { CurrencyFormatter, DateFormatter } from "../Constants";
-import { FaCashRegister } from "react-icons/fa";
+import { FaCalendar, FaCashRegister } from "react-icons/fa";
 import { FaBasketShopping, FaCartShopping } from "react-icons/fa6";
 import { MdOutlinePostAdd } from "react-icons/md";
 
 const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
   const [aranceles, setAranceles] = useState([]);
   const [ventas, setVentas] = useState([]);
+  const [actividades, setActividades] = useState([]);
   const [inputValue, setValue] = useState("");
   const [selectedValue, setSelecteValue] = useState(null);
   const [itemsApply, setItemsApply] = useState({
     aranceles: [],
     ventas: [],
+    actividades: [],
   });
   const [searchOthers, setSearchOthers] = useState(false);
   const [alumnos, setAlumnos] = useState([]);
@@ -74,50 +80,75 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
       setAranceles(res.data);
       const res2 = await getPagoVenta(id, new Date().getMonth() + 1, true);
       setVentas(res2.data);
-      console.log("aranceles: ", res);
+      const res3 = await getPagoPendienteActividad(id);
+      setActividades(res3.data);
+      console.log("actividades: ", res3.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleCheck = (e, index) => {
-    const { checked, name } = e.target;
+  const handleArancelCheck = (e, index) => {
+    const { checked } = e.target;
     if (!checked) {
-      if (name == "arancel") {
-        const filteredAranceles = itemsApply.aranceles?.filter(
-          (s) => s !== aranceles[index]
-        );
-        setItemsApply({ ...itemsApply, aranceles: filteredAranceles });
-        console.log(itemsApply);
-        return;
-      }
+      const filteredAranceles = itemsApply.aranceles?.filter(
+        (s) => s !== aranceles[index]
+      );
+      setItemsApply({ ...itemsApply, aranceles: filteredAranceles });
+      console.log("Actividades", itemsApply.aranceles);
+      return;
+    }
+    setItemsApply({
+      ...itemsApply,
+      aranceles: [...itemsApply.aranceles, aranceles[index]],
+    });
+    console.log(itemsApply);
+    console.log("Actividades", itemsApply.aranceles);
+  };
+
+  const handleVentaCheck = (e, index) => {
+    const { checked } = e.target;
+    if (!checked) {
       const filteredVentas = itemsApply.ventas?.filter(
         (s) => s !== ventas[index]
       );
       setItemsApply({ ...itemsApply, ventas: filteredVentas });
-      return;
-    }
-    if (name == "arancel") {
-      setItemsApply({
-        ...itemsApply,
-        aranceles: [...itemsApply.aranceles, aranceles[index]],
-      });
-      console.log(itemsApply);
+      console.log("Actividades", itemsApply.ventas);
       return;
     }
     setItemsApply({
       ...itemsApply,
       ventas: [...itemsApply.ventas, ventas[index]],
     });
-    console.log(itemsApply);
+    console.log("Actividades", itemsApply.ventas);
+  };
+
+  const handleActividadCheck = (e, index) => {
+    const { checked } = e.target;
+    if (!checked) {
+      console.log(index, checked);
+      const filteredActividades = itemsApply.actividades?.filter(
+        (s) => s !== actividades[index]
+      );
+      setItemsApply({ ...itemsApply, actividades: filteredActividades });
+      console.log("Actividades", itemsApply.actividades);
+      return;
+    }
+    setItemsApply({
+      ...itemsApply,
+      actividades: [...itemsApply.actividades, actividades[index]],
+    });
+    console.log("Actividades", itemsApply.actividades);
   };
 
   const close = () => {
     setAranceles([]);
     setVentas([]);
+    setActividades([]);
     setItemsApply({
       aranceles: [],
       ventas: [],
+      actividades: [],
     });
     setValue("");
     setSelecteValue(null);
@@ -197,8 +228,8 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
           )}
 
           <div className="flex flex-col gap-2 text-1xl gap-y-5  ">
-            <Tabs defaultIndex={0} onSelect={(index) => console.log(index)}>
-              <TabItem active title="Aranceles" icon={FaCashRegister}>
+            <Tabs aria-label="Full width tabs" variant="fullWidth">
+              <TabItem active title={"Aranceles"} icon={FaCashRegister}>
                 <Table>
                   <Table.Head>
                     <Table.HeadCell>descripcion</Table.HeadCell>
@@ -223,8 +254,7 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
                         </Table.Cell>
                         <Table.Cell>
                           <Checkbox
-                            name="arancel"
-                            onChange={(e) => handleCheck(e, index)}
+                            onChange={(e) => handleArancelCheck(e, index)}
                           />
                         </Table.Cell>
                       </Table.Row>
@@ -265,8 +295,41 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
                         </Table.Cell>
                         <Table.Cell>
                           <Checkbox
-                            name="venta"
-                            onChange={(e) => handleCheck(e, index)}
+                            onChange={(e) => handleVentaCheck(e, index)}
+                          />
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table>
+              </TabItem>
+              {/*  */}
+              <TabItem active title="Actividades" icon={FaCalendar}>
+                <Table>
+                  <Table.Head>
+                    <Table.HeadCell>Id</Table.HeadCell>
+                    <Table.HeadCell>Actividad</Table.HeadCell>
+                    <Table.HeadCell>Fecha</Table.HeadCell>
+                    <Table.HeadCell>monto</Table.HeadCell>
+                    <Table.HeadCell>Agregar</Table.HeadCell>
+                  </Table.Head>
+                  <Table.Body>
+                    {actividades.map((item, index) => (
+                      <Table.Row
+                        className="hover:bg-slate-100"
+                        key={item.id_actividad}
+                      >
+                        <Table.Cell>{item.id_actividad}</Table.Cell>
+                        <Table.Cell>{item.actividad}</Table.Cell>
+                        <Table.Cell>
+                          {DateFormatter(new Date(item.fecha))}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {CurrencyFormatter(Number(item.monto))}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Checkbox
+                            onChange={(e) => handleActividadCheck(e, index)}
                           />
                         </Table.Cell>
                       </Table.Row>
@@ -288,7 +351,9 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
           )}
           <Button
             disabled={
-              itemsApply.aranceles.length == 0 && itemsApply.ventas.length == 0
+              itemsApply.aranceles.length == 0 &&
+              itemsApply.ventas.length == 0 &&
+              itemsApply.actividades.length == 0
                 ? true
                 : false
             }

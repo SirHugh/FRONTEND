@@ -166,3 +166,56 @@ export const getCompra = (id, page, search) => {
     }`
   );
 };
+
+// ---------------------
+// servicios para el manejo de tipos de actividades
+// ---------------------
+
+export const getTipoActividad = (page, search) => {
+  return ApiClient.get(
+    `caja/actividad/tipo/${page ? "?page=" + page : ""}${
+      search ? "&search=" + search : ""
+    }`
+  );
+};
+
+export const createTipoActividad = (data) => {
+  return ApiClient.post(`caja/actividad/tipo/`, data);
+};
+
+export const updateTipoActividad = (id, data) => {
+  return ApiClient.put(`caja/actividad/tipo/${id}`, data);
+};
+
+// ---------------------
+// servicios para el manejo de actividades
+// ---------------------
+
+export const createActividad = (data) => {
+  return ApiClient.post(`/caja/actividad/`, data);
+};
+
+export const getPagoPendienteActividad = (id_matricula) => {
+  return ApiClient.get(
+    `/caja/actividad/pago/pendiente/?id_matricula=${id_matricula}`
+  );
+};
+
+export const getActividades = (id, id_grado, id_perido, search, page) => {
+  const params = new URLSearchParams();
+
+  if (id_grado !== "") params.append("id_grado", id_grado);
+  if (id_perido !== "") params.append("id_perido", id_perido);
+  if (search !== "") params.append("search", search);
+  if (page !== "") params.append("page", page);
+
+  const url = `/caja/actividad/${id ? id : "?" + params.toString()}`;
+
+  return ApiClient.get(url);
+};
+
+export const activateActividad = (id_actividad, value) => {
+  return ApiClient.patch(`/caja/actividad/${id_actividad}`, {
+    es_activo: value,
+  });
+};

@@ -25,11 +25,11 @@ const DesmatricularModal = ({
 
   return (
     <>
-      <Modal dismissible show={show} size="sm" onClose={close} popup>
+      <Modal dismissible show={show} size="md" onClose={close} popup>
         <Modal.Header className="p-3">{title}</Modal.Header>
         <Modal.Body className="py-2 border-y space-y-4">
           <div className="mb-2 flex ">
-            <h1>{information}</h1>
+            <big className="font-bold">{information}</big>
           </div>
           <div className="flex flex-col gap-2 text-1xl gap-y-5  ">
             <span className="font-medium">{data}</span>

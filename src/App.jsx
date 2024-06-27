@@ -24,6 +24,7 @@ import VentasPage from "./pages/VentasPage";
 import PeriodoPage from "./pages/PeriodoPage";
 import ComprasPage from "./pages/ComprasPage";
 import FlujoCajaPage from "./pages/FlujoCajaPage";
+import ActividadPage from "./pages/ActividadPage";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -67,6 +68,7 @@ function App() {
               <Route path="/timbrado" element={<TimbradoPage />} />
               <Route path="/compras" element={<ComprasPage />} />
               <Route path="/flujoCaja" element={<FlujoCajaPage />} />
+              <Route path="/actividades" element={<ActividadPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
               <Route path="/usuarios" element={<UsersPage />} />

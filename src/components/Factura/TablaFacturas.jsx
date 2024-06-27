@@ -77,6 +77,7 @@ function TablaFacturas({ search }) {
               >
                 <Table.Cell colSpan={6} className="bg-transparent pt-0 px-5 ">
                   <div className="flex flex-row p-2 gap-2 rounded-b-lg ">
+                    {/* Detalle Factura - Pago Aranceles */}
                     <div
                       className={`flex flex-col gap-2 ${
                         factura.aranceles.length == 0 ? "hidden" : ""
@@ -104,6 +105,7 @@ function TablaFacturas({ search }) {
                         </Table.Body>
                       </Table>
                     </div>
+                    {/* Detalle Factura - Pago Ventas */}
                     <div
                       className={`flex flex-col gap-2 ${
                         factura.ventas.length == 0 ? "hidden" : ""
@@ -135,6 +137,39 @@ function TablaFacturas({ search }) {
                                 </Table.Cell>
                                 <Table.Cell>
                                   {CurrencyFormatter(Number(pago.monto))}
+                                </Table.Cell>
+                              </Table.Row>
+                            ))}
+                          </Table.Body>
+                        </Table>
+                      </div>
+                    </div>
+                    {/* Detalle Factura - Pago Actividades */}
+                    <div
+                      className={`flex flex-col gap-2 ${
+                        factura.actividades?.length == 0 ? "hidden" : ""
+                      }`}
+                    >
+                      <h1 className="font-bold">Actividades</h1>
+                      <div className="flex flex-row gap-2">
+                        <Table>
+                          <Table.Head>
+                            <Table.HeadCell>Codigo</Table.HeadCell>
+                            <Table.HeadCell>Alumno</Table.HeadCell>
+                            <Table.HeadCell>Concepto</Table.HeadCell>
+                            <Table.HeadCell>Monto</Table.HeadCell>
+                          </Table.Head>
+                          <Table.Body>
+                            {factura.actividades?.map((item, index) => (
+                              <Table.Row
+                                className="bg-white border"
+                                key={index}
+                              >
+                                <Table.Cell>{item.id_pagoActividad}</Table.Cell>
+                                <Table.Cell>{item.alumno}</Table.Cell>
+                                <Table.Cell>{item.actividad}</Table.Cell>
+                                <Table.Cell>
+                                  {CurrencyFormatter(Number(item.monto))}
                                 </Table.Cell>
                               </Table.Row>
                             ))}

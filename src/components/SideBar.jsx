@@ -181,6 +181,17 @@ const menuItems = [
         link: "/productos",
       },
       {
+        text: "Actividades",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Actividades"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/actividades",
+      },
+      {
         text: "Compras",
         icon: (
           <img
