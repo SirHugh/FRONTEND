@@ -12,7 +12,6 @@ const ProductosPage = () => {
         <TabList>
           <Tab>Productos</Tab>
           <Tab>Aranceles</Tab>
-          <Tab>Actividades</Tab>
         </TabList>
 
         <TabPanel>
@@ -21,10 +20,6 @@ const ProductosPage = () => {
 
         <TabPanel>
           <ArancelesTab />
-        </TabPanel>
-
-        <TabPanel>
-          <ActividadesTab />
         </TabPanel>
       </Tabs>
     </div>
