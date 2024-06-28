@@ -170,7 +170,7 @@ const menuItems = [
         link: "/flujoCaja",
       },
       {
-        text: "Productos",
+        text: "Productos y Aranceles",
         icon: (
           <img
             src={cashIcon}

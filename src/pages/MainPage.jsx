@@ -56,7 +56,7 @@ const MainPage = () => {
       case 3:
         return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
       default:
-        return `grid-cols-1 md:grid-cols-2 lg:grid-cols-${numCards} xl:grid-cols-${numCards}`;
+        return `grid-cols-1 md:grid-cols-2 lg:grid-cols-7 xl:grid-cols-${numCards}`;
     }
   };
 
