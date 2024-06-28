@@ -77,12 +77,11 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
   const loadAranceles = async (id) => {
     try {
       const res = await getArancel(true, id, new Date().getMonth() + 1);
-      setAranceles(res.data);
+      setAranceles(res.data || []);
       const res2 = await getPagoVenta(id, new Date().getMonth() + 1, true);
-      setVentas(res2.data);
+      setVentas(res2.data || []);
       const res3 = await getPagoPendienteActividad(id);
-      setActividades(res3.data);
-      console.log("actividades: ", res3.data);
+      setActividades(res3.data || []);
     } catch (error) {
       console.log(error);
     }
@@ -314,7 +313,7 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
                     <Table.HeadCell>Agregar</Table.HeadCell>
                   </Table.Head>
                   <Table.Body>
-                    {actividades.map((item, index) => (
+                    {actividades?.map((item, index) => (
                       <Table.Row
                         className="hover:bg-slate-100"
                         key={item.id_actividad}
