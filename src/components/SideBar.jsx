@@ -9,6 +9,8 @@ import cashIcon from "../assets/icons/cash.svg";
 import downArrowIcon from "../assets/icons/down_arrow.svg";
 import upArrowIcon from "../assets/icons/up_arrow.svg";
 import useAuth from "../hooks/useAuth";
+import { FaStore, FaStoreAlt } from "react-icons/fa";
+import { TbStack, TbStack2, TbStackFront } from "react-icons/tb";
 
 // Define un array de objetos con la información de cada elemento del menú
 const menuItems = [
@@ -170,28 +172,6 @@ const menuItems = [
         link: "/flujoCaja",
       },
       {
-        text: "Productos y Aranceles",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Productos"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/productos",
-      },
-      {
-        text: "Actividades",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Actividades"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/actividades",
-      },
-      {
         text: "Compras",
         icon: (
           <img
@@ -238,42 +218,61 @@ const menuItems = [
       // Agrega más subelementos según sea necesario
     ],
   },
-  // {
-  //   text: "Facturación",
-  //   allowedGroup: "CAJA",
-  //   icon: (
-  //     <img
-  //       src={lockIcon}
-  //       alt="Factura"
-  //       className="w-5 h-5 mr-2 object-contain"
-  //     />
-  //   ),
-  //   subItems: [
-  //     {
-  //       text: "Registrar",
-  //       icon: (
-  //         <img
-  //           src={lockIcon}
-  //           alt="Opción 1"
-  //           className="w-5 h-5 mr-2 object-contain"
-  //         />
-  //       ),
-  //       link: "/NuevaFactura",
-  //     },
-  //     {
-  //       text: "Listar",
-  //       icon: (
-  //         <img
-  //           src={lockIcon}
-  //           alt="Opción 1"
-  //           className="w-5 h-5 mr-2 object-contain"
-  //         />
-  //       ),
-  //       link: "/NuevaFactura",
-  //     },
-  //     // Agrega más subelementos según sea necesario
-  //   ],
-  // },
+  {
+    text: "Recursos",
+    allowedGroup: "ADMIN",
+    icon: (
+      <TbStackFront className="w-5 h-5 mr-2 object-contain" />
+      // <img src={FaStore} alt="Caja" className="w-5 h-5 mr-2 object-contain" />
+    ),
+    subItems: [
+      {
+        text: "Productos",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Productos"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/productos",
+      },
+      {
+        text: "Aranceles",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Aranceles"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/aranceles",
+      },
+      {
+        text: "Actividades",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Actividades"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/actividades",
+      },
+      {
+        text: "Inventario",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Inventario"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/inventario",
+      },
+    ],
+  },
+
   // Agrega más elementos de menú según sea necesario
 ];
 

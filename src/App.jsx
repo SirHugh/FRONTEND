@@ -11,7 +11,6 @@ import Sidebar from "./components/SideBar";
 import MatriculacionPage from "./pages/MatriculacionPage";
 import GradosPage from "./pages/GradosPage";
 import BecasPage from "./pages/BecasPage";
-import CajaPage from "./pages/CajaPage";
 import UsersPage from "./pages/UsersPage";
 import ResponsablesPage from "./pages/ResponsablesPage";
 import ProductosPage from "./pages/ProductosPage";
@@ -25,6 +24,8 @@ import PeriodoPage from "./pages/PeriodoPage";
 import ComprasPage from "./pages/ComprasPage";
 import FlujoCajaPage from "./pages/FlujoCajaPage";
 import ActividadPage from "./pages/ActividadPage";
+import InventarioPage from "./pages/InventarioPage";
+import ArancelesPage from "./pages/ArancelesPage";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -61,19 +62,22 @@ function App() {
               <Route path="/academicoDashboards" element={<DashBoardsPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
-              <Route path="/caja" element={<CajaPage />} />
-              <Route path="/productos" element={<ProductosPage />} />
               <Route path="/ventas" element={<VentasPage />} />
               <Route path="/factura" element={<FacturaPage />} />
               <Route path="/timbrado" element={<TimbradoPage />} />
               <Route path="/compras" element={<ComprasPage />} />
               <Route path="/flujoCaja" element={<FlujoCajaPage />} />
-              <Route path="/actividades" element={<ActividadPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
               <Route path="/usuarios" element={<UsersPage />} />
               <Route path="/basics" element={<BasicsInfoPage />} />
               <Route path="/periodo" element={<PeriodoPage />} />
+            </Route>
+            <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
+              <Route path="/productos" element={<ProductosPage />} />
+              <Route path="/actividades" element={<ActividadPage />} />
+              <Route path="/aranceles" element={<ArancelesPage />} />
+              <Route path="/inventario" element={<InventarioPage />} />
             </Route>
           </Routes>
         </div>
