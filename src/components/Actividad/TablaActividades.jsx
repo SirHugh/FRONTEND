@@ -104,7 +104,7 @@ function TablaActividades({ search, grado }) {
       <div className="overflow-x-auto">
         <Table hoverable>
           <Table.Head>
-            <Table.HeadCell>ID</Table.HeadCell>
+            <Table.HeadCell>Codigo</Table.HeadCell>
             <Table.HeadCell>Grado</Table.HeadCell>
             <Table.HeadCell>Actividad</Table.HeadCell>
             <Table.HeadCell>Fecha Actividad</Table.HeadCell>

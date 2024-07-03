@@ -79,10 +79,10 @@ const ArancelesPage = () => {
           <h1>Agregar Arancel</h1>
         </Button>
       </div>
-      <div className="overflow-x-auto w-full px-10 max-w-12xl bg-white">
+      <div className="overflow-x-auto w-full max-w-12xl bg-white">
         <Table className="divide-y">
           <Table.Head className="bg-gray-500">
-            <Table.HeadCell>ID</Table.HeadCell>
+            <Table.HeadCell>Codigo</Table.HeadCell>
             <Table.HeadCell>Nombre</Table.HeadCell>
             <Table.HeadCell>Descripción</Table.HeadCell>
             <Table.HeadCell>Precio</Table.HeadCell>
@@ -94,7 +94,7 @@ const ArancelesPage = () => {
             {productos.map((producto) => (
               <Table.Row
                 key={producto.id_producto}
-                className="hover:border-l-blue-500 hover:border-l-4"
+                className={`bg-slate-100 dark:border-gray-700 dark:bg-gray-800 hover:border-l-blue-500 hover:border-l-4 `}
               >
                 <Table.Cell>{producto.id_producto}</Table.Cell>
                 <Table.Cell>{producto.nombre}</Table.Cell>

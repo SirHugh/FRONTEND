@@ -11,6 +11,7 @@ import upArrowIcon from "../assets/icons/up_arrow.svg";
 import useAuth from "../hooks/useAuth";
 import { FaStore, FaStoreAlt } from "react-icons/fa";
 import { TbStack, TbStack2, TbStackFront } from "react-icons/tb";
+import { MdAdminPanelSettings } from "react-icons/md";
 
 // Define un array de objetos con la información de cada elemento del menú
 const menuItems = [
@@ -29,13 +30,7 @@ const menuItems = [
   {
     text: "Administración",
     allowedGroup: "ADMIN",
-    icon: (
-      <img
-        src={lockIcon}
-        alt="Administración"
-        className="w-5 h-5 mr-2 object-contain"
-      />
-    ),
+    icon: <MdAdminPanelSettings className="w-6 h-6 mr-2 object-contain" />,
     subItems: [
       {
         text: "Usuarios",
@@ -71,6 +66,60 @@ const menuItems = [
         link: "/periodo",
       },
       // Agrega más subelementos según sea necesario
+    ],
+  },
+  {
+    text: "Comercial",
+    allowedGroup: "ADMIN",
+    icon: (
+      <FaStoreAlt className="w-5 h-5 mr-2 object-contain" />
+      // <img src={FaStore} alt="Caja" className="w-5 h-5 mr-2 object-contain" />
+    ),
+    subItems: [
+      {
+        text: "Productos",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Productos"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/productos",
+      },
+      {
+        text: "Aranceles",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Aranceles"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/aranceles",
+      },
+      {
+        text: "Actividades",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Actividades"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/actividades",
+      },
+      {
+        text: "Inventario",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Inventario"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/inventario",
+      },
     ],
   },
   {
@@ -216,60 +265,6 @@ const menuItems = [
         link: "/timbrado",
       },
       // Agrega más subelementos según sea necesario
-    ],
-  },
-  {
-    text: "Recursos",
-    allowedGroup: "ADMIN",
-    icon: (
-      <TbStackFront className="w-5 h-5 mr-2 object-contain" />
-      // <img src={FaStore} alt="Caja" className="w-5 h-5 mr-2 object-contain" />
-    ),
-    subItems: [
-      {
-        text: "Productos",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Productos"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/productos",
-      },
-      {
-        text: "Aranceles",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Aranceles"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/aranceles",
-      },
-      {
-        text: "Actividades",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Actividades"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/actividades",
-      },
-      {
-        text: "Inventario",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Inventario"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/inventario",
-      },
     ],
   },
 

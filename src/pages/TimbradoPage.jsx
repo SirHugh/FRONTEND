@@ -116,7 +116,7 @@ function TimbradoPage() {
       <div className="overflow-x-auto">
         <Table hoverable>
           <Table.Head>
-            <Table.HeadCell>ID</Table.HeadCell>
+            <Table.HeadCell>Codigo</Table.HeadCell>
             <Table.HeadCell>Numero</Table.HeadCell>
             <Table.HeadCell>Fecha Inicio</Table.HeadCell>
             <Table.HeadCell>Validez</Table.HeadCell>

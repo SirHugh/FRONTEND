@@ -147,7 +147,7 @@ function NuevaActividad({ onClose }) {
       focusFechaRef.current.focus();
       return false;
     }
-    if (defaultActividad.monto === 0) {
+    if (defaultActividad.monto === 0 || defaultActividad.monto === "") {
       toast.error("El monto de la actividad es requerido");
       focusMontoRef.current.focus();
       return false;
@@ -164,7 +164,7 @@ function NuevaActividad({ onClose }) {
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    if (name == "id_grado" || name == "monto") value = parseInt(value);
+    if (name == "id_grado" || name == "monto") value = Number(value) || "";
     setDefaultActividad({ ...defaultActividad, [name]: value });
     console.log("defaultActividad", defaultActividad);
   };
@@ -369,6 +369,7 @@ function NuevaActividad({ onClose }) {
                     <TextInput
                       ref={focusMontoRef}
                       type="number"
+                      min={50}
                       name="monto"
                       value={defaultActividad.monto}
                       onChange={(e) => handleChange(e)}
