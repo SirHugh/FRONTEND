@@ -277,6 +277,17 @@ const menuItems = [
         ),
         link: "/timbrado",
       },
+      {
+        text: "Estados de cuentas",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Estados de cuentas"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/alumnos",
+      },
       // Agrega más subelementos según sea necesario
     ],
   },
