@@ -1,31 +1,42 @@
 import { useEffect, useState } from "react";
 import { Button, Table } from "flowbite-react";
 import { getArancel } from "../services/CajaService";
-import { getMatricula, getPeriodo } from "../services/AcademicoService";
+import { getMatricula, getPeriodo, searchMatricula, getAlumnoById } from "../services/AcademicoService";
 import toast from "react-hot-toast";
 import { CurrencyFormatter, DateFormatter, Months } from "../components/Constants";
+import { useParams } from 'react-router-dom';
 
 const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
   const [aranceles, setAranceles] = useState([]);
   const [periodoActual, setPeriodoActual] = useState(null);
+  const [alumno, setAlumno] = useState(null);
   const [matricula, setMatricula] = useState(null);
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchPeriodoMatriculaAranceles = async () => {
       try {
         // 1. Obtener el período activo
         const periodoRes = await getPeriodo(true);
-        console.log("Periodo activo: "+ JSON.stringify(periodoRes.data[0]))
-        const periodoActivo = periodoRes.data[0].periodo; // Suponiendo que el primer resultado es el periodo activo
+        const periodoActivo = periodoRes.data[0]; // Suponiendo que el primer resultado es el periodo activo
         setPeriodoActual(periodoActivo);
 
-        // 2. Obtener las matrículas del alumno para el período activo
-        const matriculaRes = await getMatricula(periodoActivo, null, idAlumno, 1);
-        const matriculaAlumno = matriculaRes.data[0]; // Suponiendo que el primer resultado es la matricula activa del alumno
+        // 2. Obtener la cedula del alumno
+        const alumnoRes = await getAlumnoById(id);
+        const alumnoData = alumnoRes.data;
+        setAlumno(alumnoData);
+
+        console.log("Datos guardados en alumno: " + JSON.stringify(alumnoData));
+
+        // 3. Obtener las matrículas del alumno para el período activo
+        const matriculaRes = await searchMatricula(true, alumnoData.cedula, "");
+        const matriculaAlumno = matriculaRes.data; // Suponiendo que el primer resultado es la matrícula activa del alumno
         setMatricula(matriculaAlumno);
 
+        console.log("Datos de la matrícula: " + JSON.stringify(matriculaAlumno));
+
+        // 4. Obtener los aranceles asociados a la matrícula
         if (matriculaAlumno) {
-          // 3. Obtener los aranceles asociados a la matrícula
           const arancelRes = await getArancel(true, matriculaAlumno.id_matricula);
           setAranceles(arancelRes.data);
         } else {
@@ -37,7 +48,7 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
     };
 
     fetchPeriodoMatriculaAranceles();
-  }, [idAlumno]);
+  }, [id]);
 
   return (
     <div className="p-4">
@@ -45,10 +56,10 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
       {matricula && (
         <div className="mb-4">
           <p>
-            Alumno: {matricula.id_alumno.nombre} {matricula.id_alumno.apellido}
+            Alumno: {alumno.nombre} {alumno.apellido}
           </p>
-          <p>Cédula: {matricula.id_alumno.cedula}</p>
-          <p>Grado/Curso: {matricula.id_grado.grado}</p>
+          <p>Cédula: {alumno.cedula}</p>
+          <p>Grado/Curso: {matricula.id_grado}</p>
           <p>Periodo: {matricula.anio_lectivo}</p>
         </div>
       )}
@@ -64,7 +75,7 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
         <Table.Body>
           {aranceles.map((arancel, index) => (
             <Table.Row key={index}>
-              <Table.Cell>{arancel.id_producto.nombre}</Table.Cell>
+              <Table.Cell>{arancel.id_producto}</Table.Cell>
               <Table.Cell>{CurrencyFormatter(arancel.monto)}</Table.Cell>
               <Table.Cell>{Months[new Date(arancel.fecha_vencimiento).getMonth()].name}</Table.Cell>
               <Table.Cell>{arancel.nro_cuota}</Table.Cell>
