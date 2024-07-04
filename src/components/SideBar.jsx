@@ -8,6 +8,7 @@ import lockIcon from "../assets/icons/padlock.svg";
 import cashIcon from "../assets/icons/cash.svg";
 import downArrowIcon from "../assets/icons/down_arrow.svg";
 import upArrowIcon from "../assets/icons/up_arrow.svg";
+import profileIcon from "../assets/icons/profileIcon.svg";
 import useAuth from "../hooks/useAuth";
 import { FaStore, FaStoreAlt } from "react-icons/fa";
 import { TbStack, TbStack2, TbStackFront } from "react-icons/tb";
@@ -26,6 +27,18 @@ const menuItems = [
       />
     ),
     link: "/",
+  },
+  {
+    text: "Perfil",
+    allowedGroup: null, // Esto hace que sea visible para cualquier grupo
+    icon: (
+      <img
+        src={profileIcon}
+        alt="Perfil"
+        className="w-5 h-5 mr-2 object-contain"
+      />
+    ),
+    link: "/profile",
   },
   {
     text: "Administración",

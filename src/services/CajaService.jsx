@@ -34,6 +34,16 @@ export const getArancel = (active, id_matricula, month, page, search) =>
     }`
   );
 
+  export const getArancelAlumno = (active, idAlumno, month, page, search) =>
+    ApiClient.get(
+      `/caja/arancel/?es_activo=${active}${page ? "&page=" + page : ""}${
+        search ? "&search=" + search : ""
+      }${idAlumno ? "&id_alumno=" + idAlumno : ""}${
+        month ? "&month=" + month : ""
+      }`
+    );
+  
+
 export const createArancel = (data) => ApiClient.post("/caja/arancel/", data);
 
 export const updateArancel = (id, data) =>

@@ -234,8 +234,8 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
                     Edad al Ingresar al Primer Grado
                   </label>
                 </div>
-                                  {/* Perfil Psicologico */}
-                                  <div className="relative z-0 w-full mb-5 group">
+                    {/* Perfil Psicologico */}
+                    <div className="relative z-0 w-full mb-5 group">
                     <input
                       type="text"
                       name="perfil_psicologico"
@@ -254,25 +254,25 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
                     </label>
                   </div>
               </div>
+              
               <div className="grid md:grid-cols-2 md:gap-6">
-                <div className="relative z-0 w-full mb-5 group">
-                  <input
-                    type="text"
-                    name="curso_jardin"
-                    id="curso_jardin"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    placeholder=" "
-                    value={editedAlumno.curso_jardin ? "Sí" : "No"}
-                    onChange={handleChange}
-                    readOnly={!isEditing}
-                    required
-                  />
-                  <label
-                    htmlFor="curso_jardin"
-                    className="peer-focus:
-                    font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                    {/* Alergico a */}
+                    <div className="relative z-0 w-full mb-5 group">
+                    <input
+                      type="text"
+                      name="alergico_a"
+                      id="alergico_a"
+                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                      placeholder=" "
+                      value={editedAlumno.alergico_a}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
+                    />
+                    <label
+                      htmlFor="alergico_a"
+                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                     >
-                      Curso de Jardín
+                      Alergico a
                     </label>
                   </div>
                   <div className="relative z-0 w-full mb-5 group">
@@ -285,7 +285,6 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
                       value={editedAlumno.cantidad_hermanos}
                       onChange={handleChange}
                       readOnly={!isEditing}
-                      required
                     />
                     <label
                       htmlFor="cantidad_hermanos"
@@ -296,25 +295,6 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 md:gap-6">
-                  <div className="relative z-0 w-full mb-5 group">
-                    <input
-                      type="text"
-                      name="id_alumno"
-                      id="id_alumno"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
-                      value={editedAlumno.id_alumno}
-                      onChange={handleChange}
-                      readOnly={true}
-                      required
-                    />
-                    <label
-                      htmlFor="id_alumno"
-                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                      ID del Alumno
-                    </label>
-                  </div>
                   <div className="relative z-0 w-full mb-5 group">
                     <input
                       type="text"
@@ -331,25 +311,6 @@ const AlumnoCard = ({ alumno, onSubmit }) => {
                       className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                     >
                       Teléfono
-                    </label>
-                  </div>
-                  {/* Alergico a */}
-                  <div className="relative z-0 w-full mb-5 group">
-                    <input
-                      type="text"
-                      name="alergico_a"
-                      id="alergico_a"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
-                      value={editedAlumno.alergico_a}
-                      onChange={handleChange}
-                      readOnly={!isEditing}
-                    />
-                    <label
-                      htmlFor="alergico_a"
-                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                      Alergico a
                     </label>
                   </div>
                 </div>

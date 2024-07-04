@@ -24,6 +24,8 @@ import PeriodoPage from "./pages/PeriodoPage";
 import ComprasPage from "./pages/ComprasPage";
 import FlujoCajaPage from "./pages/FlujoCajaPage";
 import ActividadPage from "./pages/ActividadPage";
+import EstadoDeCuentaAlumnoPage from "./pages/EstadoDeCuentaAlumnoPage";
+import UserProfilePage from "./pages/UserProfilePage";
 import InventarioPage from "./pages/InventarioPage";
 import ArancelesPage from "./pages/ArancelesPage";
 
@@ -52,6 +54,7 @@ function App() {
           <Routes>
             <Route path="/" element={<MainPage />} exact />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile" element={<UserProfilePage />} />
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ACADEMICO} />}>
               <Route path="/alumnos" element={<AlumnosPage />} exact />
               <Route path="/alumnos/:id/" element={<AlumnoDetail />} />
@@ -67,6 +70,8 @@ function App() {
               <Route path="/timbrado" element={<TimbradoPage />} />
               <Route path="/compras" element={<ComprasPage />} />
               <Route path="/flujoCaja" element={<FlujoCajaPage />} />
+              <Route path="/actividades" element={<ActividadPage />} />
+              <Route path="/estadoDeCuenta/:id/" element={<EstadoDeCuentaAlumnoPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
               <Route path="/usuarios" element={<UsersPage />} />

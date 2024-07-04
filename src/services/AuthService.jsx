@@ -2,6 +2,9 @@ import { ApiClient } from "./ApiClient";
 
 export const getAuthToken = (data) => ApiClient.post("/auth/token/", data);
 
+export const validatePassword = (data) => 
+  ApiClient.post("/auth/validate-password/", data);
+
 export const getRefreshToken = (data) =>
   ApiClient.post("/auth/token/refresh/", data);
 
@@ -11,6 +14,8 @@ export const getQrCode = () =>
   });
 
 export const getUser = (id) => ApiClient.get(`/auth/users/${id ? id`/` : ""}`);
+
+export const getUserData = (id) => ApiClient.get(`/auth/users/${id ? `${id}/` : ""}`);
 
 export const getGroups = (id) =>
   ApiClient.get(`/auth/groups/${id ? id`/` : ""}`);
