@@ -69,11 +69,11 @@ export const getMatricula = (anio, grado, search, page) =>
     }`
   );
 
-export const searchMatricula = (value, data, page) =>
+export const searchMatricula = (value, data, page, anio) =>
   ApiClient.get(
     `/academico/matricula/?es_activo=${value}&search=${data}&page=${
       page ? page : ""
-    }`
+    }&anio_lectivo=${anio ? anio : ""}`
   );
 
 export const setMatriculaActive = (id, value, date) =>

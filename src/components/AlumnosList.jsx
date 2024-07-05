@@ -17,12 +17,6 @@ import { BsCashCoin } from "react-icons/bs";
 import * as XLSX from "xlsx";
 import { FaFileDownload } from "react-icons/fa";
 import { Button } from "flowbite-react";
-const GROUPS = {
-  ACADEMICO: "ACADEMICO",
-  INSCRIPCION: "INSCRIPCION",
-  CAJA: "CAJA",
-  ADMIN: "ADMIN",
-};
 
 export const AlumnosList = () => {
   const [alumnos, setAlumnos] = useState([]);
@@ -210,15 +204,6 @@ export const AlumnosList = () => {
                         className="text-2xl"
                         style={{ color: blueColor }}
                         title="Editar"
-                      />
-                    </Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/estadoDeCuenta/${alumno.id_alumno}`}>
-                      <BsCashCoin
-                        className="text-2xl"
-                        style={{ color: blueColor }}
-                        title="Estado de cuenta"
                       />
                     </Link>
                   </Table.Cell>
