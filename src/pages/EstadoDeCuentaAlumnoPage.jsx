@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, Table, Select } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { Table, Select } from "flowbite-react";
 import { getArancel } from "../services/CajaService";
 import { getPeriodo, searchMatricula, getAlumnoById } from "../services/AcademicoService";
 import toast from "react-hot-toast";
@@ -34,6 +34,7 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
         setAranceles(arancelAlumno);
       } else {
         toast.error("No se encontraron matrículas para el alumno.");
+        setAranceles([]); // Limpiar aranceles si no hay matrícula encontrada
       }
     } catch (error) {
       toast.error("Error al cargar los datos: " + error.message);
@@ -79,20 +80,23 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
     fetchPeriodoMatriculaAranceles(selectedPeriodo);
   };
 
+  // Mostrar la tabla solo si hay matrícula para el período seleccionado
+  const mostrarTabla = !!matricula;
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Estado de Cuenta del Alumno</h1>
-      {matricula && (
+      {(matricula || alumno) && (
         <div className="mb-4">
           <p>
             Alumno: {alumno.nombre} {alumno.apellido}
           </p>
           <p>Cédula: {alumno.cedula}</p>
-          <p>Grado/Curso: {matricula.id_grado.nombre + " grado"}</p>
+          <p>Grado/Curso: {matricula ? matricula.id_grado.nombre + " grado" : ""}</p>
           <p className="flex items-center">
             Periodo: 
             <select 
-              value={periodoActual?.periodo || ''} 
+              value={periodoActual ? periodoActual.periodo : ''} 
               onChange={handlePeriodoChange} 
               className="block p-2 ps-5 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
@@ -105,34 +109,36 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
           </p>
         </div>
       )}
-      <Table>
-        <Table.Head>
-          <Table.HeadCell>Nombre</Table.HeadCell>
-          <Table.HeadCell>Precio</Table.HeadCell>
-          <Table.HeadCell>Mes</Table.HeadCell>
-          <Table.HeadCell>Nro. Cuota</Table.HeadCell>
-          <Table.HeadCell>Vencimiento</Table.HeadCell>
-          <Table.HeadCell>Estado</Table.HeadCell>
-        </Table.Head>
-        <Table.Body>
-          {aranceles.length > 0 ? (
-            aranceles.map((arancel, index) => (
-              <Table.Row key={index}>
-                <Table.Cell>{arancel.nombre}</Table.Cell>
-                <Table.Cell>{CurrencyFormatter(arancel.monto)}</Table.Cell>
-                <Table.Cell>{Months[new Date(arancel.fecha_vencimiento).getMonth()].name}</Table.Cell>
-                <Table.Cell>{arancel.nro_cuota}</Table.Cell>
-                <Table.Cell>{DateFormatter(new Date(arancel.fecha_vencimiento))}</Table.Cell>
-                <Table.Cell>{arancel.es_activo ? "Pendiente" : "Pagado"}</Table.Cell>
+      {mostrarTabla && (
+        <Table>
+          <Table.Head>
+            <Table.HeadCell>Nombre</Table.HeadCell>
+            <Table.HeadCell>Precio</Table.HeadCell>
+            <Table.HeadCell>Mes</Table.HeadCell>
+            <Table.HeadCell>Nro. Cuota</Table.HeadCell>
+            <Table.HeadCell>Vencimiento</Table.HeadCell>
+            <Table.HeadCell>Estado</Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
+            {aranceles.length > 0 ? (
+              aranceles.map((arancel, index) => (
+                <Table.Row key={index}>
+                  <Table.Cell>{arancel.nombre}</Table.Cell>
+                  <Table.Cell>{CurrencyFormatter(arancel.monto)}</Table.Cell>
+                  <Table.Cell>{Months[new Date(arancel.fecha_vencimiento).getMonth()].name}</Table.Cell>
+                  <Table.Cell>{arancel.nro_cuota}</Table.Cell>
+                  <Table.Cell>{DateFormatter(new Date(arancel.fecha_vencimiento))}</Table.Cell>
+                  <Table.Cell>{arancel.es_activo ? "Pendiente" : "Pagado"}</Table.Cell>
+                </Table.Row>
+              ))
+            ) : (
+              <Table.Row>
+                <Table.Cell colSpan="6">No se encontraron aranceles para este alumno.</Table.Cell>
               </Table.Row>
-            ))
-          ) : (
-            <Table.Row>
-              <Table.Cell colSpan="6">No se encontraron aranceles para este alumno.</Table.Cell>
-            </Table.Row>
-          )}
-        </Table.Body>
-      </Table>
+            )}
+          </Table.Body>
+        </Table>
+      )}
     </div>
   );
 };

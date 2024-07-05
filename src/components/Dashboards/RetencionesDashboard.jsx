@@ -77,7 +77,7 @@ const MatriculacionesDashboard = () => {
       <h2 className="text-xl font-bold mb-4">Estadísticas de matriculaciones</h2>
 
       <h3 className="text-lg font-semibold mb-4">Nivel de Retención</h3>
-      <ResponsiveContainer width="110%" height={300}>
+      <ResponsiveContainer width="107%" height={300}>
         <PieChart>
           <Pie
             data={dataRetention}
@@ -85,7 +85,7 @@ const MatriculacionesDashboard = () => {
             cy="50%"
             labelLine={false}
             label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-            outerRadius={100}
+            outerRadius={90}
             fill="#8884d8"
             dataKey="value"
           >
