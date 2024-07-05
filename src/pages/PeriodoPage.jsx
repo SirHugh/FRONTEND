@@ -1,200 +1,142 @@
 import { useEffect, useState } from "react";
-import AgregarPeriodoModal from "../components/AgregarPeriodoModal";
-import { Button, Table } from "flowbite-react";
-import { RiFileList3Line } from "react-icons/ri";
-import { FaPlus, FaToggleOff, FaToggleOn } from "react-icons/fa";
-import {
-  getPeriodo,
-  updatePeriodo,
-  createPeriodo,
-} from "../services/AcademicoService";
+import { Button, Table, Select } from "flowbite-react";
+import { getArancel } from "../services/CajaService";
+import { getPeriodo, searchMatricula, getAlumnoById } from "../services/AcademicoService";
 import toast from "react-hot-toast";
-import PaginationButtons from "../components/PaginationButtons";
-import DesmatricularModal from "../components/matriculacion/Desmatricular";
+import { CurrencyFormatter, DateFormatter, Months } from "../components/Constants";
+import { useParams } from 'react-router-dom';
 
-function PeriodoPage() {
-  const [reload, setReload] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const defaultData = {
-    id_periodo: "",
-    periodo: "",
-    fecha_inicio: "",
-    fecha_fin: "",
-    vencimiento_pagos: "",
-    es_activo: false,
+const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
+  const [aranceles, setAranceles] = useState([]);
+  const [periodoActual, setPeriodoActual] = useState(null);
+  const [periodos, setPeriodos] = useState([]);
+  const [alumno, setAlumno] = useState(null);
+  const [matricula, setMatricula] = useState(null);
+  const { id } = useParams();
+
+  const fetchPeriodoMatriculaAranceles = async (periodo) => {
+    try {
+      // 1. Obtener la cedula del alumno
+      const alumnoRes = await getAlumnoById(id);
+      const alumnoData = alumnoRes.data;
+      setAlumno(alumnoData);
+
+      // 2. Obtener las matrículas del alumno para el período seleccionado
+      const matriculaRes = await searchMatricula(true, alumnoData.cedula, "", periodo);
+      const matriculaAlumno = matriculaRes.data[0]; // Suponiendo que el primer resultado es la matrícula activa del alumno
+      setMatricula(matriculaAlumno);
+
+      // 3. Obtener los aranceles asociados a la matrícula (activos e inactivos)
+      if (matriculaAlumno) {
+        const arancelActivoRes = await getArancel(true, matriculaAlumno.id_matricula);
+        const arancelInactivoRes = await getArancel(false, matriculaAlumno.id_matricula);
+        const arancelAlumno = [...arancelActivoRes.data, ...arancelInactivoRes.data];
+        setAranceles(arancelAlumno);
+      } else {
+        toast.error("No se encontraron matrículas para el alumno.");
+      }
+    } catch (error) {
+      toast.error("Error al cargar los datos: " + error.message);
+    }
   };
-  const [periodo, setPeriodo] = useState(defaultData);
-  const [periodoList, setPeriodoList] = useState([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [showActivate, setShowActivate] = useState(false);
 
   useEffect(() => {
-    const loadPeriodos = async () => {
-      const page = Math.min(currentPage + 1, totalPages);
+    const fetchInitialData = async () => {
       try {
-        const res = await getPeriodo();
-        setPeriodoList(res.data);
-        setTotalPages(Math.ceil(res.data.length / 10));
+        // Obtener todos los periodos
+        const periodoRes = await getPeriodo();
+        const allPeriodos = periodoRes.data;
+        setPeriodos(allPeriodos);
+
+        // Obtener el período activo
+        const periodoActivo = allPeriodos.find(periodo => periodo.es_activo);
+        setPeriodoActual(periodoActivo);
+
+        // Fetch datos iniciales con el período activo
+        fetchPeriodoMatriculaAranceles(periodoActivo.periodo);
       } catch (error) {
-        toast.error("Error al cargar la pagina");
-        console.log(error);
+        toast.error("Error al cargar los datos iniciales: " + error.message);
       }
     };
-    loadPeriodos();
-  }, [reload, currentPage]);
 
-  const handleEditPeriodo = (prd) => {
-    setPeriodo(prd);
-    setShowAddModal(true);
-  };
+    fetchInitialData();
+  }, [id]);
 
-  const handleClose = () => {
-    setShowAddModal(false);
-    setPeriodo(defaultData);
-    setReload(!reload);
-  };
-
-  const handleActivate = async () => {
-    try {
-      const res = await updatePeriodo(periodo.id_periodo, {
-        es_activo: !periodo.es_activo,
-      });
-      if (res.data.es_activo) {
-        await deactivateOtherPeriodos(periodo.id_periodo);
-      }
-      toast.success("Periodo Actualizado");
-      setReload(!reload);
-    } catch (error) {
-      toast.error(error.response.data.error);
-      console.log(error);
+  useEffect(() => {
+    if (aranceles.length > 0) {
+      console.log("Aranceles", JSON.stringify(aranceles));
     }
-    onCloseActivate();
+  }, [aranceles]);
+
+  if (!alumno) {
+    return <div>Cargando...</div>;
+  }
+
+  const handlePeriodoChange = (event) => {
+    const selectedPeriodo = event.target.value;
+    const periodoSeleccionado = periodos.find(periodo => periodo.periodo === selectedPeriodo);
+    setPeriodoActual(periodoSeleccionado);
+    fetchPeriodoMatriculaAranceles(selectedPeriodo);
   };
 
-  const deactivateOtherPeriodos = async (currentId) => {
-    try {
-      const otherPeriodos = periodoList.filter(
-        (prd) => prd.id_periodo !== currentId && prd.es_activo
-      );
-      for (let prd of otherPeriodos) {
-        await updatePeriodo(prd.id_periodo, { es_activo: false });
-      }
-    } catch (error) {
-      console.error("Error al desactivar otros periodos:", error);
-    }
-  };
-
-  const handleShowActivateModal = (prd) => {
-    setPeriodo(prd);
-    setShowActivate(true);
-  };
-
-  const onCloseActivate = () => {
-    setPeriodo(defaultData);
-    setShowActivate(false);
-  };
+  console.log("Alumno", alumno);
 
   return (
-    <>
-      <DesmatricularModal
-        show={showActivate}
-        onClose={() => onCloseActivate()}
-        title={periodo?.es_activo ? "Desactivar Periodo" : "Activar Periodo"}
-        message={"Confirmar cambio."}
-        information={"Periodo: " + periodo?.periodo}
-        data={""}
-        action={() => handleActivate()}
-      />
-      <AgregarPeriodoModal
-        show={showAddModal}
-        onClose={() => handleClose()}
-        periodo={periodo}
-      />
-      <div>
-        <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
-          <RiFileList3Line className="text-blue-700" />
-          <h1 className="">PERIODOS ACADÉMICOS</h1>
-        </div>
-        <div className="flex flex-row justify-end h-16 p-3 gap-3 border items-center">
-          <div>
-            <Button
-              className="flex flex-wrap bg-blue-500"
-              onClick={() => setShowAddModal(true)}
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Estado de Cuenta del Alumno</h1>
+      {matricula && (
+        <div className="mb-4">
+          <p>
+            Alumno: {alumno.nombre} {alumno.apellido}
+          </p>
+          <p>Cédula: {alumno.cedula}</p>
+          <p>Grado/Curso: {matricula.id_grado.nombre + " grado"}</p>
+          <p className="flex items-center">
+            Periodo: 
+            <select 
+              value={periodoActual?.periodo || ''} 
+              onChange={handlePeriodoChange} 
+              className="ml-2 p-2 border rounded"
             >
-              <FaPlus className="mr-2 h-5 w-5" />
-              <h1>Nuevo Periodo</h1>
-            </Button>
-          </div>
+              {periodos.map(periodo => (
+                <option key={periodo.periodo} value={periodo.periodo}>
+                  {periodo.periodo}
+                </option>
+              ))}
+            </select>
+          </p>
         </div>
-      </div>
-      <div className="overflow-x-auto">
-        <Table hoverable>
-          <Table.Head>
-            <Table.HeadCell>ID</Table.HeadCell>
-            <Table.HeadCell>Periodo</Table.HeadCell>
-            <Table.HeadCell>Fecha Inicio</Table.HeadCell>
-            <Table.HeadCell>Fecha Fin</Table.HeadCell>
-            <Table.HeadCell>Vencimiento Pagos</Table.HeadCell>
-            <Table.HeadCell>Estado</Table.HeadCell>
-            <Table.HeadCell className="sr-only"></Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {periodoList.map((periodo) => (
-              <Table.Row
-                key={periodo.id_periodo}
-                className={`bg-slate-100 dark:border-gray-700 dark:bg-gray-800 hover:border-l-blue-500 hover:border-l-4`}
-              >
-                <Table.Cell>{periodo.id_periodo}</Table.Cell>
-                <Table.Cell>{periodo.periodo}</Table.Cell>
-                <Table.Cell>{periodo.fecha_inicio}</Table.Cell>
-                <Table.Cell>{periodo.fecha_fin}</Table.Cell>
-                <Table.Cell>{periodo.vencimiento_pagos}</Table.Cell>
-                <Table.Cell
-                  className={`${
-                    !periodo.es_activo ? "text-red-700" : "text-green-600"
-                  }`}
-                >
-                  {periodo.es_activo ? "Activo" : "Inactivo"}
-                </Table.Cell>
-                <Table.Cell>
-                  <button
-                    className="text-blue-500"
-                    onClick={() => handleEditPeriodo(periodo)}
-                  >
-                    Editar
-                  </button>
-                </Table.Cell>
-                <Table.Cell>
-                  <button
-                    className="text-blue-500"
-                    onClick={() => handleShowActivateModal(periodo)}
-                  >
-                    {periodo.es_activo ? (
-                      <FaToggleOn
-                        title="Desactivar"
-                        className="size-6 text-blue-500"
-                      />
-                    ) : (
-                      <FaToggleOff
-                        title="Activar"
-                        className="size-6 text-red-800"
-                      />
-                    )}
-                  </button>
-                </Table.Cell>
+      )}
+      <Table>
+        <Table.Head>
+          <Table.HeadCell>Nombre</Table.HeadCell>
+          <Table.HeadCell>Precio</Table.HeadCell>
+          <Table.HeadCell>Mes</Table.HeadCell>
+          <Table.HeadCell>Nro. Cuota</Table.HeadCell>
+          <Table.HeadCell>Vencimiento</Table.HeadCell>
+          <Table.HeadCell>Estado</Table.HeadCell>
+        </Table.Head>
+        <Table.Body>
+          {aranceles.length > 0 ? (
+            aranceles.map((arancel, index) => (
+              <Table.Row key={index}>
+                <Table.Cell>{arancel.nombre}</Table.Cell>
+                <Table.Cell>{CurrencyFormatter(arancel.monto)}</Table.Cell>
+                <Table.Cell>{Months[new Date(arancel.fecha_vencimiento).getMonth()].name}</Table.Cell>
+                <Table.Cell>{arancel.nro_cuota}</Table.Cell>
+                <Table.Cell>{DateFormatter(new Date(arancel.fecha_vencimiento))}</Table.Cell>
+                <Table.Cell>{arancel.es_activo ? "Pendiente" : "Pagado"}</Table.Cell>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-        <PaginationButtons
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
-      </div>
-    </>
+            ))
+          ) : (
+            <Table.Row>
+              <Table.Cell colSpan="6">No se encontraron aranceles para este alumno.</Table.Cell>
+            </Table.Row>
+          )}
+        </Table.Body>
+      </Table>
+    </div>
   );
-}
+};
 
-export default PeriodoPage;
+export default EstadoDeCuentaAlumnoPage;

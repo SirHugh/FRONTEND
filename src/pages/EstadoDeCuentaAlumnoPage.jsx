@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Button, Table } from "flowbite-react";
+import { Button, Table, Select } from "flowbite-react";
 import { getArancel } from "../services/CajaService";
-import { getMatricula, getPeriodo, searchMatricula, getAlumnoById } from "../services/AcademicoService";
+import { getPeriodo, searchMatricula, getAlumnoById } from "../services/AcademicoService";
 import toast from "react-hot-toast";
 import { CurrencyFormatter, DateFormatter, Months } from "../components/Constants";
 import { useParams } from 'react-router-dom';
@@ -9,56 +9,76 @@ import { useParams } from 'react-router-dom';
 const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
   const [aranceles, setAranceles] = useState([]);
   const [periodoActual, setPeriodoActual] = useState(null);
+  const [periodos, setPeriodos] = useState([]);
   const [alumno, setAlumno] = useState(null);
   const [matricula, setMatricula] = useState(null);
   const { id } = useParams();
 
+  const fetchPeriodoMatriculaAranceles = async (periodo) => {
+    try {
+      // 1. Obtener la cedula del alumno
+      const alumnoRes = await getAlumnoById(id);
+      const alumnoData = alumnoRes.data;
+      setAlumno(alumnoData);
+
+      // 2. Obtener las matrículas del alumno para el período seleccionado
+      const matriculaRes = await searchMatricula(true, alumnoData.cedula, "", periodo);
+      const matriculaAlumno = matriculaRes.data[0]; // Suponiendo que el primer resultado es la matrícula activa del alumno
+      setMatricula(matriculaAlumno);
+
+      // 3. Obtener los aranceles asociados a la matrícula (activos e inactivos)
+      if (matriculaAlumno) {
+        const arancelActivoRes = await getArancel(true, matriculaAlumno.id_matricula);
+        const arancelInactivoRes = await getArancel(false, matriculaAlumno.id_matricula);
+        const arancelAlumno = [...arancelActivoRes.data, ...arancelInactivoRes.data];
+        setAranceles(arancelAlumno);
+      } else {
+        toast.error("No se encontraron matrículas para el alumno.");
+      }
+    } catch (error) {
+      toast.error("Error al cargar los datos: " + error.message);
+    }
+  };
+
   useEffect(() => {
-    const fetchPeriodoMatriculaAranceles = async () => {
+    const fetchInitialData = async () => {
       try {
-        // 1. Obtener el período activo
-        const periodoRes = await getPeriodo(true);
-        const periodoActivo = periodoRes.data[0]; // Suponiendo que el primer resultado es el periodo activo
+        // Obtener todos los periodos
+        const periodoRes = await getPeriodo();
+        const allPeriodos = periodoRes.data;
+        setPeriodos(allPeriodos);
+
+        // Obtener el período activo
+        const periodoActivo = allPeriodos.find(periodo => periodo.es_activo);
         setPeriodoActual(periodoActivo);
 
-        // 2. Obtener la cedula del alumno
-        const alumnoRes = await getAlumnoById(id);
-        const alumnoData = alumnoRes.data;
-        setAlumno(alumnoData);
-
-        // 3. Obtener las matrículas del alumno para el período activo
-        const matriculaRes = await searchMatricula(true, alumnoData.cedula, "");
-        const matriculaAlumno = matriculaRes.data; // Suponiendo que el primer resultado es la matrícula activa del alumno
-        setMatricula(matriculaAlumno);
-
-        // 4. Obtener los aranceles asociados a la matrícula
-        if (matriculaAlumno) {
-          const arancelRes = await getArancel(true, matriculaAlumno.id_matricula);
-          const arancelAlumno = arancelRes.data;
-          setAranceles(arancelAlumno);
-          
-        } else {
-          toast.error("No se encontraron matrículas para el alumno.");
-        }
+        // Fetch datos iniciales con el período activo
+        fetchPeriodoMatriculaAranceles(periodoActivo.periodo);
       } catch (error) {
-        toast.error("Error al cargar los datos: " + error.message);
+        toast.error("Error al cargar los datos iniciales: " + error.message);
       }
     };
 
-    console.log("Aranceles " + JSON.stringify(aranceles));
-    fetchPeriodoMatriculaAranceles();
+    fetchInitialData();
   }, [id]);
 
-  // Extraer la cédula de los aranceles y filtrar
-  const filteredAranceles = aranceles.filter(arancel => {
-    if (arancel.alumno) {
-      const [arancelCedula] = arancel.alumno.split("-");
-      return arancelCedula === alumno.cedula;
+  useEffect(() => {
+    if (aranceles.length > 0) {
+      console.log("Aranceles", JSON.stringify(aranceles));
     }
-    return false;
-  });
+  }, [aranceles]);
 
-  console.log("Datos filtrados de aranceles: "+JSON.stringify(filteredAranceles))
+  if (!alumno) {
+    return <div>Cargando...</div>;
+  }
+
+  const handlePeriodoChange = (event) => {
+    const selectedPeriodo = event.target.value;
+    const periodoSeleccionado = periodos.find(periodo => periodo.periodo === selectedPeriodo);
+    setPeriodoActual(periodoSeleccionado);
+    fetchPeriodoMatriculaAranceles(selectedPeriodo);
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Estado de Cuenta del Alumno</h1>
@@ -68,8 +88,21 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
             Alumno: {alumno.nombre} {alumno.apellido}
           </p>
           <p>Cédula: {alumno.cedula}</p>
-          <p>Grado/Curso: {matricula.id_grado}</p>
-          <p>Periodo: {matricula.anio_lectivo}</p>
+          <p>Grado/Curso: {matricula.id_grado.nombre + " grado"}</p>
+          <p className="flex items-center">
+            Periodo: 
+            <select 
+              value={periodoActual?.periodo || ''} 
+              onChange={handlePeriodoChange} 
+              className="block p-2 ps-5 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              {periodos.map(periodo => (
+                <option key={periodo.periodo} value={periodo.periodo}>
+                  {periodo.periodo}
+                </option>
+              ))}
+            </select>
+          </p>
         </div>
       )}
       <Table>
@@ -85,7 +118,7 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
           {aranceles.length > 0 ? (
             aranceles.map((arancel, index) => (
               <Table.Row key={index}>
-                <Table.Cell>{arancel.id_producto}</Table.Cell>
+                <Table.Cell>{arancel.nombre}</Table.Cell>
                 <Table.Cell>{CurrencyFormatter(arancel.monto)}</Table.Cell>
                 <Table.Cell>{Months[new Date(arancel.fecha_vencimiento).getMonth()].name}</Table.Cell>
                 <Table.Cell>{arancel.nro_cuota}</Table.Cell>

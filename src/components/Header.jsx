@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import logoutIcon from '../assets/icons/logout.svg';
+import BuscadorAlumnos from "./Ventas/BuscadorAlumnos";
 
 const Header = ({ toggleSidebar }) => {
   const { user, logoutUser } = useContext(AuthContext);
-
+  
   const handleLogout = () => {
     logoutUser();
   };
@@ -15,10 +16,17 @@ const Header = ({ toggleSidebar }) => {
     return null; // No renderizar el header si el usuario no está autenticado
   }
 
+  // Verificar si el usuario pertenece al grupo CAJA
+  const esGrupoCaja = user.groups.includes("CAJA");
+
   return (
     <div className="flex justify-between items-center bg-blue-500 text-white py-4 px-6">
       <div>
-      
+        {esGrupoCaja && (
+          <div className="mr-4">
+            <BuscadorAlumnos />
+          </div>
+        )}
       </div>
       <div>
         <div className="flex items-center">
@@ -27,7 +35,7 @@ const Header = ({ toggleSidebar }) => {
             onClick={handleLogout}
             className="text-white hover:text-gray-300"
           >
-            <img src={logoutIcon} className="w-5 h-5 mr-2 object-contain" title="Cerrar cesión" />
+            <img src={logoutIcon} className="w-5 h-5 mr-2 object-contain" title="Cerrar sesión" />
           </button>
         </div>
       </div>
