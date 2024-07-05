@@ -43,9 +43,9 @@ export const updateResponsable = (id, data) =>
 
 //  funciones para manejo de los grados
 
-export const getGrados = (is_active) =>
+export const getGrados = (es_activo) =>
   ApiClient.get(
-    `/academico/grados/${is_active ? "?is_active=" + is_active : ""}`
+    `/academico/grados/${es_activo ? "?es_activo=" + es_activo : ""}`
   );
 
 export const getGradoById = (id) => ApiClient.post(`/academico/grados/${id}`);

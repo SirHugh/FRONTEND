@@ -11,7 +11,7 @@ function ListaDetalle({ detalleList, setDetalleList }) {
 
   const loadOptions = async () => {
     if (inputValue < 2) return;
-    return getProducto("", "PR", 1, inputValue).then((result) => {
+    return getProducto("", "PR", 1, inputValue, true).then((result) => {
       const res = result.data.results;
       console.log(res);
       return res;

@@ -1,33 +1,18 @@
 import jsPDF from "jspdf";
 import { Button, Label, Modal, Table } from "flowbite-react";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
 const SummaryModal = ({ show, onClose, comprobante, detalleList }) => {
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
+  const componentRef = useRef(null);
 
-  const handlePrintAsPdf = () => {
-    const doc = new jsPDF({
-      format: "a4",
-      unit: "px",
-    });
-    const modalContent = document.getElementById("modal-content");
-    // doc.HTML(modalContent.innerHTML, 15, 15);
-    // doc.save("comprobante.pdf");
-    doc.html(modalContent.innerHTML, {
-      async callback(doc) {
-        await doc.save("document");
-      },
-    });
-  };
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "Print This Document",
+    onBeforePrint: () => console.log("before printing..."),
+    onAfterPrint: () => console.log("after printing..."),
+    removeAfterPrint: true,
+  });
 
   return (
     <>
@@ -40,58 +25,62 @@ const SummaryModal = ({ show, onClose, comprobante, detalleList }) => {
         <Modal.Header id="modal-modal-title">
           Resumen del Comprobante
         </Modal.Header>
-        <Modal.Body className="grid grid-cols-3" id="modal-content">
-          <Label>
-            ID Comprobante: <p>{comprobante.id_comprobante}</p>
-          </Label>
-          <Label>
-            ID Timbrado: <p>{comprobante.id_timbrado}</p>
-          </Label>
-          <Label>
-            Nro Factura: <p>{comprobante.nro_factura}</p>
-          </Label>
-          <Label>
-            ID Usuario: <p>{comprobante.id_user}</p>
-          </Label>
-          <Label>
-            ID Cliente: <p>{comprobante.id_cliente}</p>
-          </Label>
-          <Label>
-            Fecha: <p>{comprobante.fecha}</p>
-          </Label>
-          <Label>
-            Tipo de Pago:{" "}
-            <p>{comprobante.tipo_pago === "C" ? "Contado" : ""}</p>
-          </Label>
-          <Label>
-            Monto: <p>{comprobante.monto}</p>
-          </Label>
-          <Label id="modal-modal-title" variant="h6" component="h2">
-            Detalles del Pago
-          </Label>
-          <Table>
-            <Table.Head></Table.Head>
-            <Table.Body>
-              {detalleList.aranceles?.map((detalle) => (
-                <Table.Row key={detalle.id_arancel}>
-                  <Table.Cell> {detalle.id_arancel}</Table.Cell>
-                  <Table.Cell> {detalle.alumno}</Table.Cell>
-                  <Table.Cell> {detalle.nombre}</Table.Cell>
-                  <Table.Cell> {detalle.fecha_vencimiento}</Table.Cell>
-                  <Table.Cell> {detalle.nro_cuota}</Table.Cell>
-                  <Table.Cell> {detalle.monto}</Table.Cell>
-                  <Table.Cell> {detalle.es_activo ? "Si" : "No"}</Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+        <Modal.Body>
+          <div ref={componentRef} className="flex flex-col">
+            <div className="grid grid-cols-3 gap-2 justify-between p-3">
+              <Label>
+                ID Comprobante: <b>{comprobante.id_comprobante}</b>
+              </Label>
+              <Label>
+                <big>ID Timbrado:</big> <p>{comprobante.id_timbrado}</p>
+              </Label>
+              <Label>
+                Nro Factura: <p>{comprobante.nro_factura}</p>
+              </Label>
+              <Label>
+                ID Usuario: <p>{comprobante.id_user}</p>
+              </Label>
+              <Label>
+                ID Cliente: <p>{comprobante.id_cliente}</p>
+              </Label>
+              <Label>
+                Fecha: <p>{comprobante.fecha}</p>
+              </Label>
+              <Label>
+                Tipo de Pago:{" "}
+                <p>{comprobante.tipo_pago === "C" ? "Contado" : ""}</p>
+              </Label>
+              <Label>
+                Monto: <p>{comprobante.monto}</p>
+              </Label>
+              <Label id="modal-modal-title" variant="h6" component="h2">
+                Detalles del Pago
+              </Label>
+            </div>
+            <Table>
+              <Table.Head></Table.Head>
+              <Table.Body>
+                {detalleList.aranceles?.map((detalle) => (
+                  <Table.Row key={detalle.id_arancel}>
+                    <Table.Cell> {detalle.id_arancel}</Table.Cell>
+                    <Table.Cell> {detalle.alumno}</Table.Cell>
+                    <Table.Cell> {detalle.nombre}</Table.Cell>
+                    <Table.Cell> {detalle.fecha_vencimiento}</Table.Cell>
+                    <Table.Cell> {detalle.nro_cuota}</Table.Cell>
+                    <Table.Cell> {detalle.monto}</Table.Cell>
+                    <Table.Cell> {detalle.es_activo ? "Si" : "No"}</Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button type="button" onClick={onClose}>
-            Close
+            Cerrar
           </Button>
-          <Button type="button" onClick={handlePrintAsPdf}>
-            Print as PDF
+          <Button type="button" onClick={handlePrint}>
+            Imprimir PDF
           </Button>
         </Modal.Footer>
       </Modal>

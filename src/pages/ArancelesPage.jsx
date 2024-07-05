@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Table, Button } from "flowbite-react";
+import { Table, Button, TextInput } from "flowbite-react";
 import { BiEdit, BiError } from "react-icons/bi";
-import { FaPlus } from "react-icons/fa";
+import { FaFileInvoice, FaPlus } from "react-icons/fa";
 import toast from "react-hot-toast";
 import PaginationButtons from "../components/PaginationButtons";
 import ProductoModal from "../components/ProductoModal";
@@ -11,6 +11,8 @@ import {
   updateProducto,
 } from "../services/CajaService";
 import { CurrencyFormatter } from "../components/Constants";
+import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
+import { MdSearch } from "react-icons/md";
 
 const ArancelesPage = () => {
   const [productos, setProductos] = useState([]);
@@ -18,25 +20,23 @@ const ArancelesPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedProducto, setSelectedProducto] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [search, setSearch] = useState("");
 
   const itemsPerPage = 10;
 
   useEffect(() => {
     const loadProductos = async () => {
       try {
-        const res = await getProducto("", "AR");
-        if (res.status === 200) {
-          setProductos(res.data.slice(0, itemsPerPage));
-          setTotalPages(Math.ceil(res.data.length / itemsPerPage));
-        } else {
-          console.error("Error al cargar los productos:", res.message);
-        }
+        const page = Math.min(currentPage + 1, totalPages) || 1;
+        const res = await getProducto("", "AR", page, search);
+        setProductos(res.data.results);
       } catch (error) {
+        toast.error(error.message);
         console.error("Error al obtener los productos:", error);
       }
     };
     loadProductos();
-  }, [currentPage]);
+  }, [currentPage, search]);
 
   const handleSave = async (producto) => {
     try {
@@ -65,9 +65,18 @@ const ArancelesPage = () => {
   return (
     <div>
       <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
-        <h1 className="">ARANCELES</h1>
+        <LiaFileInvoiceDollarSolid className="text-blue-500" />
+        <h1 className="">Aranceles</h1>
       </div>
-      <div className="flex flex-row justify-end h-16 p-3 gap-3 items-center">
+      <div className="flex flex-row justify-between h-16 p-3 gap-3 items-center">
+        <TextInput
+          icon={MdSearch}
+          name="search"
+          id="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Arancel..."
+        />
         <Button
           className="flex flex-wrap bg-blue-500"
           onClick={() => {
@@ -87,7 +96,7 @@ const ArancelesPage = () => {
             <Table.HeadCell>Descripción</Table.HeadCell>
             <Table.HeadCell>Precio</Table.HeadCell>
             <Table.HeadCell>Tipo de pago</Table.HeadCell>
-            <Table.HeadCell>Activo</Table.HeadCell>
+            <Table.HeadCell>Estado</Table.HeadCell>
             <Table.HeadCell>Acciones</Table.HeadCell>
           </Table.Head>
           <Table.Body className="bg-white divide-y">
@@ -103,7 +112,13 @@ const ArancelesPage = () => {
                 <Table.Cell>
                   {producto.es_mensual != null ? "Único" : "Mensual"}
                 </Table.Cell>
-                <Table.Cell>{producto.es_activo ? "Sí" : "No"}</Table.Cell>
+                <Table.Cell
+                  className={`${
+                    producto.es_activo ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {producto.es_activo ? "Activo" : "Inactivo"}
+                </Table.Cell>
                 <Table.Cell>
                   <BiEdit
                     className="text-2xl cursor-pointer"

@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { Button, Table } from "flowbite-react";
+import { Table } from "flowbite-react";
 import { getArancel } from "../services/CajaService";
 import { getMatricula, getPeriodo } from "../services/AcademicoService";
 import toast from "react-hot-toast";
-import { CurrencyFormatter, DateFormatter, Months } from "../components/Constants";
+import {
+  CurrencyFormatter,
+  DateFormatter,
+  Months,
+} from "../components/Constants";
 
-const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
+const EstadoDeCuentaPage = ({ idAlumno }) => {
   const [aranceles, setAranceles] = useState([]);
   const [periodoActual, setPeriodoActual] = useState(null);
   const [matricula, setMatricula] = useState(null);
@@ -15,18 +19,26 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
       try {
         // 1. Obtener el período activo
         const periodoRes = await getPeriodo(true);
-        console.log("Periodo activo: "+ JSON.stringify(periodoRes.data[0]))
+        console.log("Periodo activo: " + JSON.stringify(periodoRes.data[0]));
         const periodoActivo = periodoRes.data[0].periodo; // Suponiendo que el primer resultado es el periodo activo
         setPeriodoActual(periodoActivo);
 
         // 2. Obtener las matrículas del alumno para el período activo
-        const matriculaRes = await getMatricula(periodoActivo, null, idAlumno, 1);
+        const matriculaRes = await getMatricula(
+          periodoActivo,
+          null,
+          idAlumno,
+          1
+        );
         const matriculaAlumno = matriculaRes.data[0]; // Suponiendo que el primer resultado es la matricula activa del alumno
         setMatricula(matriculaAlumno);
 
         if (matriculaAlumno) {
           // 3. Obtener los aranceles asociados a la matrícula
-          const arancelRes = await getArancel(true, matriculaAlumno.id_matricula);
+          const arancelRes = await getArancel(
+            true,
+            matriculaAlumno.id_matricula
+          );
           setAranceles(arancelRes.data);
         } else {
           toast.error("No se encontraron matrículas para el alumno.");
@@ -66,10 +78,16 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
             <Table.Row key={index}>
               <Table.Cell>{arancel.id_producto.nombre}</Table.Cell>
               <Table.Cell>{CurrencyFormatter(arancel.monto)}</Table.Cell>
-              <Table.Cell>{Months[new Date(arancel.fecha_vencimiento).getMonth()].name}</Table.Cell>
+              <Table.Cell>
+                {Months[new Date(arancel.fecha_vencimiento).getMonth()].name}
+              </Table.Cell>
               <Table.Cell>{arancel.nro_cuota}</Table.Cell>
-              <Table.Cell>{DateFormatter(new Date(arancel.fecha_vencimiento))}</Table.Cell>
-              <Table.Cell>{arancel.es_activo ? "Pendiente" : "Pagado"}</Table.Cell>
+              <Table.Cell>
+                {DateFormatter(new Date(arancel.fecha_vencimiento))}
+              </Table.Cell>
+              <Table.Cell>
+                {arancel.es_activo ? "Pendiente" : "Pagado"}
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -78,4 +96,4 @@ const EstadoDeCuentaAlumnoPage = ({ idAlumno }) => {
   );
 };
 
-export default EstadoDeCuentaAlumnoPage;
+export default EstadoDeCuentaPage;

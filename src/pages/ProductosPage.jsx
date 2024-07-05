@@ -11,6 +11,7 @@ import {
 import { FaPlus, FaToggleOff, FaToggleOn } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { CurrencyFormatter } from "../components/Constants";
+import { MdOutlineInventory2 } from "react-icons/md";
 
 const ProductosPage = () => {
   const [productos, setProductos] = useState([]);
@@ -70,7 +71,8 @@ const ProductosPage = () => {
   return (
     <div>
       <div className="flex flex-row p-3 border-b gap-3 text-4xl font-bold items-center">
-        <h1 className="">PRODUCTOS</h1>
+        <MdOutlineInventory2 className="text-blue-500" />
+        <h1 className="">Productos</h1>
       </div>
       <div className="flex flex-row justify-end h-16 p-3 gap-3 items-center">
         <Button

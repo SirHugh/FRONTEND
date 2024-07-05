@@ -52,6 +52,7 @@ function NuevaActividad({ onClose }) {
     const loadGrados = async () => {
       try {
         const res = await getGrados(true);
+        console.log(res.data);
         setGrados(res.data);
       } catch (error) {
         toast.error("No se pudo cargar los grados");
