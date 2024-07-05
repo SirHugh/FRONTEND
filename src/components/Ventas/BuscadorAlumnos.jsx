@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Cambiado useHistory por useNavigate
 import { TextInput, Button } from "flowbite-react";
 import { MdSearch } from "react-icons/md";
 import { searchAlumnos } from "../../services/AcademicoService";
 
-function BuscadorAlumnos() {
+function BuscadorAlumnos({ onAlumnoSelect }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [alumnos, setAlumnos] = useState([]);
-  const navigate = useNavigate(); // Cambiado useHistory por useNavigate
 
   const handleSearch = async () => {
     try {
       const response = await searchAlumnos(1, searchTerm); // Ajusta los parámetros de la búsqueda según sea necesario
-      console.log("Datos de los alumnos: "+JSON.stringify(response.data.results))
+      console.log("Datos de los alumnos: " + JSON.stringify(response.data.results));
       setAlumnos(response.data.results);
     } catch (error) {
       console.error("Error al buscar alumnos:", error);
@@ -20,20 +18,22 @@ function BuscadorAlumnos() {
   };
 
   const handleAlumnoClick = (id) => {
-    navigate(`/estadoDeCuenta/${id}`); // Cambiado useHistory.push por navigate
-    setAlumnos("");
+    onAlumnoSelect(id);
+    setAlumnos([]); // Borra los resultados de la búsqueda
+    setSearchTerm(""); // Limpia el término de búsqueda
   };
 
   return (
     <>
-      <div className="flex flex-row justify-between  items-center">
+      <div className="flex flex-row h-20 items-center space-x-2 w-80">
         <TextInput
           icon={MdSearch}
           name="search"
           id="search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Nombre. Apellido. CI."
+          placeholder="Nombre, Apellido o CI."
+          className="flex-grow"
         />
         <Button className="bg-blue-500" onClick={handleSearch}>
           Buscar

@@ -71,7 +71,7 @@ function App() {
               <Route path="/compras" element={<ComprasPage />} />
               <Route path="/flujoCaja" element={<FlujoCajaPage />} />
               <Route path="/actividades" element={<ActividadPage />} />
-              <Route path="/estadoDeCuenta/:id/" element={<EstadoDeCuentaAlumnoPage />} />
+              <Route path="/estadoDeCuenta" element={<EstadoDeCuentaAlumnoPage />} />
             </Route>
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
               <Route path="/usuarios" element={<UsersPage />} />
