@@ -22,11 +22,7 @@ const Header = ({ toggleSidebar }) => {
   return (
     <div className="flex justify-between items-center bg-blue-500 text-white py-4 px-6">
       <div>
-        {esGrupoCaja && (
-          <div className="mr-4">
-            <BuscadorAlumnos />
-          </div>
-        )}
+
       </div>
       <div>
         <div className="flex items-center">
