@@ -22,6 +22,15 @@ export const createProductoGrado = (data) =>
   ApiClient.post(`/caja/productogrado/`, data);
 
 // ---------------------
+// servicios para el manejo de inventario
+// ---------------------
+
+export const addAjuste = (data) =>
+  ApiClient.post(`/caja/inventario/ajuste/`, data);
+
+export const getAjuste = () => ApiClient.post(`/caja/inventario/ajuste/`);
+
+// ---------------------
 // servicios para el manejo de aranceles
 // ---------------------
 
@@ -34,15 +43,14 @@ export const getArancel = (active, id_matricula, month, page, search) =>
     }`
   );
 
-  export const getArancelAlumno = (active, idAlumno, month, page, search) =>
-    ApiClient.get(
-      `/caja/arancel/?es_activo=${active}${page ? "&page=" + page : ""}${
-        search ? "&search=" + search : ""
-      }${idAlumno ? "&id_alumno=" + idAlumno : ""}${
-        month ? "&month=" + month : ""
-      }`
-    );
-  
+export const getArancelAlumno = (active, idAlumno, month, page, search) =>
+  ApiClient.get(
+    `/caja/arancel/?es_activo=${active}${page ? "&page=" + page : ""}${
+      search ? "&search=" + search : ""
+    }${idAlumno ? "&id_alumno=" + idAlumno : ""}${
+      month ? "&month=" + month : ""
+    }`
+  );
 
 export const createArancel = (data) => ApiClient.post("/caja/arancel/", data);
 
