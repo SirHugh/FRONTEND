@@ -3,8 +3,9 @@ import PaginationButtons from "../PaginationButtons";
 import { useEffect, useState } from "react";
 import { getProducto } from "../../services/CajaService";
 import toast from "react-hot-toast";
+import { FaLevelUpAlt } from "react-icons/fa";
 
-function TablaInventario({ show, search, esActivo }) {
+function TablaInventario({ search, esActivo }) {
   const [productos, setProductos] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
@@ -16,6 +17,7 @@ function TablaInventario({ show, search, esActivo }) {
         const res = await getProducto("", "PR", page, search, esActivo);
         setProductos(res.data.results);
         setTotalPages(Math.ceil(res.data.count / 10));
+        console.log(res.data.results);
       } catch (error) {
         toast.error(error.message);
         console.error("Error al obtener los productos:", error);
@@ -40,7 +42,7 @@ function TablaInventario({ show, search, esActivo }) {
             {productos?.map((producto) => (
               <Table.Row
                 key={producto.id_producto}
-                className={`font-bold bg-slate-100 dark:border-gray-700 dark:bg-gray-800 hover:border-l-blue-500 hover:border-l-4 `}
+                className={` bg-slate-100 dark:border-gray-700 dark:bg-gray-800 hover:border-l-blue-500 hover:border-l-4 `}
               >
                 <Table.Cell>{producto.id_producto}</Table.Cell>
                 <Table.Cell>{producto.nombre}</Table.Cell>

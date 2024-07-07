@@ -28,7 +28,12 @@ export const createProductoGrado = (data) =>
 export const addAjuste = (data) =>
   ApiClient.post(`/caja/inventario/ajuste/`, data);
 
-export const getAjuste = () => ApiClient.post(`/caja/inventario/ajuste/`);
+export const getAjuste = (page, search) =>
+  ApiClient.get(
+    `/caja/inventario/ajuste/${page ? "?page=" + page : ""}${
+      search ? "&search=" + search : ""
+    }`
+  );
 
 // ---------------------
 // servicios para el manejo de aranceles
