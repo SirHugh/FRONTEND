@@ -22,9 +22,7 @@ function InventarioPage() {
     var prods = [];
     try {
       const res = await getProducto("", "PR", "", search, esActivo);
-      for (let index = 0; index < 20; index++) {
-        prods = [...prods, ...res.data];
-      }
+      prods = [...prods, ...res.data];
     } catch (error) {
       toast.error(error.message);
       console.error("Error al obtener los productos:", error);

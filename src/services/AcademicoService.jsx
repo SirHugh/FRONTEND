@@ -69,6 +69,13 @@ export const getMatricula = (anio, grado, search, page) =>
     }`
   );
 
+export const getMatriculasAlumnoId = (periodo, id, page) =>
+  ApiClient.get(
+    `/academico/matricula/?anio_lectivo=${periodo}&id_alumno=${id}&page=${
+      page ? page : ""
+    }`
+  );
+
 export const searchMatricula = (value, data, page, anio) =>
   ApiClient.get(
     `/academico/matricula/?es_activo=${value}&search=${data}&page=${
@@ -144,3 +151,10 @@ export const getPeriodo = (value, page) =>
       page ? "page=" + page : ""
     }`
   );
+
+// ------------------------------------------------
+// ---funciones para manejo Estado de cuenta---
+// ------------------------------------------------
+
+export const getEstadoDeCuenta = (id_matricula) =>
+  ApiClient.get(`/caja/estado_cuenta/${id_matricula}`);
