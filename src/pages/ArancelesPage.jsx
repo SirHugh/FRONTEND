@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Table, Button, TextInput } from "flowbite-react";
 import { BiEdit, BiError } from "react-icons/bi";
-import { FaFileInvoice, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import toast from "react-hot-toast";
 import PaginationButtons from "../components/PaginationButtons";
-import ProductoModal from "../components/ProductoModal";
+import ProductoModal from "../components/Arancel/AddArancelModal";
 import {
   createProducto,
   getProducto,
@@ -30,6 +30,7 @@ const ArancelesPage = () => {
         const page = Math.min(currentPage + 1, totalPages) || 1;
         const res = await getProducto("", "AR", page, search);
         setProductos(res.data.results);
+        setTotalPages(Math.ceil(res.data.length / itemsPerPage));
       } catch (error) {
         toast.error(error.message);
         console.error("Error al obtener los productos:", error);

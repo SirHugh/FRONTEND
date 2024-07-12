@@ -3,9 +3,8 @@ import { getAjuste } from "../../services/CajaService";
 import { Table } from "flowbite-react";
 import PaginationButtons from "../PaginationButtons";
 import { DateFormatter } from "../Constants";
-import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 
-function HistoricoAjuste({ search }) {
+function HistoricoAjuste({ search, reload }) {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(0);
   const [ajustes, setAjustes] = useState([]);
@@ -16,11 +15,10 @@ function HistoricoAjuste({ search }) {
       await getAjuste(page, search).then((response) => {
         setAjustes(response.data.results);
         setTotalPages(Math.ceil(response.data.count / 10));
-        console.log(response.data);
       });
     };
     Load();
-  }, [search]);
+  }, [currentPage, search, reload]);
 
   return (
     <div className="flex flex-col w-full">
@@ -30,7 +28,6 @@ function HistoricoAjuste({ search }) {
           <Table.HeadCell>Producto</Table.HeadCell>
           <Table.HeadCell>Fecha</Table.HeadCell>
           <Table.HeadCell>Motivo</Table.HeadCell>
-          <Table.HeadCell>Operación</Table.HeadCell>
           <Table.HeadCell>Cantidad</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
@@ -51,17 +48,7 @@ function HistoricoAjuste({ search }) {
               <Table.Cell className="text-gray-900 dark:text-white">
                 {ajuste.razon}
               </Table.Cell>
-              <Table.Cell className="text-gray-900 dark:text-white">
-                {ajuste.cantidad < 0 ? (
-                  <div className="flex items-center">
-                    <BsArrowDown color="red" /> <b>Baja</b>{" "}
-                  </div>
-                ) : (
-                  <div className="flex items-center">
-                    <BsArrowUp color="green" /> <b>Alta</b>{" "}
-                  </div>
-                )}
-              </Table.Cell>
+
               <Table.Cell className="text-gray-900 dark:text-white">
                 {Math.abs(ajuste.cantidad)}
               </Table.Cell>

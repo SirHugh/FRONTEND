@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Label, TextInput, Select } from "flowbite-react";
-import { getGrados } from "../services/AcademicoService";
-import { Months } from "./Constants";
+import { getGrados } from "../../services/AcademicoService";
+import { Months } from "../Constants";
 
-const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
+const AddArancelModal = ({ producto, onSave, onClose, tipo }) => {
   const [grados, setGrados] = useState([]);
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
     tipo: tipo || "PR",
     stock: 0,
+    stock_minimo: 0,
     precio: 0,
     es_activo: true,
     es_mensual: null,
@@ -31,6 +32,7 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
         descripcion: producto.descripcion,
         tipo: producto.tipo,
         stock: producto.stock,
+        stock_minimo: producto.stock_minimo,
         precio: producto.precio,
         es_activo: producto.es_activo,
         es_mensual: producto.es_mensual,
@@ -53,7 +55,10 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
   };
 
   const handleGradosChange = (e) => {
-    const value = Array.from(e.target.selectedOptions, (option) => option.value);
+    const value = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
     setFormData((prevState) => ({
       ...prevState,
       grados: value,
@@ -64,12 +69,14 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
     const updatedProducto = {
       ...formData,
       precio: Number(formData.precio), // Convert price to number
-      stock: Number(formData.stock),   // Convert stock to number
+      stock: Number(formData.stock), // Convert stock to number
       es_mensual: formData.tipo === "AR" ? formData.es_mensual : null,
     };
 
     try {
-      console.log("Datos del producto a guardar: " + JSON.stringify(updatedProducto));
+      console.log(
+        "Datos del producto a guardar: " + JSON.stringify(updatedProducto)
+      );
       await onSave(updatedProducto);
     } catch (error) {
       if (error.response) {
@@ -81,9 +88,9 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
   };
 
   return (
-    <Modal show={true} onClose={onClose}>
+    <Modal show={true} onClose={onClose} size="md">
       <Modal.Header>
-        {producto ? "Editar Producto" : "Agregar Producto"}
+        {producto ? "Editar Arancel" : "Agregar Arancel"}
       </Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
@@ -107,49 +114,23 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
               required
             />
           </div>
+
           <div>
-            <Label htmlFor="tipo" value="Tipo" />
-            <TextInput
-              id="tipo"
-              name="tipo"
-              value={formData.tipo}
+            <Label htmlFor="es_mensual" value="Mes de pago" />
+            <Select
+              id="es_mensual"
+              name="es_mensual"
+              value={formData.es_mensual !== null ? formData.es_mensual : ""}
               onChange={handleChange}
-              readOnly
-              required
-            />
+            >
+              <option value="">Todos los meses</option>
+              {Months.map((month) => (
+                <option key={month.id} value={month.id}>
+                  {month.name}
+                </option>
+              ))}
+            </Select>
           </div>
-          {/*{formData.tipo === "PR" && (
-            <div>
-              <Label htmlFor="stock" value="Stock" />
-              <TextInput
-                id="stock"
-                name="stock"
-                value={formData.stock}
-                onChange={handleChange}
-                type="number"
-                readOnly
-              />
-            </div>
-          )}*/}
-          {formData.tipo === "AR" && (
-            <div>
-              <Label htmlFor="es_mensual" value="Mes de pago" />
-              <Select
-                id="es_mensual"
-                name="es_mensual"
-                value={formData.es_mensual !== null ? formData.es_mensual : ""}
-                onChange={handleChange}
-              >
-                <option value="">Seleccione un mes</option>
-                {Months.map((month) => (
-                  <option key={month.id} value={month.id}>
-                    {month.name}
-                  </option>
-                ))}
-                <option value={null}>Ninguno</option>
-              </Select>
-            </div>
-          )}
           <div>
             <Label htmlFor="precio" value="Precio" />
             <TextInput
@@ -176,19 +157,6 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
               ))}
             </Select>
           </div>
-          <div>
-            <Label htmlFor="es_activo" value="Activo" />
-            <Select
-              id="es_activo"
-              name="es_activo"
-              value={formData.es_activo}
-              onChange={handleChange}
-              required
-            >
-              <option value={true}>Sí</option>
-              <option value={false}>No</option>
-            </Select>
-          </div>
         </div>
       </Modal.Body>
       <Modal.Footer>
@@ -203,4 +171,4 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
   );
 };
 
-export default ProductoModal;
+export default AddArancelModal;

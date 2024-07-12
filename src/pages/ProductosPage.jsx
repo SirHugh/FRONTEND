@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Table, Button, Tooltip } from "flowbite-react";
 import { BiEdit, BiError } from "react-icons/bi";
 import PaginationButtons from "../components/PaginationButtons";
-import ProductoModal from "../components/ProductoModal";
+import ProductoModal from "../components/Productos/ProductoModal";
 import {
   getProducto,
   createProducto,
@@ -92,6 +92,7 @@ const ProductosPage = () => {
             <Table.HeadCell>Codigo</Table.HeadCell>
             <Table.HeadCell>Nombre</Table.HeadCell>
             <Table.HeadCell>Descripción</Table.HeadCell>
+            <Table.HeadCell>Stock Minimo</Table.HeadCell>
             <Table.HeadCell>Precio</Table.HeadCell>
             <Table.HeadCell>Estado</Table.HeadCell>
             <Table.HeadCell></Table.HeadCell>
@@ -106,6 +107,7 @@ const ProductosPage = () => {
                 <Table.Cell>{producto.id_producto}</Table.Cell>
                 <Table.Cell>{producto.nombre}</Table.Cell>
                 <Table.Cell>{producto.descripcion}</Table.Cell>
+                <Table.Cell>{producto.stock_minimo}</Table.Cell>
                 <Table.Cell>{CurrencyFormatter(producto.precio)}</Table.Cell>
                 <Table.Cell
                   className={`${
