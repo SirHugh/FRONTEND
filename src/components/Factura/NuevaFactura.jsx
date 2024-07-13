@@ -22,6 +22,7 @@ function NuevaFactura({ onClose }) {
   const { user } = useAuth();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [organization, setOrganization] = useState();
   const [detalleList, setDetalleList] = useState({
     aranceles: [],
     ventas: [],
@@ -172,6 +173,8 @@ function NuevaFactura({ onClose }) {
   };
 
   const handleSubmit = async () => {
+    const res = await getBasicInfo();
+    setOrganization(res.data);
     if (!validate()) {
       return;
     }
@@ -205,6 +208,7 @@ function NuevaFactura({ onClose }) {
         onClose={() => onCloseSummary()}
         comprobante={factura.comprobante}
         detalleList={detalleList}
+        organization={organization}
       />
       <AddItemModal
         show={showAddModal}

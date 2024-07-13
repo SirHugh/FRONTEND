@@ -1,9 +1,10 @@
-import jsPDF from "jspdf";
 import { Button, Label, Modal, Table } from "flowbite-react";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
+import GeneratePDF from './GeneratePDF';
+import QRCode from 'qrcode';
 
-const SummaryModal = ({ show, onClose, comprobante, detalleList }) => {
+const SummaryModal = ({ show, onClose, comprobante, detalleList, organization }) => {
   const componentRef = useRef(null);
 
   const handlePrint = useReactToPrint({
@@ -14,6 +15,19 @@ const SummaryModal = ({ show, onClose, comprobante, detalleList }) => {
     removeAfterPrint: true,
   });
 
+  const generateQRCode = async (text) => {
+    try {
+      return await QRCode.toDataURL(text);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handlePDFGeneration = async () => {
+    const qrCode = await generateQRCode('https://your-url.com');
+    GeneratePDF(comprobante, detalleList.aranceles, organization, qrCode);
+  };
+
   return (
     <>
       <Modal
@@ -23,7 +37,7 @@ const SummaryModal = ({ show, onClose, comprobante, detalleList }) => {
         aria-describedby="modal-modal-description"
       >
         <Modal.Header id="modal-modal-title">
-          Resumen del Comprobante
+          Resumen de la Factura
         </Modal.Header>
         <Modal.Body>
           <div ref={componentRef} className="flex flex-col">
@@ -79,8 +93,8 @@ const SummaryModal = ({ show, onClose, comprobante, detalleList }) => {
           <Button type="button" onClick={onClose}>
             Cerrar
           </Button>
-          <Button type="button" onClick={handlePrint}>
-            Imprimir PDF
+          <Button type="button" onClick={handlePDFGeneration}>
+            Generar PDF
           </Button>
         </Modal.Footer>
       </Modal>
