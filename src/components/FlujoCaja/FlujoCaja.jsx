@@ -10,6 +10,7 @@ import { MdOutlineTableChart } from "react-icons/md";
 import { FaPlay, FaStop } from "react-icons/fa";
 import AgregarFlujoModal from "./AgregarFlujoModal";
 import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 function FlujoCaja({ id_flujoCaja }) {
   const [flujo, setFlujo] = useState(null);
@@ -31,17 +32,39 @@ function FlujoCaja({ id_flujoCaja }) {
 
   const handlePrintPDF = (flujoData) => {
     const doc = new jsPDF();
-    flujoData.forEach((flujo, index) => {
-      const yOffset = index * 80;
-      doc.text("Reporte de Flujo de Caja", 10, 10 + yOffset);
-      doc.text(`Fecha y hora de apertura: ${flujo.hora_apertura}`, 10, 20 + yOffset);
-      doc.text(`Fecha y hora de cierre: ${flujo.hora_cierre || "N/A"}`, 10, 30 + yOffset);
-      doc.text(`Monto de apertura: ${CurrencyFormatter(Number(flujo.monto_apertura))}`, 10, 40 + yOffset);
-      doc.text(`Monto de cierre: ${CurrencyFormatter(Number(flujo.monto_cierre))}`, 10, 50 + yOffset);
-      doc.text(`Ingresos: ${CurrencyFormatter(Number(flujo.entrada))}`, 10, 60 + yOffset);
-      doc.text(`Egresos: ${CurrencyFormatter(Number(flujo.salida))}`, 10, 70 + yOffset);
+  
+    doc.text("Reporte de Flujo de Caja", doc.internal.pageSize.width / 2, 10, {
+      align: "center",
     });
-    doc.save("flujo_caja.pdf");
+  
+    autoTable(doc, {
+      startY: 20,
+      head: [["Fecha Apertura", "Fecha Cierre", "Monto Apertura", "Monto Cierre", "Ingresos", "Egresos"]],
+      body: flujoData.map((flujo) => [
+        flujo.hora_apertura,
+        flujo.hora_cierre || "N/A",
+        CurrencyFormatter(Number(flujo.monto_apertura)),
+        CurrencyFormatter(Number(flujo.monto_cierre)),
+        CurrencyFormatter(Number(flujo.entrada)),
+        CurrencyFormatter(Number(flujo.salida)),
+      ]),
+    });
+  
+    const pageCount = doc.internal.getNumberOfPages();
+  
+    for (var i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.text(
+        "Página " + String(i) + " de " + String(pageCount),
+        doc.internal.pageSize.width / 2,
+        287,
+        {
+          align: "center",
+        }
+      );
+    }
+  
+    doc.save(`flujo_caja-${new Date().toLocaleString()}.pdf`);
   };
 
   const handleActivate = async (value) => {
