@@ -15,7 +15,7 @@ const FlujoCajaDashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const currentMonth = new Date().toISOString().slice(0, 7);; // Obtener el mes en formato YYYY-MM
+      const currentMonth = new Date().toISOString().slice(0, 7); // Obtener el mes en formato YYYY-MM
       const page = ""; // Puedes ajustar el page si es necesario
       const id = ""; // Puedes ajustar el id si es necesario
 
@@ -23,9 +23,10 @@ const FlujoCajaDashboard = () => {
         const response = await getFlujoCaja(id, page, currentMonth);
         const flujoCajaData = response.data;
 
+        // Procesar los datos asegurando que monto_cierre sea numérico
         const processedData = flujoCajaData.map((item) => ({
           fecha: item.fecha,
-          cierre: item.monto_cierre,
+          cierre: Number(item.monto_cierre), // Convertir a número
         }));
 
         setDataFlujoCaja(processedData);

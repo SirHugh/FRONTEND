@@ -34,7 +34,6 @@ function TablaInventario({ search, esActivo }) {
             <Table.HeadCell>Codigo</Table.HeadCell>
             <Table.HeadCell>Nombre</Table.HeadCell>
             <Table.HeadCell>Stock</Table.HeadCell>
-            <Table.HeadCell>Stock Minimo</Table.HeadCell>
             <Table.HeadCell>Nivel</Table.HeadCell>
             <Table.HeadCell>Estado</Table.HeadCell>
           </Table.Head>
@@ -46,8 +45,7 @@ function TablaInventario({ search, esActivo }) {
               >
                 <Table.Cell>{producto.id_producto}</Table.Cell>
                 <Table.Cell>{producto.nombre}</Table.Cell>
-                <Table.Cell>{producto.stock} uds.</Table.Cell>
-                <Table.Cell>{producto.stock_minimo} uds.</Table.Cell>
+                <Table.Cell>{producto.stock == 1 ? producto.stock + " unidad" :  producto.stock + " unidades"}</Table.Cell>
                 <Table.Cell
                   className={`${
                     producto.stock == 0

@@ -43,14 +43,12 @@ function InventarioPage() {
 
     autoTable(doc, {
       head: [
-        ["Codigo", "Nombre", "Stock Actual", "Stock encontrado", "Diferencia"],
+        ["Codigo", "Nombre", "Stock encontrado"],
       ],
       body: prods.map((producto) => {
         return [
           producto.id_producto,
           producto.nombre,
-          producto.stock,
-          "",
           "",
           "",
         ];

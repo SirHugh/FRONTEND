@@ -149,10 +149,10 @@ const EstadoDeCuentaPage = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   CI. {selectedValue?.cedula}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+               {/* <p className="text-sm text-gray-500 dark:text-gray-400">
                   Edad. {calculateAge(selectedValue?.fecha_nac)}
                   {" años"}
-                </p>
+                </p>*/}
               </div>
             </div>
             <div className="flow-root">

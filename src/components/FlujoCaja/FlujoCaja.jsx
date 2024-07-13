@@ -9,6 +9,7 @@ import { CurrencyFormatter } from "../Constants";
 import { MdOutlineTableChart } from "react-icons/md";
 import { FaPlay, FaStop } from "react-icons/fa";
 import AgregarFlujoModal from "./AgregarFlujoModal";
+import jsPDF from "jspdf";
 
 function FlujoCaja({ id_flujoCaja }) {
   const [flujo, setFlujo] = useState(null);
@@ -28,13 +29,38 @@ function FlujoCaja({ id_flujoCaja }) {
     load();
   }, [reload]);
 
+  const handlePrintPDF = (flujoData) => {
+    const doc = new jsPDF();
+    flujoData.forEach((flujo, index) => {
+      const yOffset = index * 80;
+      doc.text("Reporte de Flujo de Caja", 10, 10 + yOffset);
+      doc.text(`Fecha y hora de apertura: ${flujo.hora_apertura}`, 10, 20 + yOffset);
+      doc.text(`Fecha y hora de cierre: ${flujo.hora_cierre || "N/A"}`, 10, 30 + yOffset);
+      doc.text(`Monto de apertura: ${CurrencyFormatter(Number(flujo.monto_apertura))}`, 10, 40 + yOffset);
+      doc.text(`Monto de cierre: ${CurrencyFormatter(Number(flujo.monto_cierre))}`, 10, 50 + yOffset);
+      doc.text(`Ingresos: ${CurrencyFormatter(Number(flujo.entrada))}`, 10, 60 + yOffset);
+      doc.text(`Egresos: ${CurrencyFormatter(Number(flujo.salida))}`, 10, 70 + yOffset);
+    });
+    doc.save("flujo_caja.pdf");
+  };
+
   const handleActivate = async (value) => {
+
+
     try {
       await setFlujoCajaActive(flujo.id_flujoCaja, value);
     } catch (error) {
       toast.error(error.response.data.error);
     }
-    const message = value ? "Fujo En curso" : "Flujo Cerrado";
+    if (!value) {
+      const confirmPrint = window.confirm("¿Deseas imprimir el flujo de caja antes de cerrar?");
+      if (confirmPrint) {
+        const res = await getFlujoCajaCurrent(true);
+        handlePrintPDF([res.data]);
+      }
+    }
+
+    const message = value ? "Flujo En curso" : "Flujo Cerrado";
     toast.success(message);
     setReload(!reload);
   };
@@ -54,11 +80,10 @@ function FlujoCaja({ id_flujoCaja }) {
       <AgregarFlujoModal show={showModal} onClose={() => handleClose()} />
       {!flujo ? (
         <div>
-          {" "}
           <Card>
             <p>No hay nada que mostrar</p>
             <Button
-              className="felx flex-wrap "
+              className="flex flex-wrap"
               color="light"
               onClick={() => setShowModal(true)}
             >
@@ -81,7 +106,7 @@ function FlujoCaja({ id_flujoCaja }) {
             <Button
               title="Habilitar Flujo"
               disabled={flujo.es_activo ? true : false}
-              className={"border p-0 rounded-sm  items-center "}
+              className={"border p-0 rounded-sm items-center"}
               onClick={() => handleActivate(true)}
             >
               <FaPlay />
@@ -137,7 +162,7 @@ function FlujoCaja({ id_flujoCaja }) {
             </Card>
           </div>
           <div className="flex flex-col px-16">
-            <big className="flex font-bold text-slate-500 justify-center ">
+            <big className="flex font-bold text-slate-500 justify-center">
               TRANSACCIONES REGISTRADAS
             </big>
             <Table className="">
@@ -149,7 +174,6 @@ function FlujoCaja({ id_flujoCaja }) {
               </Table.Head>
               <Table.Body>
                 <Table.Row colSpan={4} className="flex w-full justify-center">
-                  {" "}
                   ENTRADAS
                 </Table.Row>
                 {flujo.facturas?.map((item, index) => (
@@ -163,7 +187,6 @@ function FlujoCaja({ id_flujoCaja }) {
                   </Table.Row>
                 ))}
                 <Table.Row colSpan={4} className="flex w-full justify-center">
-                  {" "}
                   SALIDAS
                 </Table.Row>
                 {flujo.compras?.map((item, index) => (
