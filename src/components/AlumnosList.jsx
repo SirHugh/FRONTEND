@@ -8,12 +8,10 @@ import {
   getGrados,
 } from "../services/AcademicoService";
 import PaginationButtons from "./PaginationButtons"; // Importar el componente de paginación
-import PrivateRoutes from "../utils/PrivateRoutes";
 import { Table } from "flowbite-react";
 import { MdSearch } from "react-icons/md";
 import { PiStudentBold } from "react-icons/pi";
 import { BiEdit } from "react-icons/bi";
-import { BsCashCoin } from "react-icons/bs";
 import * as XLSX from "xlsx";
 import { FaFileDownload } from "react-icons/fa";
 import { Button } from "flowbite-react";

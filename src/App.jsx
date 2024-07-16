@@ -28,6 +28,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import InventarioPage from "./pages/InventarioPage";
 import ArancelesPage from "./pages/ArancelesPage";
 import EstadoDeCuentaPage from "./pages/EstadoDeCuentaPage";
+import ControlStock from "./components/Inventario/ControlStock";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -83,6 +84,7 @@ function App() {
               <Route path="/actividades" element={<ActividadPage />} />
               <Route path="/aranceles" element={<ArancelesPage />} />
               <Route path="/inventario" element={<InventarioPage />} />
+              <Route path="/control-stock/:id/" element={<ControlStock />} />
             </Route>
           </Routes>
         </div>

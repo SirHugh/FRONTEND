@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, TextInput, Select } from "flowbite-react";
-import { BiAdjust, BiArchiveOut } from "react-icons/bi";
-import { ImBoxRemove } from "react-icons/im";
+import { BiArchiveOut } from "react-icons/bi";
 
 import { getProducto } from "../services/CajaService";
 import { FaHistory, FaPrint } from "react-icons/fa";
@@ -15,7 +14,8 @@ import autoTable from "jspdf-autotable";
 import jsPDF from "jspdf";
 import AjusteInventario from "../components/Inventario/AjusteInventario";
 import TablaInventario from "../components/Inventario/TablaInventario";
-import ControlStock from "../components/Inventario/ControlStock";
+import ControlStockList from "../components/Inventario/ControlStockList";
+import { initiateStockControl } from "../services/ComercialService";
 
 function InventarioPage() {
   const [search, setSearch] = useState("");
@@ -26,6 +26,14 @@ function InventarioPage() {
 
   const handleExportRows = async () => {
     var prods = [];
+    try {
+      await initiateStockControl(search, esActivo);
+      toast.success("Nuevo control de stock Iniciado");
+    } catch (error) {
+      toast.error(error.message);
+      return;
+    }
+
     try {
       const res = await getProducto("", "PR", "", search, esActivo);
       prods = [...prods, ...res.data];
@@ -42,16 +50,9 @@ function InventarioPage() {
     });
 
     autoTable(doc, {
-      head: [
-        ["Codigo", "Nombre", "Stock encontrado"],
-      ],
+      head: [["Codigo", "Nombre", "Stock encontrado"]],
       body: prods.map((producto) => {
-        return [
-          producto.id_producto,
-          producto.nombre,
-          "",
-          "",
-        ];
+        return [producto.id_producto, producto.nombre, "", ""];
       }),
     });
     const pageCount = doc.internal.getNumberOfPages();
@@ -136,10 +137,6 @@ function InventarioPage() {
                   <h1>Baja</h1>
                 </>
               </Button>
-              <Button color="gray">
-                <FaHistory className="mr-2 h-5 w-5" />
-                <h1>Historico</h1>
-              </Button>
               <Button
                 disabled={!showInventario}
                 color="gray"
@@ -159,7 +156,7 @@ function InventarioPage() {
             <TablaInventario search={search} esActivo={esActivo} />
           )}
 
-          {showControlStock && <ControlStock search={search} />}
+          {showControlStock && <ControlStockList search={search} />}
         </div>
       </div>
     </>

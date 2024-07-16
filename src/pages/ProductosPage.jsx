@@ -25,15 +25,12 @@ const ProductosPage = () => {
   useEffect(() => {
     const loadProductos = async () => {
       try {
-        const res = await getProducto("", "PR");
-        if (res.status === 200) {
-          setProductos(res.data.slice(0, itemsPerPage));
-          setTotalPages(Math.ceil(res.data.length / itemsPerPage));
-        } else {
-          console.error("Error al cargar los productos:", res.message);
-        }
+        const page = Math.min(currentPage + 1, totalPages) || 1;
+        const res = await getProducto("", "PR", page);
+        setProductos(res.data.results);
+        setTotalPages(Math.ceil(res.data.count / 10));
       } catch (error) {
-        console.error("Error al obtener los productos:", error);
+        toast.error("Error al obtener los productos:", error);
       }
     };
     loadProductos();

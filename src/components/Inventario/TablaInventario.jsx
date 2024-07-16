@@ -3,7 +3,6 @@ import PaginationButtons from "../PaginationButtons";
 import { useEffect, useState } from "react";
 import { getProducto } from "../../services/CajaService";
 import toast from "react-hot-toast";
-import { FaLevelUpAlt } from "react-icons/fa";
 
 function TablaInventario({ search, esActivo }) {
   const [productos, setProductos] = useState([]);
@@ -45,7 +44,11 @@ function TablaInventario({ search, esActivo }) {
               >
                 <Table.Cell>{producto.id_producto}</Table.Cell>
                 <Table.Cell>{producto.nombre}</Table.Cell>
-                <Table.Cell>{producto.stock == 1 ? producto.stock + " unidad" :  producto.stock + " unidades"}</Table.Cell>
+                <Table.Cell>
+                  {producto.stock == 1
+                    ? producto.stock + " unidad"
+                    : producto.stock + " unidades"}
+                </Table.Cell>
                 <Table.Cell
                   className={`${
                     producto.stock == 0

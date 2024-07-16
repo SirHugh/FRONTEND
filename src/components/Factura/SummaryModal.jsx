@@ -1,10 +1,16 @@
 import { Button, Label, Modal, Table } from "flowbite-react";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-import GeneratePDF from './GeneratePDF';
-import QRCode from 'qrcode';
+import GeneratePDF from "./GeneratePDF";
+// import QRCode from 'qrcode';
 
-const SummaryModal = ({ show, onClose, comprobante, detalleList, organization }) => {
+const SummaryModal = ({
+  show,
+  onClose,
+  comprobante,
+  detalleList,
+  organization,
+}) => {
   const componentRef = useRef(null);
 
   const handlePrint = useReactToPrint({
@@ -24,7 +30,7 @@ const SummaryModal = ({ show, onClose, comprobante, detalleList, organization })
   };
 
   const handlePDFGeneration = async () => {
-    const qrCode = await generateQRCode('https://your-url.com');
+    const qrCode = await generateQRCode("https://your-url.com");
     GeneratePDF(comprobante, detalleList.aranceles, organization, qrCode);
   };
 
