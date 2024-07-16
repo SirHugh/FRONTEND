@@ -16,7 +16,7 @@ function ControlStockList() {
         const res = await getControlStock("", page);
         console.log(res.data);
         setControles(res.data.results);
-        setTotalPages(res.data.total_pages);
+        setTotalPages(Math.ceil(res.data.count / 10));
       } catch (error) {
         toast.error(error.message);
       }
