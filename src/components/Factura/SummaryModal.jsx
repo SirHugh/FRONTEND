@@ -2,7 +2,7 @@ import { Button, Label, Modal, Table } from "flowbite-react";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import GeneratePDF from "./GeneratePDF";
-// import QRCode from 'qrcode';
+import QRCode from 'qrcode';
 
 const SummaryModal = ({
   show,
@@ -10,6 +10,7 @@ const SummaryModal = ({
   comprobante,
   detalleList,
   organization,
+  cliente
 }) => {
   const componentRef = useRef(null);
 
@@ -31,7 +32,7 @@ const SummaryModal = ({
 
   const handlePDFGeneration = async () => {
     const qrCode = await generateQRCode("https://your-url.com");
-    GeneratePDF(comprobante, detalleList.aranceles, organization, qrCode);
+    GeneratePDF(comprobante, detalleList, organization, qrCode, cliente);
   };
 
   return (
@@ -87,6 +88,27 @@ const SummaryModal = ({
                     <Table.Cell> {detalle.nombre}</Table.Cell>
                     <Table.Cell> {detalle.fecha_vencimiento}</Table.Cell>
                     <Table.Cell> {detalle.nro_cuota}</Table.Cell>
+                    <Table.Cell> {detalle.monto}</Table.Cell>
+                    <Table.Cell> {detalle.es_activo ? "Si" : "No"}</Table.Cell>
+                  </Table.Row>
+                ))}
+                {detalleList.ventas?.map((detalle) => (
+                  <Table.Row key={detalle.id_venta}>
+                    <Table.Cell> {detalle.id_venta}</Table.Cell>
+                    <Table.Cell> {detalle.alumno}</Table.Cell>
+                    <Table.Cell> {detalle.descripcion.map(d => d.producto).join(", ")}</Table.Cell>
+                    <Table.Cell> {detalle.fecha_vencimiento}</Table.Cell>
+                    <Table.Cell> {detalle.nro_pago}</Table.Cell>
+                    <Table.Cell> {detalle.monto}</Table.Cell>
+                    <Table.Cell> {detalle.es_activo ? "Si" : "No"}</Table.Cell>
+                  </Table.Row>
+                ))}
+                {detalleList.actividades?.map((detalle) => (
+                  <Table.Row key={detalle.id_pagoActividad}>
+                    <Table.Cell> {detalle.id_pagoActividad}</Table.Cell>
+                    <Table.Cell> {detalle.alumno}</Table.Cell>
+                    <Table.Cell> {detalle.actividad}</Table.Cell>
+                    <Table.Cell> {detalle.fecha_pago}</Table.Cell>
                     <Table.Cell> {detalle.monto}</Table.Cell>
                     <Table.Cell> {detalle.es_activo ? "Si" : "No"}</Table.Cell>
                   </Table.Row>

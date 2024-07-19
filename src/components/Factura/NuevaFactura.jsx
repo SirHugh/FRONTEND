@@ -23,6 +23,7 @@ function NuevaFactura({ onClose }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [organization, setOrganization] = useState();
+  const [cliente, setCliente] = useState();
   const [detalleList, setDetalleList] = useState({
     aranceles: [],
     ventas: [],
@@ -124,6 +125,7 @@ function NuevaFactura({ onClose }) {
 
   const onSetCliente = (cliente) => {
     console.log("cliente", cliente);
+    setCliente(cliente)
     setFactura({
       ...factura,
       comprobante: {
@@ -209,6 +211,7 @@ function NuevaFactura({ onClose }) {
         comprobante={factura.comprobante}
         detalleList={detalleList}
         organization={organization}
+        cliente = {cliente}
       />
       <AddItemModal
         show={showAddModal}
