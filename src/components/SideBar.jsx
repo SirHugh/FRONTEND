@@ -28,7 +28,7 @@ const menuItems = [
     ),
     link: "/",
   },
-  {
+ /* {
     text: "Perfil",
     allowedGroup: null, // Esto hace que sea visible para cualquier grupo
     icon: (
@@ -39,7 +39,7 @@ const menuItems = [
       />
     ),
     link: "/profile",
-  },
+  },*/
   {
     text: "Administración",
     allowedGroup: "ADMIN",
@@ -329,7 +329,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <div
-      className={`sticky top-0 left-0 h-screen bg-blue-400 text-white z-16 ${
+      className={`no-print sticky top-0 left-0 h-screen bg-blue-400 text-white z-16 ${
         isExpanded ? "w-64" : "w-16"
       } transition-all`}
       onMouseEnter={handleMouseEnter}

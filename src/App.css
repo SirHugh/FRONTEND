@@ -1,9 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 .p-lucida-handwriting {
-    font-family: "Lucida Handwriting", cursive;
-    font-weight: bold;
-    font-style: italic;
-    color: white;
+  font-family: "Lucida Handwriting", cursive;
+  font-weight: bold;
+  font-style: italic;
+  color: white;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  /* Quitar márgenes predeterminados del navegador */
+  @page {
+    margin: 0;
+  }
+
+  /* Ocultar el encabezado y pie de página predeterminados del navegador */
+  body {
+    -webkit-print-color-adjust: exact;
+    margin: 0;
+  }
+
+  /* Ocultar el título de la página y otras configuraciones adicionales */
+  @page {
+    @top-left {
+      content: none;
+    }
+    @top-center {
+      content: none;
+    }
+    @top-right {
+      content: none;
+    }
+    @bottom-left {
+      content: none;
+    }
+    @bottom-center {
+      content: none;
+    }
+    @bottom-right {
+      content: none;
+    }
+  }
 }

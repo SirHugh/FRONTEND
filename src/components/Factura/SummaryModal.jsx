@@ -32,7 +32,19 @@ const SummaryModal = ({
 
   const handlePDFGeneration = async () => {
     const qrCode = await generateQRCode("https://your-url.com");
-    GeneratePDF(comprobante, detalleList, organization, qrCode, cliente);
+    const data = {
+      comprobante,
+      detalleList,
+      organization,
+      qrCode,
+      cliente,
+    };
+    
+    // Save data to localStorage or pass it via query parameters
+    localStorage.setItem('facturaData', JSON.stringify(data));
+  
+    // Open new window with FacturaPage
+    window.open('/Printfactura', '_blank');
   };
 
   return (

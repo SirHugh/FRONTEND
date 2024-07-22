@@ -5,7 +5,8 @@ import logo from "../../assets/fundationLogo.png"; // Ajusta la ruta según tu e
 const GeneratePDF = (comprobante, detalleList, organization, qrCode, cliente) => {
   const doc = new jsPDF({ orientation: "landscape" });
 
-  // Encabezado
+  // Encabezado con recuadros
+  doc.rect(10, 10, 280, 40); // Marco del encabezado
   doc.addImage(logo, 'JPEG', 14, 15, 30, 30);
   doc.setFontSize(10);
   doc.text("Fundación Unidos por Cristo", 50, 15);
@@ -17,11 +18,12 @@ const GeneratePDF = (comprobante, detalleList, organization, qrCode, cliente) =>
   doc.text(`FACTURA ELECTRONICA Nº ${comprobante.nro_factura}`, 250, 25);
   doc.text(`Fecha: ${comprobante.fecha}`, 250, 30);
 
-  // Datos del Cliente
-  doc.text(`Nombre o Razon Social: ${cliente?.nombre} ${cliente?.apellido || ""}`, 14, 50);
-  doc.text(`Dirección: ${cliente?.direccion || ""}`, 14, 55);
-  doc.text(`Teléfono: ${cliente?.telefono || ""}`, 14, 60);
-  doc.text(`Correo Electrónico: ${cliente?.email || ""}`, 14, 65);
+  // Datos del Cliente con recuadro
+  doc.rect(10, 50, 280, 20);
+  doc.text(`Nombre o Razon Social: ${cliente?.nombre} ${cliente?.apellido || ""}`, 14, 55);
+  doc.text(`Dirección: ${cliente?.direccion || ""}`, 14, 60);
+  doc.text(`Teléfono: ${cliente?.telefono || ""}`, 14, 65);
+  doc.text(`Correo Electrónico: ${cliente?.email || ""}`, 14, 70);
 
   // Función para calcular IVA
   const calcularIVA = (monto, tipo) => {
@@ -90,23 +92,26 @@ const GeneratePDF = (comprobante, detalleList, organization, qrCode, cliente) =>
   const totalIVA5Amount = totalIVA5 / 21;
   const totalIVA10Amount = totalIVA10 / 11;
   const totalGeneral = totalExentas + totalIVA5 + totalIVA10;
+  const totalIVA = totalIVA5Amount + totalIVA10Amount;
 
-  // Subtotales y Totales
+  // Subtotales y Totales con recuadro
   const finalY = doc.autoTable.previous.finalY;
-  doc.text(`Valor Parcial: ${totalGeneral.toFixed(2)}`, 14, finalY + 10);
-  doc.text(`Total a Pagar: ${totalGeneral.toFixed(2)}`, 14, finalY + 20);
-  doc.text(`Liquidación del IVA:`, 14, finalY + 30);
-  doc.text(`(5%): ${totalIVA5Amount.toFixed(2)}`, 14, finalY + 40);
-  doc.text(`(10%): ${totalIVA10Amount.toFixed(2)}`, 14, finalY + 50);
+  doc.rect(10, finalY + 5, 280, 50); // Ajustar la altura del recuadro para incluir Total IVA
+  doc.text(`Subtotal: ${totalGeneral.toFixed(2)}`, 14, finalY + 15);
+  doc.text(`Total a Pagar: ${totalGeneral.toFixed(2)}`, 14, finalY + 25);
+  doc.text(`Liquidación del IVA:`, 14, finalY + 35);
+  doc.text(`(5%): ${totalIVA5Amount.toFixed(2)}`, 14, finalY + 45);
+  doc.text(`(10%): ${totalIVA10Amount.toFixed(2)}`, 14, finalY + 55);
+  doc.text(`Total IVA: ${totalIVA.toFixed(2)}`, 14, finalY + 65); // Mostrar Total IVA correctamente
 
   // Código QR
   if (qrCode) {
-    doc.addImage(qrCode, 'PNG', 250, finalY + 10, 50, 50);
+    doc.addImage(qrCode, 'PNG', 250, finalY + 15, 50, 50);
   }
 
   // Representación gráfica del documento electrónico
   doc.setFontSize(8);
-  doc.text('Este documento es una representación gráfica de un documento electrónico (XML)', 14, finalY + 70);
+  doc.text('Este documento es una representación gráfica de un documento electrónico (XML)', 14, finalY + 85);
 
   // Guardar el PDF
   doc.save(`factura_${comprobante.nro_factura}.pdf`);

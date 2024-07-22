@@ -20,9 +20,9 @@ const Header = ({ toggleSidebar }) => {
   const esGrupoCaja = user.groups.includes("CAJA");
 
   return (
-    <div className="flex justify-between items-center bg-blue-500 text-white py-4 px-6">
+    <div className="no-print flex justify-between items-center bg-blue-500 text-white py-4 px-6">
       <div>
-
+        {/* Aquí puedes añadir contenido adicional al encabezado si es necesario */}
       </div>
       <div>
         <div className="flex items-center">

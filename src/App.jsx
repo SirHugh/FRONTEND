@@ -29,6 +29,7 @@ import InventarioPage from "./pages/InventarioPage";
 import ArancelesPage from "./pages/ArancelesPage";
 import EstadoDeCuentaPage from "./pages/EstadoDeCuentaPage";
 import ControlStock from "./components/Inventario/ControlStock";
+import PrintFacturaPage from "./pages/PrintFacturaPage";
 import Profile from "./pages/Profile";
 import NuevaFactura from "./components/Factura/NuevaFactura";
 
@@ -70,6 +71,7 @@ function App() {
             <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
               <Route path="/ventas" element={<VentasPage />} />
               <Route path="/factura" element={<FacturaPage />} />
+              <Route path="/printFactura" element={<PrintFacturaPage />} />
               <Route path="/factura/nuevo" element={<NuevaFactura />} />
               <Route path="/timbrado" element={<TimbradoPage />} />
               <Route path="/compras" element={<ComprasPage />} />

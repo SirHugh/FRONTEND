@@ -148,6 +148,7 @@ function NuevaFactura({ onClose }) {
 
   const onSetCliente = (cliente) => {
     console.log("cliente", cliente);
+    setCliente(cliente);
     setFactura({
       ...factura,
       comprobante: {
