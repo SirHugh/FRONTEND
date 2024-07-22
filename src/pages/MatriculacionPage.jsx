@@ -97,7 +97,7 @@ const MatriculacionPage = () => {
       );
       allAlumnos = res.data.map((alumno) => alumno.id_alumno);
 
-      console.log("ALUMNOS: "+JSON.stringify(allAlumnos));
+      console.log("ALUMNOS: " + JSON.stringify(allAlumnos));
 
       const data = allAlumnos.map((alumno) => ({
         Nombre: alumno.nombre,
@@ -317,9 +317,6 @@ const MatriculacionPage = () => {
               <Table.HeadCell>
                 <span className="sr-only">Acciones</span>
               </Table.HeadCell>
-              <Table.HeadCell>
-                <span className="sr-only">Confirmar </span>
-              </Table.HeadCell>
             </Table.Head>
             <Table.Body>
               {matriculas.map((matricula) => (
@@ -329,7 +326,8 @@ const MatriculacionPage = () => {
                 >
                   <Table.Cell>{matricula.id_alumno?.cedula}</Table.Cell>
                   <Table.Cell>
-                    {matricula.id_alumno?.nombre} {matricula.id_alumno?.apellido}
+                    {matricula.id_alumno?.nombre}{" "}
+                    {matricula.id_alumno?.apellido}
                   </Table.Cell>
                   <Table.Cell>
                     {matricula.id_grado?.grado
@@ -345,24 +343,24 @@ const MatriculacionPage = () => {
                       matricula.anio_lectivo === periodoActual?.periodo
                         ? "Activo"
                         : matricula.fecha_desmatriculacion != null
-                        ? "Cancelado"
+                        ? "Desmatriculado"
                         : "Inactivo"}
                     </span>
                   </Table.Cell>
                   <Table.Cell>
                     {matricula.fecha_desmatriculacion == null && (
                       <button
-                        className="text-blue-500"
+                        className="bg-blue-500 m-1 text-white font-bold py-1 px-3 rounded"
                         onClick={() => handleEditMatricula(matricula)}
                       >
                         Editar
                       </button>
                     )}
-                  </Table.Cell>
-                  <Table.Cell>
                     {!matricula.fecha_desmatriculacion && (
-                      <Button
-                        color={matricula.es_activo ? "failure" : "warning"}
+                      <button
+                        className={`text-white font-bold py-1 px-3 rounded ${
+                          matricula.es_activo ? "bg-red-700" : "bg-yellow-300"
+                        }`}
                         onClick={
                           matricula.es_activo
                             ? () => handleDesmatricular(matricula)
@@ -370,7 +368,7 @@ const MatriculacionPage = () => {
                         }
                       >
                         {matricula.es_activo ? "Desmatricular" : "Confirmar"}
-                      </Button>
+                      </button>
                     )}
                   </Table.Cell>
                 </Table.Row>

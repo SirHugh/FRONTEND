@@ -190,7 +190,7 @@ const AgregarBecadoModal = ({ show, onClose, beca, changed, setchanged }) => {
             onClick={() => {
               if (window.confirm("Confirma Guardar?")) {
                 agregarBecados();
-                onClose();
+                onCloseModal();
               }
             }}
           >

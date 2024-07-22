@@ -59,7 +59,6 @@ const AgregarBecaModal = ({
       return;
     }
 
-    console.log("Beca: ", beca);
     try {
       if (edit) {
         await updateBeca(beca.id_beca, beca);
@@ -81,7 +80,6 @@ const AgregarBecaModal = ({
 
   const onCloseModal = () => {
     setDisableButton(true);
-
     onClose();
   };
 
