@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { getAlumnoById, deleteAlumno, updateAlumno } from '../services/AcademicoService';
-import { useParams } from 'react-router-dom';
-import AlumnoCard from './AlumnoCard';
-import DeleteModal from './DeleteModal';
-import SuccessModal from './SuccessModal'; // Importar el componente SuccessModal
+import React, { useState, useEffect } from "react";
+import {
+  getAlumnoById,
+  deleteAlumno,
+  updateAlumno,
+} from "../services/AcademicoService";
+import { useParams } from "react-router-dom";
+import AlumnoCard from "./AlumnoCard";
+import DeleteModal from "./DeleteModal";
+import SuccessModal from "./SuccessModal"; // Importar el componente SuccessModal
+import toast from "react-hot-toast";
 
 const AlumnoDetail = () => {
   const [alumno, setAlumno] = useState(null);
@@ -17,7 +22,7 @@ const AlumnoDetail = () => {
         const response = await getAlumnoById(id);
         setAlumno(response.data);
       } catch (error) {
-        console.error('Error fetching alumno details:', error);
+        console.error("Error fetching alumno details:", error);
       }
     };
     fetchAlumno();
@@ -29,7 +34,7 @@ const AlumnoDetail = () => {
       setShowDeleteModal(false);
       setShowSuccessModal(true);
     } catch (error) {
-      console.error('Error deleting alumno:', error);
+      console.error("Error deleting alumno:", error);
     }
   };
 
@@ -40,13 +45,16 @@ const AlumnoDetail = () => {
         if (key === "fotocarnet" && updatedAlumno[key] instanceof File) {
           alumnoFormData.append(key, updatedAlumno[key]);
         } else {
-          alumnoFormData.append(key, updatedAlumno[key] ? updatedAlumno[key] : "");
+          alumnoFormData.append(
+            key,
+            updatedAlumno[key] ? updatedAlumno[key] : ""
+          );
         }
       }
       await updateAlumno(updatedAlumno.id_alumno, alumnoFormData);
-      setShowSuccessModal(true);
+      toast.success("Información del alumno guardada.");
     } catch (error) {
-      console.error('Error updating alumno:', error);
+      console.error("Error updating alumno:", error);
     }
   };
 
@@ -56,7 +64,7 @@ const AlumnoDetail = () => {
 
   const closeSuccessModal = () => {
     setShowSuccessModal(false);
-    window.location.href = '/alumnos';
+    window.location.href = "/alumnos";
   };
 
   return (
@@ -64,18 +72,26 @@ const AlumnoDetail = () => {
       {alumno ? (
         <div className="flex justify-center items-center">
           <div className="bg-white p-4 rounded-md ">
-            <AlumnoCard alumno={alumno} onDelete={toggleDeleteModal} onSubmit={handleSubmit} />
+            <AlumnoCard
+              alumno={alumno}
+              onDelete={toggleDeleteModal}
+              onSubmit={handleSubmit}
+            />
             <DeleteModal
               show={showDeleteModal}
               onDelete={() => handleDelete(alumno.id_alumno)}
               onCancel={toggleDeleteModal}
-              message={"¿Estás seguro de que deseas eliminar este alumno? Esta acción no se puede deshacer."}
+              message={
+                "¿Estás seguro de que deseas eliminar este alumno? Esta acción no se puede deshacer."
+              }
             />
             <SuccessModal
               show={showSuccessModal}
               onClose={closeSuccessModal}
               title={"Datos actualizados"}
-              message={"Los datos del alumno han sido modificados exitosamente."}
+              message={
+                "Los datos del alumno han sido modificados exitosamente."
+              }
             />
           </div>
         </div>

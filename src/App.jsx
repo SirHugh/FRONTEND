@@ -24,11 +24,13 @@ import PeriodoPage from "./pages/PeriodoPage";
 import ComprasPage from "./pages/ComprasPage";
 import FlujoCajaPage from "./pages/FlujoCajaPage";
 import ActividadPage from "./pages/ActividadPage";
-import UserProfilePage from "./pages/UserProfilePage";
+// import UserProfilePage from "./pages/UserProfilePage";
 import InventarioPage from "./pages/InventarioPage";
 import ArancelesPage from "./pages/ArancelesPage";
 import EstadoDeCuentaPage from "./pages/EstadoDeCuentaPage";
 import ControlStock from "./components/Inventario/ControlStock";
+import Profile from "./pages/Profile";
+import NuevaFactura from "./components/Factura/NuevaFactura";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -55,7 +57,7 @@ function App() {
           <Routes>
             <Route path="/" element={<MainPage />} exact />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/profile" element={<UserProfilePage />} />
+            <Route path="/profile" element={<Profile />} />
             <Route element={<PrivateRoutes allowedGroup={GROUPS.ACADEMICO} />}>
               <Route path="/alumnos" element={<AlumnosPage />} exact />
               <Route path="/alumnos/:id/" element={<AlumnoDetail />} />
@@ -68,6 +70,7 @@ function App() {
             <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
               <Route path="/ventas" element={<VentasPage />} />
               <Route path="/factura" element={<FacturaPage />} />
+              <Route path="/factura/nuevo" element={<NuevaFactura />} />
               <Route path="/timbrado" element={<TimbradoPage />} />
               <Route path="/compras" element={<ComprasPage />} />
               <Route path="/flujoCaja" element={<FlujoCajaPage />} />

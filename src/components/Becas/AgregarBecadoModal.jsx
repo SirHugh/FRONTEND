@@ -1,4 +1,5 @@
-import { Button, Label, Modal, Table, TextInput } from "flowbite-react";
+import { Button, Label, Modal, Table } from "flowbite-react";
+import AsyncSelect from "react-select/async";
 import { useState } from "react";
 import { CgRemove } from "react-icons/cg";
 import { GoArrowRight } from "react-icons/go";
@@ -11,32 +12,34 @@ import {
 
 const AgregarBecadoModal = ({ show, onClose, beca, changed, setchanged }) => {
   const [alumno, setAlumno] = useState([]);
-  const [cedula, setCedula] = useState("");
   const [becadoList, setBecadoList] = useState([]);
   const [isInList, setIsInList] = useState(false);
+  const [inputValue, setValue] = useState("");
+  const [selectedValue, setSelecteValue] = useState(null);
 
-  const searchAlumno = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await searchMatricula(true, cedula, "");
-      setAlumno(res.data);
-      console.log("Search: ", res.data);
-      const res2 = await getBecadosBeca(
-        beca?.id_beca,
-        res.data[0].id_matricula
-      );
-      if (
-        becadoList.some(
-          (item) => item.id_matricula === res.data[0].id_matricula
-        ) ||
-        res2.data.count >> 0
-      )
-        setIsInList(true);
-      else setIsInList(false);
-    } catch (error) {
-      // Manejo de errores en caso de que la solicitud falle
-      console.error("Error al activar", error);
-    }
+  const loadOptions = async () => {
+    if (inputValue.length < 2) return;
+    return searchMatricula(true, inputValue, 1).then((result) => {
+      const res = result.data.results;
+      return res;
+    });
+  };
+
+  const handleInputChange = (value) => {
+    setValue(value);
+  };
+
+  const handleChange = async (value) => {
+    setSelecteValue(value);
+    setAlumno([...alumno, value]);
+    const res2 = await getBecadosBeca(beca?.id_beca, value.id_matricula);
+    if (
+      becadoList.some((item) => item.id_matricula === value.id_matricula) ||
+      res2.data.count >> 0
+    )
+      setIsInList(true);
+    else setIsInList(false);
+    console.log("Alumno: ", value);
   };
 
   const agregarBecado = async (data) => {
@@ -68,7 +71,8 @@ const AgregarBecadoModal = ({ show, onClose, beca, changed, setchanged }) => {
     onClose();
     setAlumno([]);
     setBecadoList([]);
-    setCedula("");
+    setValue("");
+    setSelecteValue(null);
   };
 
   return (
@@ -79,26 +83,25 @@ const AgregarBecadoModal = ({ show, onClose, beca, changed, setchanged }) => {
         </Modal.Header>
         <Modal.Body className="py-3 border-t space-y-4">
           <div className="mb-2 block">
-            <Label htmlFor="cedula" value="Cedula" />
+            <Label htmlFor="cedula" value="Buscar alumno:" />
           </div>
           <div className="flex flex-row gap-1">
-            <form
-              className="flex flex-row gap-1"
-              onSubmit={(e) => searchAlumno(e)}
-            >
-              <TextInput
-                type="search"
-                id="searchAlumno"
-                name="searchAlumno"
-                value={cedula}
-                onChange={(e) => setCedula(e.target.value)}
-                placeholder="4375..."
-                required
+            <div className="flex flex-col w-72">
+              <AsyncSelect
+                noOptionsMessage={() => "No se encuentran resultados"}
+                placeholder="Nombre, apellido, cedula..."
+                cacheOptions
+                defaultOptions
+                value={selectedValue}
+                loadOptions={loadOptions}
+                onInputChange={handleInputChange}
+                onChange={handleChange}
+                getOptionLabel={(e) =>
+                  e.id_alumno.nombre + " " + e.id_alumno.apellido
+                }
+                getOptionValue={(e) => e.id_matricula}
               />
-              <Button type="submit">
-                <GoArrowRight />
-              </Button>
-            </form>
+            </div>
           </div>
           <div className="flex flex-row gap-1 h-10">
             <Table>

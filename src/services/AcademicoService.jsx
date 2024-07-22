@@ -116,10 +116,10 @@ export const setBecaActive = (id, value) =>
 export const getBecados = (page) =>
   ApiClient.get(`/academico/becado/?page=${page}`);
 
-export const getBecadosBeca = (id, matricula) =>
+export const getBecadosBeca = (id_beca, page) =>
   ApiClient.get(
-    `/academico/becado/?id_beca=${id}&id_matricula=${
-      matricula ? matricula : ""
+    `/academico/becado/?${id_beca ? `id_beca=${id_beca}` : ""}${
+      page ? `&page=${page}` : ""
     }`
   );
 
@@ -134,6 +134,9 @@ export const setActiveBecado = (id, value, date) =>
     es_activo: value,
     fecha_fin: date,
   });
+
+export const getBecaMatricula = (id_matricula) =>
+  ApiClient.get(`/academico/becado/matricula/${id_matricula}/`);
 
 // ------------------------------------------------
 // ---funciones para manejo de periodo academico---

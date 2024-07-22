@@ -20,7 +20,7 @@ function TablaFacturas({ search }) {
         const res = await getComprobante("", page, search);
         setTotalPages(Math.ceil(res.data.count / 10));
         setFacturas(res.data.results);
-        console.log(res);
+        console.log(res.data.results);
       } catch (error) {
         toast.error(error.message);
         console.log(error);
@@ -43,7 +43,8 @@ function TablaFacturas({ search }) {
           <Table.HeadCell>Cliente</Table.HeadCell>
           <Table.HeadCell>Fecha</Table.HeadCell>
           <Table.HeadCell>Hora</Table.HeadCell>
-          <Table.HeadCell>Tipo Pago</Table.HeadCell>
+          <Table.HeadCell>Condicion Pago</Table.HeadCell>
+          <Table.HeadCell>Forma de pago</Table.HeadCell>
           <Table.HeadCell>Monto</Table.HeadCell>
         </Table.Head>
         <Table.Body>
@@ -66,6 +67,7 @@ function TablaFacturas({ search }) {
                 <Table.Cell>
                   {factura.tipo_pago == "C" ? "Contado" : "Credito"}
                 </Table.Cell>
+                <Table.Cell>{factura.forma_pago}</Table.Cell>
                 <Table.Cell>
                   {CurrencyFormatter(Number(factura.monto))}
                 </Table.Cell>

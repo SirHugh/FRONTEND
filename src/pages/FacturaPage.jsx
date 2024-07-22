@@ -63,11 +63,13 @@ function FacturaPage() {
           )}
         </Button>
       </div>
-      {ShowAgregar ? (
-        <NuevaFactura onClose={() => setShowAgregar(false)} />
-      ) : (
-        <TablaFacturas search={search} />
-      )}
+      <div className="flex justify-center w-full h-full bg-blue-50">
+        {ShowAgregar ? (
+          <NuevaFactura onClose={() => setShowAgregar(false)} />
+        ) : (
+          <TablaFacturas search={search} />
+        )}
+      </div>
     </>
   );
 }

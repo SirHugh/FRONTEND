@@ -34,6 +34,7 @@ function UsersPage() {
     const retriveUser = async () => {
       try {
         const res = await getUser();
+        console.log(res.data);
         const res2 = await getGroups();
         setUsers(res.data);
         setGroups(res2.data);

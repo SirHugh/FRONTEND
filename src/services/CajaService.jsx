@@ -66,8 +66,12 @@ export const updateArancel = (id, data) =>
 // servicios para el manejo de clientes
 // ---------------------
 
-export const getCliente = (cedula) => {
-  return ApiClient.get(`/academico/cliente/?cedula=${cedula}`);
+export const getCliente = (cedula, search, page) => {
+  return ApiClient.get(
+    `/academico/cliente/?${cedula ? "cedula=" + cedula : ""}${
+      search ? "&search=" + search : ""
+    }${page ? "&page=" + page : ""}`
+  );
 };
 
 export const updateCliente = (id, data) => {
@@ -241,4 +245,12 @@ export const activateActividad = (id_actividad, value) => {
   return ApiClient.patch(`/caja/actividad/${id_actividad}`, {
     es_activo: value,
   });
+};
+
+// ---------------------
+// servicios de forma de pago
+// ---------------------
+
+export const getFormaPago = () => {
+  return ApiClient.get(`/caja/forma_pago/`);
 };

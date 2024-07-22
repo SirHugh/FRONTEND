@@ -6,27 +6,29 @@ import Encabezado from "./Encabezado";
 import {
   createComprobante,
   getActiveTimbrado,
+  getFormaPago,
 } from "../../services/CajaService";
 import { getBasicInfo } from "../../services/BasicsService";
-import { CurrencyFormatter } from "../Constants";
-import { Button } from "flowbite-react";
+import { CurrencyFormatter, DateFormatter } from "../Constants";
+import { Breadcrumb, Button, Select, Tooltip } from "flowbite-react";
 import moment from "moment";
 import useAuth from "../../hooks/useAuth";
 import { BiError } from "react-icons/bi";
 import SummaryModal from "./SummaryModal";
 import Cliente from "./Cliente";
 import AddItemModal from "./AddItemModal";
-import { GrTableAdd } from "react-icons/gr";
 
 function NuevaFactura({ onClose }) {
   const { user } = useAuth();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [organization, setOrganization] = useState();
+  const [formasPago, setFormasPago] = useState([]);
   const [detalleList, setDetalleList] = useState({
     aranceles: [],
     ventas: [],
     actividades: [],
+    descuentos: [],
   });
   const [timbrado, setTimbrado] = useState();
   const [info, setInfo] = useState();
@@ -38,17 +40,22 @@ function NuevaFactura({ onClose }) {
       id_user: user.user_id,
       id_cliente: "",
       fecha: moment(new Date()).format("YYYY-MM-DD"),
-      tipo_pago: "C",
+      tipo_pago: null,
       monto: 0,
+      id_formaPago: null,
     },
     aranceles: [],
     pagoventas: [],
     actividades: [],
+    descuentos: [],
   });
 
   useEffect(() => {
     const fetchBasics = async () => {
       try {
+        const res01 = await getFormaPago();
+        console.log(res01.data);
+        setFormasPago(res01.data);
         const res = await getActiveTimbrado();
         if (res.data[0]) {
           setTimbrado(res.data[0]);
@@ -90,6 +97,11 @@ function NuevaFactura({ onClose }) {
       0
     );
 
+    total += detalleList.descuentos?.reduce(
+      (total, item) => total - Number(item.monto),
+      0
+    );
+
     let aux_aranceles = [];
     detalleList.aranceles.forEach((detalle) => {
       aux_aranceles.push(detalle.id_arancel);
@@ -110,20 +122,30 @@ function NuevaFactura({ onClose }) {
       aux_actividades.push(a);
     });
 
+    let aux_descuentos = [];
+    detalleList.descuentos?.forEach((descuento) => {
+      const a = {
+        id_arancel: descuento.id_arancel,
+        monto: descuento.monto,
+        id_beca: descuento.id_beca,
+      };
+      aux_descuentos.push(a);
+    });
+
     setFactura({
       ...factura,
       comprobante: { ...factura.comprobante, ["monto"]: total },
       aranceles: aux_aranceles,
       pagoventas: aux_ventas,
       actividades: aux_actividades,
+      descuentos: aux_descuentos,
     });
 
-    console.log(factura);
+    console.log("factura:", factura);
     console.log("detalle", detalleList);
   }, [detalleList]);
 
   const onSetCliente = (cliente) => {
-    console.log("cliente", cliente);
     setFactura({
       ...factura,
       comprobante: {
@@ -134,6 +156,7 @@ function NuevaFactura({ onClose }) {
   };
 
   const onSetData = (detalle) => {
+    console.log("detalle", detalle);
     const filteredAranceles = detalle.aranceles.filter(
       (arancel) =>
         !detalleList.aranceles.some((d) => d.id_arancel == arancel.id_arancel)
@@ -148,15 +171,32 @@ function NuevaFactura({ onClose }) {
           (d) => d.id_actividad == actividad.id_actividad
         )
     );
+
+    const filteredDescuentos = detalle.descuentos.filter(
+      (descuento) =>
+        !detalleList.descuentos.some(
+          (d) => d.id_arancel == descuento.id_arancel
+        )
+    );
+
     setDetalleList({
       ...detalleList,
       aranceles: [...detalleList.aranceles, ...filteredAranceles],
       ventas: [...detalleList.ventas, ...filteredVentas],
       actividades: [...detalleList.actividades, ...filteredActividades],
+      descuentos: [...detalleList.descuentos, ...filteredDescuentos],
     });
   };
 
   const validate = () => {
+    if (!factura.comprobante.tipo_pago) {
+      toast.error("Seleccione la condicion de venta");
+      return false;
+    }
+    if (!factura.comprobante.id_formaPago) {
+      toast.error("Seleccione una forma de pago");
+      return false;
+    }
     if (factura.comprobante.id_cliente === "") {
       toast.error("Debe seleccionar un cliente");
       return false;
@@ -201,6 +241,14 @@ function NuevaFactura({ onClose }) {
     onClose();
   };
 
+  const handleChange = (name, value) => {
+    setFactura({
+      ...factura,
+      comprobante: { ...factura.comprobante, [name]: value },
+    });
+    console.log(factura.comprobante);
+  };
+
   return (
     <>
       <SummaryModal
@@ -217,28 +265,56 @@ function NuevaFactura({ onClose }) {
         action={() => {}}
         cliente={factura.comprobante.id_cliente}
       />
-      <div className="flex flex-col px-4 gap-y-2 pb-3 bg-slate-200 w-full h-full ">
-        <div className="flex flex-row p-3 gap-3 text-2xl font-bold items-center">
-          <GrTableAdd className="text-blue-500" />
-          <h1 className="">Registro de Factura</h1>
-        </div>
+      <div className="flex flex-col px-8 gap-y-2 pb-3 w-3/4 h-full ">
         {/* encabezado de la factura */}
-        <div className="flex flex-col bg-white p-4 border rounded-lg">
+        {/* <div className="flex flex-col bg-white p-4 border rounded mt-3">
           <Encabezado timbrado={timbrado} info={info} />
+        </div> */}
+        {/* <Breadcrumb>
+          <Breadcrumb.Item href="/factura">Facturas</Breadcrumb.Item>
+          <Breadcrumb.Item href="/factura/nuevo">Nueva</Breadcrumb.Item>
+        </Breadcrumb> */}
+
+        <div className="flex p-4 mt-3 bg-white border rounded justify-between items-center">
+          <span className="font-sans">
+            <b>Fecha: </b>
+            {DateFormatter(new Date()).toUpperCase()}
+          </span>
+          <span className="flex items-center gap-3">
+            <b>Condicion de Venta: </b>
+            <Select
+              className="w-32"
+              name="tipo_pago"
+              value={factura.comprobante.tipo_pago}
+              onChange={(e) => handleChange(e.target.name, e.target.value)}
+            >
+              <option value=""></option>
+              <option value="Contado">Contado</option>
+              <option value="Credito">Credito</option>
+            </Select>
+          </span>
+          <span className="flex items-center gap-3">
+            <b>Forma de Pago: </b>
+            <Select
+              name="id_formaPago"
+              value={factura.comprobante?.id_formaPago}
+              onChange={(e) =>
+                handleChange(e.target.name, parseInt(e.target.value))
+              }
+            >
+              <option value=""></option>
+              {formasPago?.map((item) => (
+                <option key={item.id_formaPago} value={item.id_formaPago}>
+                  {item.nombre}
+                </option>
+              ))}
+            </Select>
+          </span>
         </div>
 
         {/* datos del cliente */}
-        <div className="flex flex-col gap-4 divide-y bg-white p-4 border rounded-lg">
-          <div className="flex flex-row justify-between">
-            <p className="font-bold text-2xl self-center">Datos del Cliente</p>
-            <div className="flex flex-row items-center p-2 gap-2 text-3xl justify-end">
-              <FaRegPlusSquare className="cursor-pointer" />
-              <FaRegEdit className="cursor-pointer" />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4 w-full ">
-            <Cliente setCliente={(cliente) => onSetCliente(cliente)} />
-          </div>
+        <div className="flex flex-col gap-4 divide-y bg-white p-4 border rounded">
+          <Cliente setCliente={(cliente) => onSetCliente(cliente)} />
         </div>
 
         {/* detalle de la factura */}
@@ -246,10 +322,12 @@ function NuevaFactura({ onClose }) {
           <div className="flex flex-row justify-between items-end">
             <p className="font-bold text-2xl">Detalle de la Factura</p>
             <div className="flex w-14 items-center gap-2 text-3xl justify-end">
-              <FaRegPlusSquare
-                className="cursor-pointer"
-                onClick={() => setShowAddModal(true)}
-              />
+              <Tooltip content="Agregar Pago" placement="top">
+                <FaRegPlusSquare
+                  className="cursor-pointer"
+                  onClick={() => setShowAddModal(true)}
+                />
+              </Tooltip>
             </div>
           </div>
           <div className="flex flex-row gap-4">

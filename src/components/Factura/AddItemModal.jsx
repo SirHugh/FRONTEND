@@ -10,6 +10,7 @@ import {
 } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import {
+  getBecaMatricula,
   getMatricula,
   getMatriculaResposable,
 } from "../../services/AcademicoService";
@@ -22,7 +23,7 @@ import {
 } from "../../services/CajaService";
 import { CurrencyFormatter, DateFormatter } from "../Constants";
 import { FaCalendar, FaCashRegister } from "react-icons/fa";
-import { FaBasketShopping, FaCartShopping } from "react-icons/fa6";
+import { FaCartShopping } from "react-icons/fa6";
 import { MdOutlinePostAdd } from "react-icons/md";
 
 const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
@@ -35,10 +36,12 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
     aranceles: [],
     ventas: [],
     actividades: [],
+    descuentos: [],
   });
   const [searchOthers, setSearchOthers] = useState(false);
   const [alumnos, setAlumnos] = useState([]);
   const displayed = useRef(false);
+  const [becas, setBecas] = useState([]);
 
   useEffect(() => {
     if (show) {
@@ -82,6 +85,9 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
       setVentas(res2.data || []);
       const res3 = await getPagoPendienteActividad(id);
       setActividades(res3.data || []);
+      const res4 = await getBecaMatricula(id);
+      setBecas(res4.data || []);
+      console.log(res4.data);
     } catch (error) {
       console.log(error);
     }
@@ -93,17 +99,48 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
       const filteredAranceles = itemsApply.aranceles?.filter(
         (s) => s !== aranceles[index]
       );
-      setItemsApply({ ...itemsApply, aranceles: filteredAranceles });
-      console.log("Actividades", itemsApply.aranceles);
+      const filteredDescuento = itemsApply.descuentos?.filter((s) =>
+        s.id_producto === aranceles[index].id_producto ? null : s
+      );
+      setItemsApply({
+        ...itemsApply,
+        descuentos: filteredDescuento,
+        aranceles: filteredAranceles,
+      });
       return;
     }
+    let auxDescuento = [];
+    console.log("becas:", becas);
+    becas.forEach((item) => {
+      if (item.beca.arancel.includes(aranceles[index].id_producto)) {
+        const { beca, ...rest } = item;
+        const data = {
+          id_beca: rest.id_beca,
+          id_matricula: rest.id_matricula,
+          monto:
+            beca.tipo_monto === 1
+              ? (beca.monto / 100) * aranceles[index].monto
+              : beca.monto,
+          nombre: beca.nombre,
+          arancel: beca.arancel,
+          alumno: rest.alumno,
+          id_producto: aranceles[index].id_producto,
+          id_arancel: aranceles[index].id_arancel,
+        };
+        auxDescuento.push(data);
+      }
+    });
+
     setItemsApply({
       ...itemsApply,
       aranceles: [...itemsApply.aranceles, aranceles[index]],
+      descuentos: auxDescuento,
     });
-    console.log(itemsApply);
-    console.log("Actividades", itemsApply.aranceles);
   };
+
+  useEffect(() => {
+    console.log("items apply:", itemsApply);
+  }, [itemsApply]);
 
   const handleVentaCheck = (e, index) => {
     const { checked } = e.target;
@@ -112,14 +149,12 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
         (s) => s !== ventas[index]
       );
       setItemsApply({ ...itemsApply, ventas: filteredVentas });
-      console.log("Actividades", itemsApply.ventas);
       return;
     }
     setItemsApply({
       ...itemsApply,
       ventas: [...itemsApply.ventas, ventas[index]],
     });
-    console.log("Actividades", itemsApply.ventas);
   };
 
   const handleActividadCheck = (e, index) => {
@@ -130,14 +165,12 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
         (s) => s !== actividades[index]
       );
       setItemsApply({ ...itemsApply, actividades: filteredActividades });
-      console.log("Actividades", itemsApply.actividades);
       return;
     }
     setItemsApply({
       ...itemsApply,
       actividades: [...itemsApply.actividades, actividades[index]],
     });
-    console.log("Actividades", itemsApply.actividades);
   };
 
   const close = () => {
@@ -148,6 +181,7 @@ const AddItemModal = ({ show, onClose, action, setData, cliente, load }) => {
       aranceles: [],
       ventas: [],
       actividades: [],
+      descuentos: [],
     });
     setValue("");
     setSelecteValue(null);

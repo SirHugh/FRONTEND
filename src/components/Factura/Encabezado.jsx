@@ -15,17 +15,14 @@ function Encabezado({ timbrado, info }) {
           </div>
           {/* right side */}
           <div className="flex flex-col items-end">
+            <p>Timbrado: {timbrado.nro_timbrado} </p>
+            <p>Valido hasta {timbrado.fecha_hasta}</p>
+            <p>FACTURA</p>
             <p className="font-bold text-xl uppercase">
-              Nro. {formatNumber(timbrado.establecimiento, 3)}-
+              N° {formatNumber(timbrado.establecimiento, 3)}-
               {formatNumber(timbrado.punto_expedicion, 3)}-
               {formatNumber(timbrado.ultimo_numero + 1, 7)}
             </p>
-            <p>Timbrado: {timbrado.nro_timbrado} </p>
-            <p>Validez {timbrado.fecha_hasta}</p>
-            <p className="font-sans">
-              Fecha: {DateFormatter(new Date()).toUpperCase()}
-            </p>
-            <p>Tipo: Contado</p>
           </div>
         </div>
       )}

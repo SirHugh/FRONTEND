@@ -9,7 +9,7 @@ import {
 } from "../services/AcademicoService";
 import { FaRegEdit } from "react-icons/fa";
 import PaginationButtons from "../components/PaginationButtons";
-import { Button, Table } from "flowbite-react";
+import { Button, Table, Tooltip } from "flowbite-react";
 import { TbCertificate, TbCertificateOff, TbListSearch } from "react-icons/tb";
 import AlumnoSetActiveModal from "../components/Becas/AlumnoActivoModal";
 import AgregarBecadoModal from "../components/Becas/AgregarBecadoModal";
@@ -67,6 +67,7 @@ function BecasPage() {
         const res2 = await getBecados(page);
         setTotalPages(Math.ceil(res2.data.count / 10));
         setBecados(res2.data.results);
+        console.log(res2.data.results);
       } catch (error) {
         console.error("Error al cargar los becados:", error);
       }
@@ -95,11 +96,10 @@ function BecasPage() {
   const cargarBecados = async (b) => {
     setBecadosTitle(b.nombre);
     try {
-      const res = await getBecadosBeca(b.id_beca);
-      if (res.status === 200) {
-        setTotalPages(Math.ceil(res.data.count / 10));
-        setBecados(res.data.results);
-      }
+      const page = Math.min(currentPage + 1, totalPages) || 1;
+      const res = await getBecadosBeca(b.id_beca, page);
+      setTotalPages(Math.ceil(res.data.count / 10));
+      setBecados(res.data.results);
     } catch (error) {
       // Manejo de errores en caso de que la solicitud falle
       console.error("Error al activar", error);
@@ -286,7 +286,6 @@ function BecasPage() {
                 <Table.HeadCell>NOMBRE</Table.HeadCell>
                 <Table.HeadCell>APELLIDO</Table.HeadCell>
                 <Table.HeadCell>GRADO</Table.HeadCell>
-                <Table.HeadCell>ORIGEN</Table.HeadCell>
                 <Table.HeadCell>
                   <span className="sr-only justify-end">QUITAR</span>
                 </Table.HeadCell>
@@ -300,24 +299,13 @@ function BecasPage() {
                     }`}
                     onClick={() => console.log("clicked")}
                   >
+                    <Table.Cell>{becado.alumno.cedula}</Table.Cell>
+                    <Table.Cell>{becado.alumno.nombre}</Table.Cell>
+                    <Table.Cell>{becado.alumno.apellido}</Table.Cell>
                     <Table.Cell>
-                      {becado.id_matricula.id_alumno.cedula}
+                      {becado.grado.grado}° - {becado.grado.nombre}
                     </Table.Cell>
-                    <Table.Cell>
-                      {becado.id_matricula.id_alumno.nombre}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {becado.id_matricula.id_alumno.apellido}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {becado.id_matricula.id_grado.grado}° -{" "}
-                      {becado.id_matricula.id_grado.nombre}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {becado.id_matricula.es_interno == true
-                        ? "Fundacion"
-                        : "Externo"}
-                    </Table.Cell>
+
                     <Table.Cell>
                       <a
                         onClick={() => {
@@ -328,13 +316,13 @@ function BecasPage() {
                         className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer"
                       >
                         {becado.es_activo ? (
-                          <TbCertificate
-                            title="Remover Beca"
-                            className="size-6"
-                            style={{ color: blueColor }}
-                          />
+                          <Tooltip content="Remover Beca" placement="left">
+                            <TbCertificate className="text-blue-700 size-6" />
+                          </Tooltip>
                         ) : (
-                          <TbCertificateOff className="text-red-800 size-6" />
+                          <Tooltip content="Activar Beca" placement="left">
+                            <TbCertificateOff className="text-red-800 size-6" />
+                          </Tooltip>
                         )}
                       </a>
                     </Table.Cell>

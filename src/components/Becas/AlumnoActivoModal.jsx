@@ -13,7 +13,8 @@ const AlumnoSetActiveModal = ({
 
   const quitarBecado = async () => {
     try {
-      await setActiveBecado(becado.id, !becado.es_activo, null);
+      const res = await setActiveBecado(becado.id, !becado.es_activo, null);
+      console.log(res.data);
       setChecked(false);
       setChanged(!changed);
       onClose();
@@ -50,10 +51,9 @@ const AlumnoSetActiveModal = ({
               </Label>
             </div>
             <span className="font-bold items-center justify-center">
-              {becado?.id_matricula.id_alumno.nombre}{" "}
-              {becado?.id_matricula.id_alumno.apellido}
+              {becado?.alumno.nombre} {becado?.alumno.apellido}
               {" - CI: "}
-              {becado?.id_matricula.id_alumno.cedula}
+              {becado?.alumno.cedula}
             </span>
           </div>
         </Modal.Body>
