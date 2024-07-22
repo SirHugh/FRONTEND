@@ -28,7 +28,7 @@ const menuItems = [
     ),
     link: "/",
   },
- /* {
+  {
     text: "Perfil",
     allowedGroup: null, // Esto hace que sea visible para cualquier grupo
     icon: (
@@ -39,7 +39,7 @@ const menuItems = [
       />
     ),
     link: "/profile",
-  },*/
+  },
   {
     text: "Administración",
     allowedGroup: "ADMIN",

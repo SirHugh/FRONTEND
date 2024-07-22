@@ -31,3 +31,6 @@ export const updateUserPhoto = (id, data) =>
 
 export const updateUserPassword = (id, data) =>
   ApiClient.post(`/auth/users/${id}/password`, data);
+
+export const resetUserPasskey = (id) =>
+  ApiClient.post(`/auth/users/${id}/passkey-reset`);

@@ -134,19 +134,6 @@ const NewUserModal = ({
               />
             </div>
             <div className="flex flex-row gap-4 items-center">
-              <Label className="w-1/5" htmlFor="apellido">
-                Apellido:
-              </Label>
-              <TextInput
-                type="text"
-                name="apellido"
-                value={user.apellido}
-                onChange={handleChange}
-                required
-                className="w-4/5"
-              />
-            </div>
-            <div className="flex flex-row gap-4 items-center">
               <Label className="w-1/5" htmlFor="email">
                 Email:
               </Label>
@@ -159,20 +146,6 @@ const NewUserModal = ({
                 className="w-4/5"
               />
             </div>
-            <div className="flex flex-row gap-4 items-center">
-              <Label className="w-1/5" htmlFor="password">
-                Clave de acceso:
-              </Label>
-              <TextInput
-                type="password"
-                name="password"
-                value={user.password}
-                onChange={handleChange}
-                required={user.id ? false : true}
-                className="w-4/5"
-              />
-            </div>
-
             <div className="flex flex-row gap-4 items-center">
               <Label className="w-1/5" htmlFor="group">
                 Grupos:
