@@ -14,7 +14,7 @@ const Confirmacion = ({ show, onClose, periodoActual, matricula }) => {
   useEffect(() => {
     const getAranceles = async () => {
       try {
-        const res = await getProducto(matricula?.id_grado?.id_grado, "AR");
+        const res = await getProducto(matricula?.id_grado?.id_grado, "AR", "", "", true);
 
         const fecha_inicio_periodo = new Date(periodoActual?.fecha_inicio);
         const fecha_fin_periodo = new Date(periodoActual?.fecha_fin);

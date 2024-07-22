@@ -97,6 +97,8 @@ const MatriculacionPage = () => {
       );
       allAlumnos = res.data.map((alumno) => alumno.id_alumno);
 
+      console.log("ALUMNOS: "+JSON.stringify(allAlumnos));
+
       const data = allAlumnos.map((alumno) => ({
         Nombre: alumno.nombre,
         Apellido: alumno.apellido,
@@ -325,14 +327,14 @@ const MatriculacionPage = () => {
                   key={matricula.id_matricula}
                   className="hover:bg-gray-100"
                 >
-                  <Table.Cell>{matricula.id_alumno.cedula}</Table.Cell>
+                  <Table.Cell>{matricula.id_alumno?.cedula}</Table.Cell>
                   <Table.Cell>
-                    {matricula.id_alumno.nombre} {matricula.id_alumno.apellido}
+                    {matricula.id_alumno?.nombre} {matricula.id_alumno?.apellido}
                   </Table.Cell>
                   <Table.Cell>
-                    {matricula.id_grado.grado
-                      ? matricula.id_grado.grado + "°"
-                      : matricula.id_grado.nombre}
+                    {matricula.id_grado?.grado
+                      ? matricula.id_grado?.grado + "°"
+                      : matricula.id_grado?.nombre}
                   </Table.Cell>
                   <Table.Cell>
                     {matricula.es_interno ? "FUNDACION" : "EXTERNO"}
