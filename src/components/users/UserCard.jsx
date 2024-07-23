@@ -1,47 +1,13 @@
 import { Card, Tooltip } from "flowbite-react";
-import toast from "react-hot-toast";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa6";
 import { MdEditSquare, MdPassword } from "react-icons/md";
-import ConfirmationModal from "../ConfirmationModal";
-import { useEffect, useState } from "react";
-import { resetUserPasskey } from "../../services/AuthService";
+import { useState } from "react";
 
-function UserCard({ user, groups, editUser, activateUser }) {
-  const [show, setShow] = useState(false);
-  const [confirm, setConfirm] = useState(false);
-
+function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
   const userGroups = groups.filter((group) => user.groups.includes(group.id));
-
-  const resetPassKey = async () => {
-    setShow(false);
-    try {
-      await resetUserPasskey(user.id);
-      toast.success("Clave cambiada y enviada");
-    } catch (error) {
-      toast.error(error);
-    }
-  };
 
   return (
     <>
-      <ConfirmationModal
-        show={show}
-        title="Cambiar Clave"
-        message="Desea generar una nueva clave de acceso para el usuario?"
-        onConfirm={() => resetPassKey()}
-        onCancel={() => setShow(false)}
-      >
-        <div className="flex flex-col gap-2 mt-3">
-          <p>
-            <b>Usuario: </b>
-            {user.nombre}
-          </p>
-          <p>
-            La nueva clave sera enviada al correo <b>{user.email}</b>
-          </p>
-        </div>
-      </ConfirmationModal>
-
       <Card className={` w-full ${!user.is_active ? "bg-slate-200" : ""}`}>
         <div className="flex flex-row gap-3 justify-between text-gray-500">
           <div className="flex  ">
@@ -129,7 +95,7 @@ function UserCard({ user, groups, editUser, activateUser }) {
               <button
                 disabled={user.is_active ? false : true}
                 className="w-8 h-8 items-center bg-transparent"
-                onClick={() => setShow(true)}
+                onClick={() => resetPassKey()}
               >
                 <MdPassword
                   className={`size-8 ${

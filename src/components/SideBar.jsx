@@ -10,8 +10,7 @@ import downArrowIcon from "../assets/icons/down_arrow.svg";
 import upArrowIcon from "../assets/icons/up_arrow.svg";
 import profileIcon from "../assets/icons/profileIcon.svg";
 import useAuth from "../hooks/useAuth";
-import { FaStore, FaStoreAlt } from "react-icons/fa";
-import { TbStack, TbStack2, TbStackFront } from "react-icons/tb";
+import { FaStoreAlt } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 
 // Define un array de objetos con la información de cada elemento del menú

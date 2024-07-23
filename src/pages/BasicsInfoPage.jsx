@@ -18,7 +18,6 @@ function BasicsInfoPage() {
         const res = await getBasicInfo();
         setOrganization(res.data);
         setLoading(false);
-        console.log(res.data);
       } catch (error) {
         console.error("Error al cargar la organización:", error);
       }
@@ -56,12 +55,9 @@ function BasicsInfoPage() {
           orgFormData.append(key, organization[key] ? organization[key] : "");
         }
       }
-      console.log("formdata: ", [...orgFormData]);
-      const res = await updateBasicInfo(orgFormData);
-      console.log(res.data);
+      await updateBasicInfo(orgFormData);
       toast.success("Informacion Actualizada");
     } catch (error) {
-      console.log(error);
       toast.error("Error al actualizar la organización");
     }
     setEdit(false);
@@ -160,6 +156,18 @@ function BasicsInfoPage() {
                 placeholder="RUC"
                 rightIcon={edit ? GrFormEdit : GrFormLock}
                 required
+              />
+            </Label>
+            <Label className="flex flex-row items-center gap-5 justify-end">
+              Clave de mail
+              <TextInput
+                value={organization.password}
+                onChange={(e) => handleChange(e)}
+                readOnly={!edit}
+                type="text"
+                name="password"
+                placeholder="clave de mail"
+                rightIcon={edit ? GrFormEdit : GrFormLock}
               />
             </Label>
             <Label className="flex flex-row items-center gap-5 justify-end">

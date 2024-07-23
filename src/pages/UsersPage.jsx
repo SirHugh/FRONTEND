@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getGroups, getUser } from "../services/AuthService";
+import { getGroups, getUser, resetUserPasskey } from "../services/AuthService";
 import toast, { Toaster } from "react-hot-toast";
 import { BiError } from "react-icons/bi";
 import { FaPlus, FaUsersCog } from "react-icons/fa";
@@ -7,12 +7,14 @@ import { Button } from "flowbite-react";
 import UserCard from "../components/users/UserCard";
 import NewUserModal from "../components/users/NewUserModal";
 import ActivateUserModal from "../components/users/ActivateUserModal";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 function UsersPage() {
   const [users, setUsers] = useState([]);
   const [groups, setGroups] = useState([]);
   const [showNewUserModal, setShowNewUserModal] = useState(false);
   const [showActivateUserModal, setShowActivateUserModal] = useState(false);
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
   const initialState = {
     id: "",
     last_login: "",
@@ -68,8 +70,41 @@ function UsersPage() {
     }
   };
 
+  const handdleConfirmReset = (u) => {
+    setUser(u);
+    setShowConfirmReset(true);
+  };
+
+  const resetPassKey = async () => {
+    setShowConfirmReset(false);
+    try {
+      await resetUserPasskey(user.id);
+      toast.success("Clave cambiada y enviada");
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
+
   return (
     <>
+      <ConfirmationModal
+        show={showConfirmReset}
+        title="Cambiar Clave"
+        message="Desea generar una nueva clave de acceso para el usuario?"
+        onConfirm={() => resetPassKey()}
+        onCancel={() => setShowConfirmReset(false)}
+      >
+        <div className="flex flex-col gap-2 mt-3">
+          <p>
+            <b>Usuario: </b>
+            {user.nombre}
+          </p>
+          <p>
+            La nueva clave sera enviada al correo <b>{user.email}</b>
+          </p>
+        </div>
+      </ConfirmationModal>
       <NewUserModal
         show={showNewUserModal}
         user={user}
@@ -111,6 +146,7 @@ function UsersPage() {
                   groups={groups}
                   editUser={() => handdleEdit(u)}
                   activateUser={() => handdleActivate(u)}
+                  resetPassKey={() => handdleConfirmReset(u)}
                 />
               </div>
             ))}
