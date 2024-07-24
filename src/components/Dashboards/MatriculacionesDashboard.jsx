@@ -42,26 +42,32 @@ const MatriculacionesDashboard = () => {
         const lastYearMatriculasExcludingLastGrade = lastYearMatriculas.filter(
           (matricula) => matricula.id_grado.grado !== lastGrade
         );
-        const currentYearMatriculasExcludingFirstGrade = currentYearMatriculas.filter(
-          (matricula) => matricula.id_grado.grado !== firstGrade
-        );
+        const currentYearMatriculasExcludingFirstGrade =
+          currentYearMatriculas.filter(
+            (matricula) => matricula.id_grado.grado !== firstGrade
+          );
 
         // Calculate retained students
-        const retainedStudents = currentYearMatriculasExcludingFirstGrade.filter((matricula) =>
-          lastYearMatriculasExcludingLastGrade.some(
-            (lastYearMatricula) =>
-              lastYearMatricula.id_alumno.id_alumno === matricula.id_alumno.id_alumno
-          )
-        ).length;
+        const retainedStudents =
+          currentYearMatriculasExcludingFirstGrade.filter((matricula) =>
+            lastYearMatriculasExcludingLastGrade.some(
+              (lastYearMatricula) =>
+                lastYearMatricula.id_alumno.id_alumno ===
+                matricula.id_alumno.id_alumno
+            )
+          ).length;
 
-        const retentionRate = (retainedStudents / lastYearMatriculasExcludingLastGrade.length) * 100;
+        const retentionRate =
+          (retainedStudents / lastYearMatriculasExcludingLastGrade.length) *
+          100;
 
         // Calculate new students rate
         const newStudentsCurrentYear = currentYearMatriculas.filter(
           (matricula) => !matricula.es_interno
         ).length;
 
-        const newStudentsRate = (newStudentsCurrentYear / currentYearMatriculas.length) * 100;
+        const newStudentsRate =
+          (newStudentsCurrentYear / currentYearMatriculas.length) * 100;
 
         // Data for retention level chart
         setDataRetention([
@@ -98,8 +104,7 @@ const MatriculacionesDashboard = () => {
 
   return (
     <div className="p-6">
-
-<h2 className="text-xl font-bold mb-4">Alumnos de la fundación</h2>
+      <h2 className="text-xl font-bold mb-4">Alumnos de la fundación</h2>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={dataFoundation}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -107,8 +112,8 @@ const MatriculacionesDashboard = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="Total" fill="#8884d8" />
-          <Bar dataKey="Fundación UPC" fill="#82ca9d" />
+          <Bar dataKey="Total" fill="#40E0D0" />
+          <Bar dataKey="Fundación UPC" fill="#3594d8" />
         </BarChart>
       </ResponsiveContainer>
       <div className="mt-8">

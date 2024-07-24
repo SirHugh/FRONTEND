@@ -8,8 +8,8 @@ function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
 
   return (
     <>
-      <Card className={` w-full ${!user.is_active ? "bg-slate-200" : ""}`}>
-        <div className="flex flex-row gap-3 justify-between text-gray-500">
+      <Card className={`p-0 w-full ${!user.is_active ? "bg-slate-200" : ""}`}>
+        <div className="flex flex-row gap-2 justify-between text-gray-500">
           <div className="flex  ">
             <div className="flex flex-col ">
               <h2
@@ -24,15 +24,22 @@ function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
             </div>
             <div className="flex flex-row">
               <div className="flex flex-col w-52">
-                <p className="user-card__cedula">Cedula: {user.cedula}</p>
-                <p className="user-card__phone">Telefono: {user.telefono}</p>
+                <p className="user-card__cedula">
+                  <b>Cedula: </b>
+                  {user.cedula}
+                </p>
+                <p className="user-card__phone">
+                  <b>Telefono: </b>
+                  {user.telefono}
+                </p>
                 <p className="user-card__address">
-                  Direccion: {user.direccion}
+                  <b>Direccion: </b>
+                  {user.direccion}
                 </p>
               </div>
               <div className="flex flex-col w-52">
                 <p className="user-card__last-login">
-                  Ultimo login:{" "}
+                  <b>Ultimo login: </b>{" "}
                   {user.last_login
                     ? new Date(user.last_login).toLocaleString()
                     : "Nunca"}
@@ -42,11 +49,13 @@ function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
                     !user.is_active ? " text-red-800" : " text-gray-900"
                   }`}
                 >
-                  Es Activo: {user.is_active ? "Si" : "No"}
+                  <b>Es Activo: </b>
+                  {user.is_active ? "Si" : "No"}
                 </p>
               </div>
               <p className="user-card__groups">
-                Grupo: {userGroups.map((group) => group.name).join(", ")}
+                <b>Molulos: </b>
+                {userGroups.map((group) => group.name).join(", ")}
               </p>
             </div>
           </div>

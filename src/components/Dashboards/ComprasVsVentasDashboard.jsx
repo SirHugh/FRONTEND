@@ -1,6 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
-import { getCompra, getVenta } from '../../services/CajaService'; // Ajusta la ruta según tu estructura de proyecto
+import React, { useEffect, useState } from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  Legend,
+} from "recharts";
+import { getCompra, getFlujoCaja, getVenta } from "../../services/CajaService"; // Ajusta la ruta según tu estructura de proyecto
 
 const ComprasVsVentasDashboard = () => {
   const [data, setData] = useState([]);
@@ -8,35 +17,61 @@ const ComprasVsVentasDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [comprasResponse, ventasResponse] = await Promise.all([getCompra(), getVenta()]);
-        
-        const compras = comprasResponse.data;
-        const ventas = ventasResponse.data;
+        // const [comprasResponse, ventasResponse] = await Promise.all([
+        //   getCompra(),
+        //   getVenta(),
+        // ]);
 
-        console.log('Datos de compras:', compras);
-        console.log('Datos de ventas:', ventas);
+        // const compras = comprasResponse.data;
+        // const ventas = ventasResponse.data;
+
+        const response = await getFlujoCaja("", 1);
+        const flujoCaja = response.data.results;
 
         // Transformar datos para que sean compatibles con la gráfica
         const transformData = () => {
-          const allDates = [...new Set([...compras.map(c => c.fecha), ...ventas.map(v => v.fecha)])];
+          // const allDates = [
+          //   ...new Set([
+          //     ...compras.map((c) => c.fecha),
+          //     ...ventas.map((v) => v.fecha),
+          //   ]),
+          // ];
 
-          const formattedData = allDates.map(date => {
-            const compraData = compras.filter(c => c.fecha === date).reduce((sum, c) => sum + parseFloat(c.monto), 0);
-            const ventaData = ventas.filter(v => v.fecha === date).reduce((sum, v) => sum + parseFloat(v.monto), 0);
+          // const formattedData01 = allDates.map((date) => {
+          //   const compraData = compras
+          //     .filter((c) => c.fecha === date)
+          //     .reduce((sum, c) => sum + parseFloat(c.monto), 0);
+          //   const ventaData = ventas
+          //     .filter((v) => v.fecha === date)
+          //     .reduce((sum, v) => sum + parseFloat(v.monto), 0);
 
-            return {
-              date,
-              compra: compraData,
-              venta: ventaData
-            };
-          });
+          //   return {
+          //     date,
+          //     compra: compraData,
+          //     venta: ventaData,
+          //   };
+          // });
 
+          const formattedData = flujoCaja
+            .map((flujo) => {
+              const compraData = flujo.entrada;
+              const ventaData = flujo.salida;
+              const date = flujo.fecha.slice(8, 10);
+              return {
+                date,
+                entrada: compraData,
+                salida: ventaData,
+              };
+            })
+            .reverse();
+
+          console.log("FormatedData", formattedData);
           return formattedData;
         };
 
         setData(transformData());
       } catch (error) {
-        console.error('Error fetching compras vs ventas data:', error);
+        console.error("Error fetching compras vs ventas data:", error);
       }
     };
 
@@ -53,8 +88,8 @@ const ComprasVsVentasDashboard = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="compra" stroke="#8884d8" />
-          <Line type="monotone" dataKey="venta" stroke="#82ca9d" />
+          <Line type="monotone" dataKey="entrada" stroke="#8884d8" />
+          <Line type="monotone" dataKey="salida" stroke="#82ca9d" />
         </LineChart>
       </ResponsiveContainer>
     </div>

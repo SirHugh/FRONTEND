@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { getArancel } from "../../services/CajaService";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
-const COLORS = ['#0088FE', '#00C49F'];
+const COLORS = ["#FF0000", "#00C49F"];
 
 const ArancelesDashboard = () => {
   const [dataAranceles, setDataAranceles] = useState([]);
@@ -23,7 +17,7 @@ const ArancelesDashboard = () => {
       try {
         const [activeResponse, inactiveResponse] = await Promise.all([
           getArancel(true, "", currentMonth, page, search),
-          getArancel(false, "", currentMonth, page, search)
+          getArancel(false, "", currentMonth, page, search),
         ]);
 
         const activeAranceles = activeResponse.data.length;
@@ -34,8 +28,8 @@ const ArancelesDashboard = () => {
         const inactiveRate = (inactiveAranceles / totalAranceles) * 100;
 
         setDataAranceles([
-          { name: 'Activos', value: activeAranceles },
-          { name: 'Inactivos', value: inactiveAranceles }
+          { name: "Pendientes", value: activeAranceles },
+          { name: "Cancelados", value: inactiveAranceles },
         ]);
 
         setStats({
@@ -62,13 +56,19 @@ const ArancelesDashboard = () => {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-            outerRadius={100}
+            label={({ name, percent }) =>
+              `${name}: ${(percent * 100).toFixed(0)}%`
+            }
+            outerRadius={80}
+            innerRadius={50}
             fill="#8884d8"
             dataKey="value"
           >
             {dataAranceles.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
             ))}
           </Pie>
           <Tooltip />
@@ -76,8 +76,8 @@ const ArancelesDashboard = () => {
       </ResponsiveContainer>
 
       <div className="mt-8">
-        <h3>Aranceles Activos: {stats.activeRate}%</h3>
-        <h3>Aranceles Inactivos: {stats.inactiveRate}%</h3>
+        <h3>Pendientes: {stats.activeRate}%</h3>
+        <h3>Cancelados: {stats.inactiveRate}%</h3>
       </div>
     </div>
   );

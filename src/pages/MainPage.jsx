@@ -26,23 +26,78 @@ const MainPage = () => {
 
   // Datos para las tarjetas
   const cardData = [
-    { title: "Alumnos", icon: studentIcon, linkTo: "/alumnos", allowedGroup: "ACADEMICO" },
-    { title: "Matriculaciones", icon: academicIcon, linkTo: "/Matriculas", allowedGroup: "ACADEMICO" },
-    { title: "Becas", icon: honourIcon, linkTo: "/becas", allowedGroup: "ACADEMICO" },
-    { title: "Facturación", icon: boxIcon, linkTo: "/factura", allowedGroup: "CAJA" },
-    { title: "Productos", icon: backpackIcon, linkTo: "/productos", allowedGroup: "CAJA" },
-    { title: "Ventas", icon: ventaIcon, linkTo: "/ventas", allowedGroup: "CAJA" },
-    { title: "Usuarios", icon: usersIcon, linkTo: "/usuarios", allowedGroup: "ADMIN" },
+    {
+      title: "Alumnos",
+      icon: studentIcon,
+      linkTo: "/alumnos",
+      allowedGroup: "ACADEMICO",
+    },
+    {
+      title: "Matriculaciones",
+      icon: academicIcon,
+      linkTo: "/Matriculas",
+      allowedGroup: "ACADEMICO",
+    },
+    {
+      title: "Becas",
+      icon: honourIcon,
+      linkTo: "/becas",
+      allowedGroup: "ACADEMICO",
+    },
+    {
+      title: "Facturación",
+      icon: boxIcon,
+      linkTo: "/factura",
+      allowedGroup: "CAJA",
+    },
+    {
+      title: "Productos",
+      icon: backpackIcon,
+      linkTo: "/productos",
+      allowedGroup: "CAJA",
+    },
+    {
+      title: "Ventas",
+      icon: ventaIcon,
+      linkTo: "/ventas",
+      allowedGroup: "CAJA",
+    },
+    {
+      title: "Usuarios",
+      icon: usersIcon,
+      linkTo: "/usuarios",
+      allowedGroup: "ADMIN",
+    },
   ];
 
   // Datos para los dashboards
   const dashboardData = [
-    { component: MatriculacionesDashboard, title: "Matriculaciones", allowedGroup: "ACADEMICO" },
-    { component: AlumnosPorGradoDashboard, title: "Alumnos por Grado", allowedGroup: "ACADEMICO" },
-    { component: RetencionesDashboard, title: "Porcentaje de retención", allowedGroup: "ACADEMICO" },
-    { component: ComprasVsVentasDashboard, title: "Compras vs Ventas", allowedGroup: "CAJA" },
+    {
+      component: MatriculacionesDashboard,
+      title: "Matriculaciones",
+      allowedGroup: "ACADEMICO",
+    },
+    {
+      component: AlumnosPorGradoDashboard,
+      title: "Alumnos por Grado",
+      allowedGroup: "ACADEMICO",
+    },
+    {
+      component: RetencionesDashboard,
+      title: "Porcentaje de retención",
+      allowedGroup: "ACADEMICO",
+    },
+    {
+      component: ComprasVsVentasDashboard,
+      title: "Compras vs Ventas",
+      allowedGroup: "CAJA",
+    },
     { component: ArancelesDashboard, title: "Aranceles", allowedGroup: "CAJA" },
-    { component: FlujoCajaDashboard, title: "Flujo de caja", allowedGroup: "CAJA" },
+    {
+      component: FlujoCajaDashboard,
+      title: "Flujo de caja",
+      allowedGroup: "CAJA",
+    },
     // Agrega más dashboards según sea necesario
   ];
 
@@ -67,19 +122,23 @@ const MainPage = () => {
       case "CAJA":
         return "Dashboards de Caja";
       default:
-        return "Dashboards";
+        return;
     }
   };
 
   // Filtrar tarjetas permitidas para el usuario actual
-  const filteredCardData = cardData.filter(card => userGroups.includes(card.allowedGroup));
-  const filteredUserGroups = userGroups.filter(group => group !== "ADMIN");
-  const filteredDashboardData = dashboardData.filter(dashboard => dashboard.allowedGroup !== "ADMIN");
+  const filteredCardData = cardData.filter((card) =>
+    userGroups.includes(card.allowedGroup)
+  );
+  const filteredUserGroups = userGroups.filter((group) => group !== "ADMIN");
+  const filteredDashboardData = dashboardData.filter(
+    (dashboard) => dashboard.allowedGroup !== "ADMIN"
+  );
 
   return (
     <div className="min-h-full bg-gray-100">
       <main className="p-4">
-      <div className={`grid gap-4 ${getGridClass(filteredCardData.length)}`}>
+        <div className={`grid gap-4 ${getGridClass(filteredCardData.length)}`}>
           {/* Renderizar tarjetas */}
           {filteredCardData.map((card, index) => (
             <Card
@@ -93,18 +152,23 @@ const MainPage = () => {
         <Tabs>
           <TabList>
             {filteredUserGroups.map((group, index) => (
-              <Tab key={index}>{getTabName(group) }</Tab>
+              <Tab key={index}>{getTabName(group)}</Tab>
             ))}
           </TabList>
 
           {filteredUserGroups.map((group, index) => (
             <TabPanel key={index}>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                {filteredDashboardData.filter(dashboard => dashboard.allowedGroup === group).map((dashboard, dashboardIndex) => (
-                  <div key={dashboardIndex} className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm">
-                    <dashboard.component />
-                  </div>
-                ))}
+                {filteredDashboardData
+                  .filter((dashboard) => dashboard.allowedGroup === group)
+                  .map((dashboard, dashboardIndex) => (
+                    <div
+                      key={dashboardIndex}
+                      className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm"
+                    >
+                      <dashboard.component />
+                    </div>
+                  ))}
               </div>
             </TabPanel>
           ))}

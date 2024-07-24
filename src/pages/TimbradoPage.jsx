@@ -33,7 +33,7 @@ function TimbradoPage() {
     const loadTimbrados = async () => {
       const page = Math.min(currentPage + 1, totalPages);
       try {
-        const res = await getTimbrado(page);
+        const res = await getTimbrado("", page);
         setTimbradoList(res.data.results);
         setTotalPages(Math.ceil(res.data.count / 10));
       } catch (error) {

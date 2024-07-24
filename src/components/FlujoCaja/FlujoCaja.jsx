@@ -32,14 +32,23 @@ function FlujoCaja({ id_flujoCaja }) {
 
   const handlePrintPDF = (flujoData) => {
     const doc = new jsPDF();
-  
+
     doc.text("Reporte de Flujo de Caja", doc.internal.pageSize.width / 2, 10, {
       align: "center",
     });
-  
+
     autoTable(doc, {
       startY: 20,
-      head: [["Fecha Apertura", "Fecha Cierre", "Monto Apertura", "Monto Cierre", "Ingresos", "Egresos"]],
+      head: [
+        [
+          "Fecha Apertura",
+          "Fecha Cierre",
+          "Monto Apertura",
+          "Monto Cierre",
+          "Ingresos",
+          "Egresos",
+        ],
+      ],
       body: flujoData.map((flujo) => [
         flujo.hora_apertura,
         flujo.hora_cierre || "N/A",
@@ -49,9 +58,9 @@ function FlujoCaja({ id_flujoCaja }) {
         CurrencyFormatter(Number(flujo.salida)),
       ]),
     });
-  
+
     const pageCount = doc.internal.getNumberOfPages();
-  
+
     for (var i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.text(
@@ -63,20 +72,20 @@ function FlujoCaja({ id_flujoCaja }) {
         }
       );
     }
-  
+
     doc.save(`flujo_caja-${new Date().toLocaleString()}.pdf`);
   };
 
   const handleActivate = async (value) => {
-
-
     try {
       await setFlujoCajaActive(flujo.id_flujoCaja, value);
     } catch (error) {
       toast.error(error.response.data.error);
     }
     if (!value) {
-      const confirmPrint = window.confirm("¿Deseas imprimir el flujo de caja antes de cerrar?");
+      const confirmPrint = window.confirm(
+        "¿Deseas imprimir el flujo de caja antes de cerrar?"
+      );
       if (confirmPrint) {
         const res = await getFlujoCajaCurrent(true);
         handlePrintPDF([res.data]);
@@ -171,7 +180,7 @@ function FlujoCaja({ id_flujoCaja }) {
               <small className="text-cyan-700">Balance</small>
               <big className="self-center">
                 {CurrencyFormatter(
-                  Number(flujo.monto_cierre) - Number(flujo.salida)
+                  Number(flujo.entrada) - Number(flujo.salida)
                 )}
               </big>
             </Card>

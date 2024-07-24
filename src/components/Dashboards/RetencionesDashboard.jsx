@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { getMatricula, getGrados } from "../../services/AcademicoService";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
-const COLORS = ['#0088FE', '#00C49F'];
+const COLORS = ["#0088FE", "#00C49F"];
 
 const MatriculacionesDashboard = () => {
   const [dataRetention, setDataRetention] = useState([]);
@@ -26,8 +20,8 @@ const MatriculacionesDashboard = () => {
         const gradosResponse = await getGrados();
         const grados = gradosResponse.data;
 
-        const lastGrade = Math.max(...grados.map(grado => grado.grado));
-        const firstGrade = Math.min(...grados.map(grado => grado.grado));
+        const lastGrade = Math.max(...grados.map((grado) => grado.grado));
+        const firstGrade = Math.min(...grados.map((grado) => grado.grado));
 
         const [currentYearResponse, lastYearResponse] = await Promise.all([
           getMatricula(currentYear, "", search, page),
@@ -41,24 +35,33 @@ const MatriculacionesDashboard = () => {
         const lastYearMatriculasExcludingLastGrade = lastYearMatriculas.filter(
           (matricula) => matricula.id_grado.grado !== lastGrade
         );
-        const currentYearMatriculasExcludingFirstGrade = currentYearMatriculas.filter(
-          (matricula) => matricula.id_grado.grado !== firstGrade
-        );
+        const currentYearMatriculasExcludingFirstGrade =
+          currentYearMatriculas.filter(
+            (matricula) => matricula.id_grado.grado !== firstGrade
+          );
 
         // Calculate retained students
-        const retainedStudents = currentYearMatriculasExcludingFirstGrade.filter((matricula) =>
-          lastYearMatriculasExcludingLastGrade.some(
-            (lastYearMatricula) =>
-              lastYearMatricula.id_alumno.id_alumno === matricula.id_alumno.id_alumno
-          )
-        ).length;
+        const retainedStudents =
+          currentYearMatriculasExcludingFirstGrade.filter((matricula) =>
+            lastYearMatriculasExcludingLastGrade.some(
+              (lastYearMatricula) =>
+                lastYearMatricula.id_alumno.id_alumno ===
+                matricula.id_alumno.id_alumno
+            )
+          ).length;
 
-        const retentionRate = (retainedStudents / lastYearMatriculasExcludingLastGrade.length) * 100;
+        const retentionRate =
+          (retainedStudents / lastYearMatriculasExcludingLastGrade.length) *
+          100;
 
         // Data for retention level chart
         setDataRetention([
-          { name: 'Retenidos', value: retainedStudents },
-          { name: 'No Retenidos', value: lastYearMatriculasExcludingLastGrade.length - retainedStudents },
+          { name: "Retenidos", value: retainedStudents },
+          {
+            name: "No Retenidos",
+            value:
+              lastYearMatriculasExcludingLastGrade.length - retainedStudents,
+          },
         ]);
 
         setStats({
@@ -74,7 +77,9 @@ const MatriculacionesDashboard = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-xl font-bold mb-4">Estadísticas de matriculaciones</h2>
+      <h2 className="text-xl font-bold mb-4">
+        Estadísticas de matriculaciones
+      </h2>
 
       <h3 className="text-lg font-semibold mb-4">Nivel de Retención</h3>
       <ResponsiveContainer width="107%" height={300}>
@@ -84,13 +89,19 @@ const MatriculacionesDashboard = () => {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            label={({ name, percent }) =>
+              `${name}: ${(percent * 100).toFixed(0)}%`
+            }
             outerRadius={90}
+            innerRadius={60}
             fill="#8884d8"
             dataKey="value"
           >
             {dataRetention.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
             ))}
           </Pie>
           <Tooltip />

@@ -13,7 +13,7 @@ function FlujoCajaPage() {
     <>
       <div className="flex flex-row p-3 gap-3 text-4xl font-bold items-center">
         <FaCashRegister className="text-blue-500" />
-        <h1 className="">Flujo Diario De Caja</h1>
+        <h1 className="">Flujo De Caja</h1>
       </div>
       <div className="flex flex-row justify-between h-20 px-6 gap-3 border items-center">
         <div>

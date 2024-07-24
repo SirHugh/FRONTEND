@@ -148,7 +148,7 @@ const NewUserModal = ({
             </div>
             <div className="flex flex-row gap-4 items-center">
               <Label className="w-1/5" htmlFor="group">
-                Grupos:
+                Modulos:
               </Label>
               <Select
                 name="groups"

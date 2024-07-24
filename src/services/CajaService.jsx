@@ -86,7 +86,7 @@ export const createTimbrado = (data) => {
   return ApiClient.post(`/caja/timbrado/`, data);
 };
 
-export const getTimbrado = (page, id) => {
+export const getTimbrado = (id, page) => {
   return ApiClient.get(
     `/caja/timbrado/${id ? id + "/" : ""}${page ? "?page=" + page : ""}`
   );

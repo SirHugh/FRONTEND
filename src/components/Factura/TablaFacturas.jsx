@@ -59,7 +59,11 @@ function TablaFacturas({ search }) {
               >
                 <Table.Cell>{factura.id_comprobante}</Table.Cell>
                 <Table.Cell>{factura.nro_factura}</Table.Cell>
-                <Table.Cell>{factura.cliente}</Table.Cell>
+                <Table.Cell>
+                  {factura.cliente.nombre}
+                  {", "}
+                  {factura.cliente?.apellido}
+                </Table.Cell>
                 <Table.Cell>
                   {DateFormatter(new Date(factura.fecha))}
                 </Table.Cell>
