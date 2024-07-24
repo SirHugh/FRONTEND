@@ -71,7 +71,7 @@ function App() {
             <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
               <Route path="/ventas" element={<VentasPage />} />
               <Route path="/factura" element={<FacturaPage />} />
-              <Route path="/printFactura" element={<PrintFacturaPage />} />
+              <Route path="/printFactura/:id/" element={<PrintFacturaPage />} />
               <Route path="/factura/nuevo" element={<NuevaFactura />} />
               <Route path="/timbrado" element={<TimbradoPage />} />
               <Route path="/compras" element={<ComprasPage />} />

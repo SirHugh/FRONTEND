@@ -1,144 +1,52 @@
-import { Button, Label, Modal, Table } from "flowbite-react";
-import { useRef } from "react";
-import { useReactToPrint } from "react-to-print";
-import GeneratePDF from "./GeneratePDF";
-import QRCode from 'qrcode';
+import { Button, Modal } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const SummaryModal = ({
   show,
   onClose,
+  handleSubmit,
   comprobante,
   detalleList,
   organization,
-  cliente
+  cliente,
 }) => {
-  const componentRef = useRef(null);
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-    documentTitle: "Print This Document",
-    onBeforePrint: () => console.log("before printing..."),
-    onAfterPrint: () => console.log("after printing..."),
-    removeAfterPrint: true,
-  });
-
-  const generateQRCode = async (text) => {
+  const handleConfirm = async () => {
+    setIsSubmitting(true);
     try {
-      return await QRCode.toDataURL(text);
-    } catch (err) {
-      console.error(err);
+      const newComprobanteId = await handleSubmit(); // Espera la respuesta de handleSubmit
+      console.log("Datos del comprobante:", newComprobanteId);
+      if (newComprobanteId) {
+        navigate(`/printFactura/${newComprobanteId}`);
+      } else {
+        toast.error("Error al obtener el ID del comprobante.");
+      }
+    } catch (error) {
+      toast.error("Error al crear la factura.");
+      console.error("Error al crear la factura:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handlePDFGeneration = async () => {
-    const qrCode = await generateQRCode("https://your-url.com");
-    const data = {
-      comprobante,
-      detalleList,
-      organization,
-      qrCode,
-      cliente,
-    };
-    
-    // Save data to localStorage or pass it via query parameters
-    localStorage.setItem('facturaData', JSON.stringify(data));
-  
-    // Open new window with FacturaPage
-    window.open('/Printfactura', '_blank');
-  };
-
   return (
-    <>
-      <Modal
-        show={show}
-        onClose={onClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Modal.Header id="modal-modal-title">
-          Resumen de la Factura
-        </Modal.Header>
-        <Modal.Body>
-          <div ref={componentRef} className="flex flex-col">
-            <div className="grid grid-cols-3 gap-2 justify-between p-3">
-              <Label>
-                ID Comprobante: <b>{comprobante.id_comprobante}</b>
-              </Label>
-              <Label>
-                <big>ID Timbrado:</big> <p>{comprobante.id_timbrado}</p>
-              </Label>
-              <Label>
-                Nro Factura: <p>{comprobante.nro_factura}</p>
-              </Label>
-              <Label>
-                ID Usuario: <p>{comprobante.id_user}</p>
-              </Label>
-              <Label>
-                ID Cliente: <p>{comprobante.id_cliente}</p>
-              </Label>
-              <Label>
-                Fecha: <p>{comprobante.fecha}</p>
-              </Label>
-              <Label>
-                Tipo de Pago:{" "}
-                <p>{comprobante.tipo_pago === "C" ? "Contado" : ""}</p>
-              </Label>
-              <Label>
-                Monto: <p>{comprobante.monto}</p>
-              </Label>
-              <Label id="modal-modal-title" variant="h6" component="h2">
-                Detalles del Pago
-              </Label>
-            </div>
-            <Table>
-              <Table.Head></Table.Head>
-              <Table.Body>
-                {detalleList.aranceles?.map((detalle) => (
-                  <Table.Row key={detalle.id_arancel}>
-                    <Table.Cell> {detalle.id_arancel}</Table.Cell>
-                    <Table.Cell> {detalle.alumno}</Table.Cell>
-                    <Table.Cell> {detalle.nombre}</Table.Cell>
-                    <Table.Cell> {detalle.fecha_vencimiento}</Table.Cell>
-                    <Table.Cell> {detalle.nro_cuota}</Table.Cell>
-                    <Table.Cell> {detalle.monto}</Table.Cell>
-                    <Table.Cell> {detalle.es_activo ? "Si" : "No"}</Table.Cell>
-                  </Table.Row>
-                ))}
-                {detalleList.ventas?.map((detalle) => (
-                  <Table.Row key={detalle.id_venta}>
-                    <Table.Cell> {detalle.id_venta}</Table.Cell>
-                    <Table.Cell> {detalle.alumno}</Table.Cell>
-                    <Table.Cell> {detalle.descripcion.map(d => d.producto).join(", ")}</Table.Cell>
-                    <Table.Cell> {detalle.fecha_vencimiento}</Table.Cell>
-                    <Table.Cell> {detalle.nro_pago}</Table.Cell>
-                    <Table.Cell> {detalle.monto}</Table.Cell>
-                    <Table.Cell> {detalle.es_activo ? "Si" : "No"}</Table.Cell>
-                  </Table.Row>
-                ))}
-                {detalleList.actividades?.map((detalle) => (
-                  <Table.Row key={detalle.id_pagoActividad}>
-                    <Table.Cell> {detalle.id_pagoActividad}</Table.Cell>
-                    <Table.Cell> {detalle.alumno}</Table.Cell>
-                    <Table.Cell> {detalle.actividad}</Table.Cell>
-                    <Table.Cell> {detalle.fecha_pago}</Table.Cell>
-                    <Table.Cell> {detalle.monto}</Table.Cell>
-                    <Table.Cell> {detalle.es_activo ? "Si" : "No"}</Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button type="button" onClick={onClose}>
-            Cerrar
-          </Button>
-          <Button type="button" onClick={handlePDFGeneration}>
-            Generar PDF
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+    <Modal show={show} onClose={onClose}>
+      <Modal.Header>Confirmación de Registro</Modal.Header>
+      <Modal.Body>
+        <p>¿Está seguro de que desea registrar esta factura?</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button type="button" onClick={onClose} disabled={isSubmitting}>
+          Cancelar
+        </Button>
+        <Button type="button" onClick={handleConfirm} disabled={isSubmitting}>
+          Aceptar
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

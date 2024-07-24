@@ -69,7 +69,7 @@ function NuevaFactura({ onClose }) {
             },
           });
         } else
-          toast.error("No se encontro timbrado habilitado", {
+          toast.error("No se encontró timbrado habilitado", {
             duration: 5000,
             icon: <BiError color="red" fontSize="1.5rem" />,
           });
@@ -193,7 +193,7 @@ function NuevaFactura({ onClose }) {
 
   const validate = () => {
     if (!factura.comprobante.tipo_pago) {
-      toast.error("Seleccione la condicion de venta");
+      toast.error("Seleccione la condición de venta");
       return false;
     }
     if (!factura.comprobante.id_formaPago) {
@@ -221,25 +221,12 @@ function NuevaFactura({ onClose }) {
     if (!validate()) {
       return;
     }
-    if (!window.confirm("Confirmar la generación de la factura?")) {
-      toast.error("Operacion Cancelada");
-      return;
-    }
-    console.log("data", factura);
-    try {
-      await createComprobante(factura);
-      toast.success("Factura creada exitosamente!", { duration: 5000 });
-    } catch (error) {
-      toast.error(error.message, {
-        duration: 5000,
-        icon: <BiError color="red" fontSize="5.5rem" />,
-      });
-      console.error("Error al crear la factura:", error);
-    }
     setShowSummaryModal(true);
+    return null; // Inicialmente retorna null, ya que la lógica para obtener el id del comprobante se maneja en el modal.
   };
+  
 
-  const onCloseSummary = () => {
+  const onCloseSummary = async () => {
     setShowSummaryModal(false);
     onClose();
   };
@@ -256,7 +243,20 @@ function NuevaFactura({ onClose }) {
     <>
       <SummaryModal
         show={showSummaryModal}
-        onClose={() => onCloseSummary()}
+        onClose={() => setShowSummaryModal(false)}
+        handleSubmit={async () => {
+          try {
+            await createComprobante(factura);
+            toast.success("Factura creada exitosamente!", { duration: 5000 });
+            onCloseSummary(); // Cierra el modal y la ventana de NuevaFactura
+          } catch (error) {
+            toast.error(error.message, {
+              duration: 5000,
+              icon: <BiError color="red" fontSize="5.5rem" />,
+            });
+            console.error("Error al crear la factura:", error);
+          }
+        }}
         comprobante={factura.comprobante}
         detalleList={detalleList}
         organization={organization}
@@ -269,7 +269,7 @@ function NuevaFactura({ onClose }) {
         action={() => {}}
         cliente={factura.comprobante.id_cliente}
       />
-      <div className="flex flex-col px-8 gap-y-2 pb-3 w-3/4 h-full ">
+      <div className="flex flex-col px-8 gap-y-2 pb-3 w-3/4 h-full">
         {/* encabezado de la factura */}
         {/* <div className="flex flex-col bg-white p-4 border rounded mt-3">
           <Encabezado timbrado={timbrado} info={info} />
@@ -285,7 +285,7 @@ function NuevaFactura({ onClose }) {
             {DateFormatter(new Date()).toUpperCase()}
           </span>
           <span className="flex items-center gap-3">
-            <b>Condicion de Venta: </b>
+            <b>Condición de Venta: </b>
             <Select
               className="w-32"
               name="tipo_pago"
@@ -335,7 +335,7 @@ function NuevaFactura({ onClose }) {
             </div>
           </div>
           <div className="flex flex-row gap-4">
-            <div className=" w-full ">
+            <div className="w-full">
               <DetalleFactura items={detalleList} setItems={setDetalleList} />
             </div>
           </div>
@@ -356,6 +356,3 @@ function NuevaFactura({ onClose }) {
 }
 
 export default NuevaFactura;
-{
-  onclose;
-}
