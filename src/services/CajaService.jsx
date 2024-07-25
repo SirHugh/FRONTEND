@@ -105,15 +105,16 @@ export const getActiveTimbrado = () => {
 // ---------------------
 
 export const createComprobante = (data) => {
-  return ApiClient.post(`/caja/comprobante/`, data).then(response => response.data);
+  return ApiClient.post(`/caja/comprobante/`, data).then(
+    (response) => response.data
+  );
 };
-
 
 export const getComprobante = (id, page, search) => {
   return ApiClient.get(
     `/caja/comprobante/${
       id
-        ? id + "/"
+        ? id
         : `?${page ? "page=" + page : ""}${search ? "&search=" + search : ""}`
     }`
   );
@@ -254,4 +255,12 @@ export const activateActividad = (id_actividad, value) => {
 
 export const getFormaPago = () => {
   return ApiClient.get(`/caja/forma_pago/`);
+};
+
+// ---------------------
+// enviar email al cliente
+// ---------------------
+
+export const sendEmailFactura = (data) => {
+  return ApiClient.post(`/caja/send_email/`, data);
 };

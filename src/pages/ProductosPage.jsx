@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import { Table, Button, Tooltip } from "flowbite-react";
-import { BiEdit, BiError } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
 import PaginationButtons from "../components/PaginationButtons";
 import ProductoModal from "../components/Productos/ProductoModal";
-import {
-  getProducto,
-  createProducto,
-  updateProducto,
-} from "../services/CajaService";
+import { getProducto } from "../services/CajaService";
 import { FaPlus, FaToggleOff, FaToggleOn } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { CurrencyFormatter } from "../components/Constants";
@@ -19,8 +15,7 @@ const ProductosPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedProducto, setSelectedProducto] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
-  const itemsPerPage = 10;
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const loadProductos = async () => {
@@ -34,35 +29,14 @@ const ProductosPage = () => {
       }
     };
     loadProductos();
-  }, [currentPage]);
+  }, [currentPage, reload]);
 
-  const handleShowActivate = async (producto) => {};
+  const handleShowActivate = async () => {};
 
-  const handleSave = async (producto) => {
-    try {
-      if (selectedProducto) {
-        console.log(
-          "TRATA DE ACTUALIZAR producto de id: " +
-            selectedProducto.id_producto +
-            " " +
-            JSON.stringify(producto)
-        );
-        await updateProducto(selectedProducto.id_producto, producto);
-        toast.success("Producto actualizado!", { duration: 5000 });
-      } else {
-        await createProducto(producto);
-        toast.success("Producto registrado!", { duration: 5000 });
-      }
-      setShowModal(false);
-      const res = await getProducto("", "PR");
-      setProductos(res.data.slice(0, itemsPerPage));
-    } catch (error) {
-      toast.error("Ha ocurrido un error al guardar los datos.", {
-        duration: 5000,
-        icon: <BiError color="red" fontSize="5.5rem" />,
-      });
-      console.log("Error al guardar el producto:", error);
-    }
+  const onClose = () => {
+    setShowModal(false);
+    setReload(!reload);
+    setSelectedProducto(null);
   };
 
   return (
@@ -86,6 +60,7 @@ const ProductosPage = () => {
       <div className="overflow-x-auto w-full max-w-12xl bg-white ">
         <Table hoverable className="divide-y">
           <Table.Head className="bg-gray-500">
+            <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Codigo</Table.HeadCell>
             <Table.HeadCell>Nombre</Table.HeadCell>
             <Table.HeadCell>Descripción</Table.HeadCell>
@@ -102,6 +77,7 @@ const ProductosPage = () => {
                 className={`bg-slate-100 dark:border-gray-700 dark:bg-gray-800 hover:border-l-blue-500 hover:border-l-4 `}
               >
                 <Table.Cell>{producto.id_producto}</Table.Cell>
+                <Table.Cell>{producto.codigo}</Table.Cell>
                 <Table.Cell>{producto.nombre}</Table.Cell>
                 <Table.Cell>{producto.descripcion}</Table.Cell>
                 <Table.Cell>{producto.stock_minimo}</Table.Cell>
@@ -151,14 +127,11 @@ const ProductosPage = () => {
           onPageChange={(page) => setCurrentPage(page)}
         />
       </div>
-      {showModal && (
-        <ProductoModal
-          producto={selectedProducto}
-          onSave={handleSave}
-          onClose={() => setShowModal(false)}
-          tipo="PR" // Pasamos el tipo de producto
-        />
-      )}
+      <ProductoModal
+        show={showModal}
+        producto={selectedProducto}
+        onClose={onClose}
+      />
     </div>
   );
 };

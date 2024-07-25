@@ -1,41 +1,34 @@
 import { useState, useEffect } from "react";
-import { Modal, Button, Label, TextInput, Select } from "flowbite-react";
-import { getGrados } from "../../services/AcademicoService";
-import { Months } from "../Constants";
-
-const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
-  const [formData, setFormData] = useState({
+import { Modal, Button, Label, TextInput } from "flowbite-react";
+import { createProducto, updateProducto } from "../../services/CajaService";
+import toast from "react-hot-toast";
+const ProductoModal = ({ show, producto, onClose }) => {
+  const defaultData = {
     nombre: "",
     descripcion: "",
-    tipo: tipo || "PR",
+    codigo: "",
+    tipo: "PR",
     stock: 0,
     stock_minimo: 0,
     precio: 0,
     es_activo: true,
     es_mensual: null,
     grados: [],
-  });
+  };
+  const [formData, setFormData] = useState(defaultData);
 
   useEffect(() => {
     if (producto) {
-      setFormData({
-        nombre: producto.nombre,
-        descripcion: producto.descripcion,
-        tipo: producto.tipo,
-        stock: producto.stock,
-        stock_minimo: producto.stock_minimo,
-        precio: producto.precio,
-        es_activo: producto.es_activo,
-        es_mensual: producto.es_mensual,
-        grados: producto.grados || [],
-      });
+      const codigoOriginal = producto.codigo.lastIndexOf("-");
+      const codigo = producto.codigo.substring(0, codigoOriginal);
+      setFormData({ ...producto, codigo: codigo });
     } else {
       setFormData((prevState) => ({
         ...prevState,
-        tipo: tipo || "PR",
+        tipo: "PR",
       }));
     }
-  }, [producto, tipo]);
+  }, [producto]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -45,87 +38,119 @@ const ProductoModal = ({ producto, onSave, onClose, tipo }) => {
     }));
   };
 
-  const handleSave = async () => {
+  const close = () => {
+    setFormData(defaultData);
+    onClose();
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
     const updatedProducto = {
       ...formData,
       precio: Number(formData.precio), // Convert price to number
       stock: Number(formData.stock), // Convert stock to number
-      es_mensual: formData.tipo === "AR" ? formData.es_mensual : null,
+      es_mensual: null,
     };
-
     try {
-      console.log(
-        "Datos del producto a guardar: " + JSON.stringify(updatedProducto)
-      );
-      await onSave(updatedProducto);
-    } catch (error) {
-      if (error.response) {
-        console.error("Response error:", error.response.data);
+      if (updatedProducto.id_producto) {
+        await updateProducto(updatedProducto.id_producto, updatedProducto);
+        toast.success("Producto actualizado!", { duration: 5000 });
+        close();
+        return;
       } else {
-        console.error("Request error:", error.message);
+        await createProducto(updatedProducto);
+        toast.success("Producto registrado!", { duration: 5000 });
+        close();
+        return;
       }
+    } catch (error) {
+      toast.error("Ha ocurrido un error al guardar los datos.");
+      console.log(error);
+      return;
     }
   };
 
   return (
-    <Modal show={true} onClose={onClose} size="md">
+    <Modal show={show} onClose={onClose} size="xl" dismissible>
       <Modal.Header>
         {producto ? "Editar Producto" : "Agregar Producto"}
       </Modal.Header>
       <Modal.Body>
-        <div className="space-y-6">
-          <div>
-            <Label htmlFor="nombre" value="Nombre" />
-            <TextInput
-              id="nombre"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              required
-            />
+        <form action="" onSubmit={handleSave}>
+          <div className="space-y-6">
+            <div>
+              <Label htmlFor="nombre" value="Nombre" />
+              <c className="text-red-700">*</c>
+              <TextInput
+                id="nombre"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="descripcion" value="Descripción" />
+              <c className="text-red-700">*</c>
+              <TextInput
+                id="descripcion"
+                name="descripcion"
+                value={formData.descripcion}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex flex-row gap-2">
+              <div>
+                <Label htmlFor="codigo" value="Codigo" />
+                <c className="text-red-700">*</c>
+                <TextInput
+                  id="codigo"
+                  name="codigo"
+                  value={formData.codigo}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="stock" value="Stock Minimo" />
+                <c className="text-red-700">*</c>
+                <TextInput
+                  id="stock_minimo"
+                  name="stock_minimo"
+                  value={formData.stock_minimo}
+                  onChange={handleChange}
+                  type="number"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="precio" value="Precio" />
+                <c className="text-red-700">*</c>
+                <TextInput
+                  id="precio"
+                  name="precio"
+                  value={formData.precio}
+                  onChange={handleChange}
+                  type="number"
+                  required
+                />
+              </div>
+            </div>
           </div>
-          <div>
-            <Label htmlFor="descripcion" value="Descripción" />
-            <TextInput
-              id="descripcion"
-              name="descripcion"
-              value={formData.descripcion}
-              onChange={handleChange}
-              required
-            />
+          <small className="text-red-700">* campos obligatorios</small>
+          <div className="flex mt-5 justify-end w-full">
+            <Button type="submit">{producto ? "Actualizar" : "Guardar"}</Button>
+            {producto ? (
+              <Button color="gray" onClick={onClose}>
+                Cancelar
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
-          <div>
-            <Label htmlFor="stock" value="Stock Minimo" />
-            <TextInput
-              id="stock_minimo"
-              name="stock_minimo"
-              value={formData.stock_minimo}
-              onChange={handleChange}
-              type="number"
-              required
-            />
-          </div>
-          <div>
-            <Label htmlFor="precio" value="Precio" />
-            <TextInput
-              id="precio"
-              name="precio"
-              value={formData.precio}
-              onChange={handleChange}
-              type="number"
-              required
-            />
-          </div>
-        </div>
+        </form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={handleSave}>
-          {producto ? "Actualizar" : "Guardar"}
-        </Button>
-        <Button color="gray" onClick={onClose}>
-          Cancelar
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 };

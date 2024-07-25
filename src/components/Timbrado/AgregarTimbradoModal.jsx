@@ -16,7 +16,6 @@ function AgregarTimbradoModal({ show, onClose, timbrado, title }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevValues) => ({ ...prevValues, [name]: value }));
-    console.log(formData);
   };
 
   const handleSubmit = async (e) => {
