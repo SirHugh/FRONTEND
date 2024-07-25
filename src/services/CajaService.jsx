@@ -105,8 +105,9 @@ export const getActiveTimbrado = () => {
 // ---------------------
 
 export const createComprobante = (data) => {
-  return ApiClient.post(`/caja/comprobante/`, data);
+  return ApiClient.post(`/caja/comprobante/`, data).then(response => response.data);
 };
+
 
 export const getComprobante = (id, page, search) => {
   return ApiClient.get(

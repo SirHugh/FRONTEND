@@ -55,43 +55,56 @@ function App() {
         <div className="flex flex-col w-screen">
           {/* Pasa la función toggleSidebar al componente Header */}
           <Header toggleSidebar={toggleSidebar} />
-          <Routes>
-            <Route path="/" element={<MainPage />} exact />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route element={<PrivateRoutes allowedGroup={GROUPS.ACADEMICO} />}>
-              <Route path="/alumnos" element={<AlumnosPage />} exact />
-              <Route path="/alumnos/:id/" element={<AlumnoDetail />} />
-              <Route path="/matriculas" element={<MatriculacionPage />} />
-              <Route path="/grados" element={<GradosPage />} />
-              <Route path="/becas" element={<BecasPage />} />
-              <Route path="/responsables" element={<ResponsablesPage />} />
-              <Route path="/academicoDashboards" element={<DashBoardsPage />} />
-            </Route>
-            <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
-              <Route path="/ventas" element={<VentasPage />} />
-              <Route path="/factura" element={<FacturaPage />} />
-              <Route path="/printFactura" element={<PrintFacturaPage />} />
-              <Route path="/factura/nuevo" element={<NuevaFactura />} />
-              <Route path="/timbrado" element={<TimbradoPage />} />
-              <Route path="/compras" element={<ComprasPage />} />
-              <Route path="/flujoCaja" element={<FlujoCajaPage />} />
-              <Route path="/actividades" element={<ActividadPage />} />
-              <Route path="/estadoDeCuenta" element={<EstadoDeCuentaPage />} />
-            </Route>
-            <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
-              <Route path="/usuarios" element={<UsersPage />} />
-              <Route path="/basics" element={<BasicsInfoPage />} />
-              <Route path="/periodo" element={<PeriodoPage />} />
-            </Route>
-            <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
-              <Route path="/productos" element={<ProductosPage />} />
-              <Route path="/actividades" element={<ActividadPage />} />
-              <Route path="/aranceles" element={<ArancelesPage />} />
-              <Route path="/inventario" element={<InventarioPage />} />
-              <Route path="/control-stock/:id/" element={<ControlStock />} />
-            </Route>
-          </Routes>
+          <div>
+            <Routes>
+              <Route path="/" element={<MainPage />} exact />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route
+                element={<PrivateRoutes allowedGroup={GROUPS.ACADEMICO} />}
+              >
+                <Route path="/alumnos" element={<AlumnosPage />} exact />
+                <Route path="/alumnos/:id/" element={<AlumnoDetail />} />
+                <Route path="/matriculas" element={<MatriculacionPage />} />
+                <Route path="/grados" element={<GradosPage />} />
+                <Route path="/becas" element={<BecasPage />} />
+                <Route path="/responsables" element={<ResponsablesPage />} />
+                <Route
+                  path="/academicoDashboards"
+                  element={<DashBoardsPage />}
+                />
+              </Route>
+              <Route element={<PrivateRoutes allowedGroup={GROUPS.CAJA} />}>
+                <Route path="/ventas" element={<VentasPage />} />
+                <Route path="/factura" element={<FacturaPage />} />
+                <Route
+                  path="/printFactura/:id/"
+                  element={<PrintFacturaPage />}
+                />
+                <Route path="/factura/nuevo" element={<NuevaFactura />} />
+                <Route path="/timbrado" element={<TimbradoPage />} />
+                <Route path="/compras" element={<ComprasPage />} />
+                <Route path="/flujoCaja" element={<FlujoCajaPage />} />
+                <Route path="/actividades" element={<ActividadPage />} />
+                <Route
+                  path="/estadoDeCuenta"
+                  element={<EstadoDeCuentaPage />}
+                />
+              </Route>
+              <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
+                <Route path="/usuarios" element={<UsersPage />} />
+                <Route path="/basics" element={<BasicsInfoPage />} />
+                <Route path="/periodo" element={<PeriodoPage />} />
+              </Route>
+              <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
+                <Route path="/productos" element={<ProductosPage />} />
+                <Route path="/actividades" element={<ActividadPage />} />
+                <Route path="/aranceles" element={<ArancelesPage />} />
+                <Route path="/inventario" element={<InventarioPage />} />
+                <Route path="/control-stock/:id/" element={<ControlStock />} />
+              </Route>
+            </Routes>
+          </div>
         </div>
       </div>
     </>
