@@ -53,7 +53,7 @@ function TablaInventario({ search, esActivo }) {
                   className={`${
                     producto.stock == 0
                       ? "text-red-700"
-                      : producto.stock <= producto.stock_minimo
+                      : producto.stock < producto.stock_minimo
                       ? "text-yellow-400"
                       : "text-green-600"
                   }`}

@@ -14,10 +14,9 @@ const DashBoardsPage = () => {
         <div className="border border-gray-300 rounded-lg p-6 bg-white shadow">
           <AlumnosPorGradoDashboard />
         </div>
-       <div className="border border-gray-300 rounded-lg p-6 bg-white shadow">
+        <div className="border border-gray-300 rounded-lg p-6 bg-white shadow">
           <RetencionesDashboard />
         </div>
-      
       </div>
     </div>
   );

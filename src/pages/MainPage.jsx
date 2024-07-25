@@ -17,8 +17,9 @@ import boxIcon from "../assets/icons/CajaIcon.svg";
 import backpackIcon from "../assets/icons/backpack.svg";
 import ventaIcon from "../assets/icons/ventaIcon.svg";
 import usersIcon from "../assets/icons/usersIcon.svg";
-import periodoIcon from "../assets/icons/periodoIcon.svg";
-import timbradoIcon from "../assets/icons/timbradoIcon.svg";
+import ComercialKPI from "../components/Dashboards/ComercialKPI";
+import CajaKPI from "../components/Dashboards/CajaKPI";
+import AcademicoKPI from "../components/Dashboards/AcademicoKPI";
 
 const MainPage = () => {
   const { user } = useAuth(); // Obtiene la información del usuario
@@ -101,36 +102,39 @@ const MainPage = () => {
     // Agrega más dashboards según sea necesario
   ];
 
-  // Función para determinar las clases de TailwindCSS según el número de tarjetas
-  const getGridClass = (numCards) => {
-    switch (numCards) {
-      case 1:
-        return "grid-cols-1";
-      case 2:
-        return "grid-cols-1 md:grid-cols-2";
-      case 3:
-        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
-      default:
-        return `grid-cols-1 md:grid-cols-2 lg:grid-cols-7 xl:grid-cols-${numCards}`;
-    }
-  };
+  const kpiComponents = [
+    {
+      component: ComercialKPI,
+      title: "Comercial KPI",
+      allowedGroup: "ADMIN",
+    },
+  ];
 
-  const getTabName = (group) => {
-    switch (group) {
-      case "ACADEMICO":
-        return "Dashboards Académicos";
-      case "CAJA":
-        return "Dashboards de Caja";
-      default:
-        return;
-    }
-  };
+  // Función para determinar las clases de TailwindCSS según el número de tarjetas
+  // const getGridClass = (numCards) => {
+  //   switch (numCards) {
+  //     case 1:
+  //       return "grid-cols-1";
+  //     case 2:
+  //       return "grid-cols-1 md:grid-cols-2";
+  //     case 3:
+  //       return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
+  //     default:
+  //       return `grid-cols-1 md:grid-cols-2 lg:grid-cols-7 xl:grid-cols-${numCards}`;
+  //   }
+  // };
 
   // Filtrar tarjetas permitidas para el usuario actual
-  const filteredCardData = cardData.filter((card) =>
-    userGroups.includes(card.allowedGroup)
-  );
+  // const filteredCardData = cardData.filter((card) =>
+  //   userGroups.includes(card.allowedGroup)
+  // );
+
+  // const filteredKpiComponents = kpiComponents.filter(
+  //   (Kpi_component) => Kpi_component.allowedGroup !== "ADMIN"
+  // );
+
   const filteredUserGroups = userGroups.filter((group) => group !== "ADMIN");
+
   const filteredDashboardData = dashboardData.filter(
     (dashboard) => dashboard.allowedGroup !== "ADMIN"
   );
@@ -138,41 +142,28 @@ const MainPage = () => {
   return (
     <div className="min-h-full bg-gray-100">
       <main className="p-4">
-        <div className={`grid gap-4 ${getGridClass(filteredCardData.length)}`}>
-          {/* Renderizar tarjetas */}
-          {filteredCardData.map((card, index) => (
-            <Card
-              key={index}
-              icon={card.icon}
-              title={card.title}
-              linkTo={card.linkTo}
-            />
-          ))}
-        </div>
-        <Tabs>
-          <TabList>
-            {filteredUserGroups.map((group, index) => (
-              <Tab key={index}>{getTabName(group)}</Tab>
-            ))}
-          </TabList>
+        <ComercialKPI />
 
-          {filteredUserGroups.map((group, index) => (
-            <TabPanel key={index}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                {filteredDashboardData
-                  .filter((dashboard) => dashboard.allowedGroup === group)
-                  .map((dashboard, dashboardIndex) => (
-                    <div
-                      key={dashboardIndex}
-                      className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm"
-                    >
-                      <dashboard.component />
-                    </div>
-                  ))}
-              </div>
-            </TabPanel>
-          ))}
-        </Tabs>
+        <AcademicoKPI />
+
+        <CajaKPI />
+
+        {filteredUserGroups.map((group, index) => (
+          <div key={index}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+              {filteredDashboardData
+                .filter((dashboard) => dashboard.allowedGroup === group)
+                .map((dashboard, dashboardIndex) => (
+                  <div
+                    key={dashboardIndex}
+                    className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm"
+                  >
+                    <dashboard.component />
+                  </div>
+                ))}
+            </div>
+          </div>
+        ))}
       </main>
     </div>
   );

@@ -12,6 +12,8 @@ import profileIcon from "../assets/icons/profileIcon.svg";
 import useAuth from "../hooks/useAuth";
 import { FaStoreAlt } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
+import { BiLockOpenAlt, BiSidebar, BiTransfer } from "react-icons/bi";
+import { RiSideBarLine } from "react-icons/ri";
 
 // Define un array de objetos con la información de cada elemento del menú
 const menuItems = [
@@ -200,18 +202,6 @@ const menuItems = [
         ),
         link: "/responsables",
       },
-      {
-        text: "DashBoards",
-        icon: (
-          <img
-            src={userIcon}
-            alt="DashBoards"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/academicoDashBoards",
-      },
-      // Agrega más subelementos según sea necesario
     ],
   },
   {
@@ -328,7 +318,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <div
-      className={`no-print sticky top-0 left-0 h-screen bg-blue-400 text-white z-16 ${
+      className={`relative no-print top-0 left-0 h-screen bg-blue-400 text-white z-16 ${
         isExpanded ? "w-64" : "w-16"
       } transition-all`}
       onMouseEnter={handleMouseEnter}
@@ -342,6 +332,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </p>
         )}
       </div>
+
+      {/* <BiLockOpenAlt className="absolute -right-3 top-5 w-5 h-5 border rounded-full bg-white text-blue-950 text-3xl cursor-pointer"></BiLockOpenAlt> */}
 
       <ul>
         {menuItems.map((item, index) => (

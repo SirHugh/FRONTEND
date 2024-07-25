@@ -9,7 +9,7 @@ import {
   CartesianGrid,
   Legend,
 } from "recharts";
-import { getCompra, getFlujoCaja, getVenta } from "../../services/CajaService"; // Ajusta la ruta según tu estructura de proyecto
+import { getFlujoCaja } from "../../services/CajaService"; // Ajusta la ruta según tu estructura de proyecto
 
 const ComprasVsVentasDashboard = () => {
   const [data, setData] = useState([]);
@@ -17,41 +17,11 @@ const ComprasVsVentasDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const [comprasResponse, ventasResponse] = await Promise.all([
-        //   getCompra(),
-        //   getVenta(),
-        // ]);
-
-        // const compras = comprasResponse.data;
-        // const ventas = ventasResponse.data;
-
         const response = await getFlujoCaja("", 1);
         const flujoCaja = response.data.results;
 
         // Transformar datos para que sean compatibles con la gráfica
         const transformData = () => {
-          // const allDates = [
-          //   ...new Set([
-          //     ...compras.map((c) => c.fecha),
-          //     ...ventas.map((v) => v.fecha),
-          //   ]),
-          // ];
-
-          // const formattedData01 = allDates.map((date) => {
-          //   const compraData = compras
-          //     .filter((c) => c.fecha === date)
-          //     .reduce((sum, c) => sum + parseFloat(c.monto), 0);
-          //   const ventaData = ventas
-          //     .filter((v) => v.fecha === date)
-          //     .reduce((sum, v) => sum + parseFloat(v.monto), 0);
-
-          //   return {
-          //     date,
-          //     compra: compraData,
-          //     venta: ventaData,
-          //   };
-          // });
-
           const formattedData = flujoCaja
             .map((flujo) => {
               const compraData = flujo.entrada;
@@ -65,7 +35,6 @@ const ComprasVsVentasDashboard = () => {
             })
             .reverse();
 
-          console.log("FormatedData", formattedData);
           return formattedData;
         };
 
