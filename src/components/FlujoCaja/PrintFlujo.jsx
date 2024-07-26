@@ -63,7 +63,7 @@ export const PrintFlujoPDF = async (id) => {
       return [
         factura.nro_factura,
         factura.hora,
-        factura.tipo_pago,
+        factura.tipo_pago === "C" ? "Contado" : factura.tipo_pago,
         factura.forma_pago,
         factura.monto,
         "Entrada",
@@ -73,7 +73,6 @@ export const PrintFlujoPDF = async (id) => {
 
   autoTable(doc, {
     startY: doc.lastAutoTable.finalY + 20,
-    styles: { fillColor: [255, 100, 0] },
     head: [["Nro", "Hora", "Monto", "Movimiento"]],
     body: flujo.compras?.map((compra) => {
       return [
