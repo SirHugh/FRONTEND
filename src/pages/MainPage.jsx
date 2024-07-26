@@ -142,12 +142,20 @@ const MainPage = () => {
   return (
     <div className="min-h-full bg-gray-100">
       <main className="p-4">
-        <ComercialKPI />
+        {/* Contenedor para los KPI */}
+        <div className="flex flex-wrap gap-4 justify-center">
 
-        <AcademicoKPI />
+            <ComercialKPI />
+        
+          
+            <AcademicoKPI />
+         
+          
+            <CajaKPI />
+          
+        </div>
 
-        <CajaKPI />
-
+        {/* Contenedor para los dashboard components */}
         {filteredUserGroups.map((group, index) => (
           <div key={index}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
@@ -156,7 +164,7 @@ const MainPage = () => {
                 .map((dashboard, dashboardIndex) => (
                   <div
                     key={dashboardIndex}
-                    className="border border-gray-300 rounded-lg p-4 bg-white shadow-sm"
+                    className="p-4 bg-white shadow-sm"
                   >
                     <dashboard.component />
                   </div>

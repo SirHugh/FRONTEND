@@ -318,7 +318,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <div
-      className={`relative no-print top-0 left-0 h-screen bg-blue-400 text-white z-16 ${
+      className={`relative no-print top-0 left-0 h-screen-full bg-blue-400 text-white z-16 ${
         isExpanded ? "w-64" : "w-16"
       } transition-all`}
       onMouseEnter={handleMouseEnter}

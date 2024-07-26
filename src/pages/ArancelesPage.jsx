@@ -56,10 +56,7 @@ const ArancelesPage = () => {
         duration: 5000,
         icon: <BiError color="red" fontSize="5.5rem" />,
       });
-      console.error(
-        "Error al guardar el producto:",
-        error.response ? error.response.data : error.message
-      );
+      console.error(error);
     }
   };
 

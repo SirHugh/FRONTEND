@@ -164,7 +164,6 @@ function NuevaVenta({ onClose }) {
       return;
     }
     if (!window.confirm("Desea Confirmar la Venta?")) {
-      toast.error("Operacion Cancelada");
       return;
     }
     console.log("formdata", formData);
@@ -174,7 +173,7 @@ function NuevaVenta({ onClose }) {
       onClose();
     } catch (error) {
       toast.error(error.message);
-      console.error(error);
+      console.log(error);
     }
   };
 

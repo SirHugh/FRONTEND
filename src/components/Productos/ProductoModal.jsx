@@ -19,8 +19,8 @@ const ProductoModal = ({ show, producto, onClose }) => {
 
   useEffect(() => {
     if (producto) {
-      const codigoOriginal = producto.codigo.lastIndexOf("-");
-      const codigo = producto.codigo.substring(0, codigoOriginal);
+      const codigoOriginal = producto.codigo?.lastIndexOf("-");
+      const codigo = producto.codigo?.substring(0, codigoOriginal);
       setFormData({ ...producto, codigo: codigo });
     } else {
       setFormData((prevState) => ({
