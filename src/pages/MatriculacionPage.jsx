@@ -221,7 +221,7 @@ const MatriculacionPage = () => {
               onMouseLeave={() => setShowOptions(false)}
               onClick={() => openNuevaMatricula()}
             >
-              Agregar Matriculacion <HiBars3 className="text-2xl" />
+              Agregar Matriculación <HiBars3 className="text-2xl" />
             </button>
             <div
               id="dropdownHover"
@@ -240,7 +240,7 @@ const MatriculacionPage = () => {
                     onClick={() => setQr_codeVisible(true)}
                     className="  flex flex-row justify-between items-center px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                   >
-                    Inscripcion Mobil
+                    Inscripción Móvil
                     <MdQrCodeScanner className="text-2xl" />
                   </button>
                 </li>
