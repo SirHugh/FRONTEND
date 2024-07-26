@@ -9,6 +9,7 @@ import { HiOutlinePlus } from "react-icons/hi";
 import AddGradoForm from "../components/AddGradoForm";
 import EditGradoForm from "../components/EditGradoForm";
 import toast, { Toaster } from "react-hot-toast";
+import { Table } from "flowbite-react";
 
 function GradosPage() {
   const [grados, setGrados] = useState([]);
@@ -98,7 +99,7 @@ function GradosPage() {
         </button>
       </div>
       {showFormModal && <AddGradoForm onClose={handleCloseFormModal} />}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto border rounded">
         {showModal && (
           <EditGradoForm
             initialData={selectedGrado}
@@ -106,51 +107,47 @@ function GradosPage() {
             onClose={() => setShowModal(false)}
           />
         )}
-        <table className="w-full bg-white border border-gray-200 divide-y divide-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2">Grado</th>
-              <th className="px-4 py-2">Nombre</th>
-              <th className="px-4 py-2">Nivel</th>
-              <th className="px-4 py-2">Turno</th>
-              <th className="px-4 py-2">Seccion</th>
-              <th className="px-4 py-2">Estado</th>
-              <th className="px-4 py-2">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="divide-y">
+          <Table.Head>
+            <Table.HeadCell>Grado</Table.HeadCell>
+            <Table.HeadCell>Nombre</Table.HeadCell>
+            <Table.HeadCell>Nivel</Table.HeadCell>
+            <Table.HeadCell>Turno</Table.HeadCell>
+            <Table.HeadCell>Seccion</Table.HeadCell>
+            <Table.HeadCell>Estado</Table.HeadCell>
+            <Table.HeadCell>Acciones</Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
             {grados.map((grado) => (
-              <tr
-                key={grado.id_grado}
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => listAlumnos(grado.id_grado, grado)}
-              >
-                <td style={{ width: "10%" }} className="px-4 py-2">
-                  {grado.grado}°
-                </td>
-                <td style={{ width: "20%" }} className="px-4 py-2">
-                  {grado.nombre}
-                </td>
-                <td style={{ width: "20%" }} className="px-4 py-2">
-                  {grado.nivel}
-                </td>
-                <td style={{ width: "20%" }} className="px-4 py-2">
-                  {grado.turno}
-                </td>
-                <td style={{ width: "10%" }} className="px-4 py-2">
-                  {grado.seccion}
-                </td>
-                <td
-                  style={{ width: "20%", position: "relative" }}
-                  className="px-4 py-2"
-                >
+              <Table.Row key={grado.id_grado}>
+                <Table.Cell>{grado.grado}°</Table.Cell>
+                <Table.Cell>{grado.nombre}</Table.Cell>
+                <Table.Cell>{grado.nivel}</Table.Cell>
+                <Table.Cell>{grado.turno}</Table.Cell>
+                <Table.Cell>{grado.seccion}</Table.Cell>
+                <Table.Cell>
+                  <span
+                    className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    style={{ zIndex: 1 }}
+                  >
+                    {grado.es_activo ? "Activo" : "Inactivo"}
+                  </span>
+                </Table.Cell>
+
+                <Table.Cell style={{ width: "10%" }} className="px-4 py-2">
+                  <button onClick={() => handleEditGrado(grado)}>Editar</button>
+                </Table.Cell>
+                <Table.Cell>
                   {!showModal && !showFormModal && (
-                    <label className="inline-flex items-center cursor-pointer">
+                    <label className="inline-flex items-center">
                       <input
                         type="checkbox"
                         checked={grado.es_activo}
                         onChange={(e) =>
-                          handleGradoActiveChange(grado.id_grado, e.target.checked)
+                          handleGradoActiveChange(
+                            grado.id_grado,
+                            e.target.checked
+                          )
                         }
                         className="sr-only peer"
                       />
@@ -161,23 +158,13 @@ function GradosPage() {
                             : "dark:bg-gray-700 peer-checked:bg-gray-600"
                         } dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}
                       ></div>
-                      <span
-                        className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        style={{ zIndex: 1 }}
-                      >
-                        {grado.es_activo ? "Activo" : "Inactivo"}
-                      </span>
                     </label>
                   )}
-                </td>
-
-                <td style={{ width: "10%" }} className="px-4 py-2">
-                  <button onClick={() => handleEditGrado(grado)}>Editar</button>
-                </td>
-              </tr>
+                </Table.Cell>
+              </Table.Row>
             ))}
-          </tbody>
-        </table>
+          </Table.Body>
+        </Table>
       </div>
       <div></div>
     </div>
