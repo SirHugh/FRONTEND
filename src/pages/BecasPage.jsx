@@ -97,7 +97,7 @@ function BecasPage() {
     setBecadosTitle(b.nombre);
     try {
       const page = Math.min(currentPage + 1, totalPages) || 1;
-      const res = await getBecadosBeca(b.id_beca, page);
+      const res = await getBecadosBeca(b.id_beca, "", page);
       setTotalPages(Math.ceil(res.data.count / 10));
       setBecados(res.data.results);
     } catch (error) {
@@ -109,14 +109,14 @@ function BecasPage() {
   const handdleSearch = async (e) => {
     setBecadosTitle("TODOS");
     try {
-      const res = await searchBecado(e.target.value);
-      if (res.status === 200) {
-        setTotalPages(Math.ceil(res.data.count / 10));
-        setBecados(res.data.results);
-      }
+      const page = Math.min(currentPage + 1, totalPages) || 1;
+      const res = await searchBecado(e.target.value, page);
+      console.log(res.data);
+      setTotalPages(Math.ceil(res.data.count / 10));
+      setBecados(res.data.results);
     } catch (error) {
       // Manejo de errores en caso de que la solicitud falle
-      console.error("Error al activar", error);
+      console("Error al activar", error);
     }
   };
 
@@ -286,6 +286,7 @@ function BecasPage() {
                 <Table.HeadCell>NOMBRE</Table.HeadCell>
                 <Table.HeadCell>APELLIDO</Table.HeadCell>
                 <Table.HeadCell>GRADO</Table.HeadCell>
+                <Table.HeadCell>BECA</Table.HeadCell>
                 <Table.HeadCell>
                   <span className="sr-only justify-end">QUITAR</span>
                 </Table.HeadCell>
@@ -305,7 +306,7 @@ function BecasPage() {
                     <Table.Cell>
                       {becado.grado.grado}° - {becado.grado.nombre}
                     </Table.Cell>
-
+                    <Table.Cell>{becado.beca}</Table.Cell>
                     <Table.Cell>
                       <a
                         onClick={() => {

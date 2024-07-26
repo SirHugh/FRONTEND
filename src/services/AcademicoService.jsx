@@ -113,18 +113,18 @@ export const setBecaActive = (id, value) =>
 // ---funciones para manejo de becados---
 // --------------------------------------
 
-export const getBecados = (page) =>
+export const getBecados = (page, seach) =>
   ApiClient.get(`/academico/becado/?page=${page}`);
 
-export const getBecadosBeca = (id_beca, page) =>
+export const getBecadosBeca = (id_beca, id_matricula, page) =>
   ApiClient.get(
     `/academico/becado/?${id_beca ? `id_beca=${id_beca}` : ""}${
-      page ? `&page=${page}` : ""
-    }`
+      id_matricula ? `&id_matricula=${id_matricula}` : ""
+    }${page ? "&page=" + page : ""}`
   );
 
-export const searchBecado = (value) =>
-  ApiClient.get(`/academico/becado/?search=${value}`);
+export const searchBecado = (value, page) =>
+  ApiClient.get(`/academico/becado/?search=${value}&page=${page}`);
 
 export const createBecado = (data) =>
   ApiClient.post(`/academico/becado/`, data);
