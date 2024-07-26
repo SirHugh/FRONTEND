@@ -83,60 +83,6 @@ const menuItems = [
     ],
   },
   {
-    text: "Comercial",
-    allowedGroup: "ADMIN",
-    icon: (
-      <FaStoreAlt className="w-5 h-5 mr-2 object-contain" />
-      // <img src={FaStore} alt="Caja" className="w-5 h-5 mr-2 object-contain" />
-    ),
-    subItems: [
-      {
-        text: "Productos",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Productos"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/productos",
-      },
-      {
-        text: "Aranceles",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Aranceles"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/aranceles",
-      },
-      {
-        text: "Actividades",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Actividades"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/actividades",
-      },
-      {
-        text: "Inventario",
-        icon: (
-          <img
-            src={cashIcon}
-            alt="Inventario"
-            className="w-5 h-5 mr-2 object-contain"
-          />
-        ),
-        link: "/inventario",
-      },
-    ],
-  },
-  {
     text: "Academico",
     allowedGroup: "ACADEMICO",
     icon: (
@@ -278,6 +224,60 @@ const menuItems = [
         link: "/estadoDeCuenta",
       },
       // Agrega más subelementos según sea necesario
+    ],
+  },
+  {
+    text: "Comercial",
+    allowedGroup: "ADMIN",
+    icon: (
+      <FaStoreAlt className="w-5 h-5 mr-2 object-contain" />
+      // <img src={FaStore} alt="Caja" className="w-5 h-5 mr-2 object-contain" />
+    ),
+    subItems: [
+      {
+        text: "Productos",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Productos"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/productos",
+      },
+      {
+        text: "Aranceles",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Aranceles"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/aranceles",
+      },
+      {
+        text: "Actividades",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Actividades"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/actividades",
+      },
+      {
+        text: "Inventario",
+        icon: (
+          <img
+            src={cashIcon}
+            alt="Inventario"
+            className="w-5 h-5 mr-2 object-contain"
+          />
+        ),
+        link: "/inventario",
+      },
     ],
   },
 
