@@ -2,15 +2,15 @@ import { Button, Label, Modal, Table } from "flowbite-react";
 import AsyncSelect from "react-select/async";
 import { useState } from "react";
 import { CgRemove } from "react-icons/cg";
-import { GoArrowRight } from "react-icons/go";
 import { HiArrowDownTray } from "react-icons/hi2";
 import {
   createBecado,
   getBecadosBeca,
   searchMatricula,
 } from "../../services/AcademicoService";
+import toast from "react-hot-toast";
 
-const AgregarBecadoModal = ({ show, onClose, beca, changed, setchanged }) => {
+const AgregarBecadoModal = ({ show, onClose, beca, changed, setChanged }) => {
   const [alumno, setAlumno] = useState([]);
   const [becadoList, setBecadoList] = useState([]);
   const [isInList, setIsInList] = useState(false);
@@ -31,14 +31,23 @@ const AgregarBecadoModal = ({ show, onClose, beca, changed, setchanged }) => {
 
   const handleChange = async (value) => {
     setSelecteValue(value);
-    setAlumno([...alumno, value]);
+    const valueExist = becadoList.filter(
+      (s) => s.id_matricula == value.id_matricula
+    );
+    console.log(valueExist);
+    if (valueExist.length > 0) {
+      return;
+    }
     const res2 = await getBecadosBeca(beca?.id_beca, value.id_matricula);
+    console.log("REs", res2.data);
     if (
       becadoList.some((item) => item.id_matricula === value.id_matricula) ||
-      res2.data.count >> 0
-    )
-      setIsInList(true);
-    else setIsInList(false);
+      res2.data[0]
+    ) {
+      toast.error("El alumno ya cuenta con esta beca!");
+      return;
+    } else setIsInList(false);
+    setAlumno([...alumno, value]);
     console.log("Alumno: ", value);
   };
 
@@ -52,6 +61,7 @@ const AgregarBecadoModal = ({ show, onClose, beca, changed, setchanged }) => {
       // Manejo de errores en caso de que la solicitud falle
       console.error("Error al activar", error);
     }
+    setChanged(!changed);
   };
 
   const agregarBecados = () => {
