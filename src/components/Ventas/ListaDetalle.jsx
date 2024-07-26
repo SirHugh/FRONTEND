@@ -4,6 +4,7 @@ import { getProducto } from "../../services/CajaService";
 import { Table, TextInput } from "flowbite-react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { CurrencyFormatter } from "../Constants";
+import toast from "react-hot-toast";
 
 function ListaDetalle({ detalleList, setDetalleList }) {
   const [inputValue, setValue] = useState("");
@@ -31,6 +32,10 @@ function ListaDetalle({ detalleList, setDetalleList }) {
     if (valueExist.length > 0) {
       return;
     }
+    if (value.stock === 0) {
+      toast.error("El articulo se encuentra fuera de stock");
+      return;
+    }
     setDetalleList((prev) => [...prev, value]);
   };
 
@@ -41,7 +46,11 @@ function ListaDetalle({ detalleList, setDetalleList }) {
 
   const handleCantidad = (e, index) => {
     const { name, value } = e.target;
-    console.log("name", name, "value", value);
+    if (detalleList[index].stock < Number(value)) {
+      console.log(detalleList[index].stock, value);
+      toast.error("La cantidad supera el stock");
+      return;
+    }
 
     setDetalleList((prev) =>
       prev.map((item, i) =>
@@ -93,6 +102,12 @@ function ListaDetalle({ detalleList, setDetalleList }) {
                     name="cantidad"
                     value={d.cantidad}
                     onChange={(e) => handleCantidad(e, index)}
+                    onBlur={
+                      d.cantidad > d.stock
+                        ? (handleCantidad(0, index),
+                          toast.error("La cantidad supera el stock"))
+                        : ""
+                    }
                     autoComplete="off"
                   />
                 </Table.Cell>

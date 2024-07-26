@@ -32,7 +32,6 @@ import ControlStock from "./components/Inventario/ControlStock";
 import PrintFacturaPage from "./pages/PrintFacturaPage";
 import Profile from "./pages/Profile";
 import NuevaFactura from "./components/Factura/NuevaFactura";
-import FlujoCaja from "./components/FlujoCaja/FlujoCaja";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
@@ -51,7 +50,7 @@ function App() {
 
   return (
     <>
-      <Toaster position="top-right"></Toaster>
+      <Toaster position="top-center"></Toaster>
       <div className="flex flex-row h-full">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <div className="flex flex-col w-screen">
