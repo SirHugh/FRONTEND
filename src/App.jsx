@@ -32,12 +32,14 @@ import ControlStock from "./components/Inventario/ControlStock";
 import PrintFacturaPage from "./pages/PrintFacturaPage";
 import Profile from "./pages/Profile";
 import NuevaFactura from "./components/Factura/NuevaFactura";
+import FlujoCaja from "./components/FlujoCaja/FlujoCaja";
 
 const GROUPS = {
   ACADEMICO: "ACADEMICO",
   INSCRIPCION: "INSCRIPCION",
   CAJA: "CAJA",
   ADMIN: "ADMIN",
+  COMERCIAL: "COMERCIAL",
 };
 
 function App() {
@@ -85,6 +87,7 @@ function App() {
                 <Route path="/timbrado" element={<TimbradoPage />} />
                 <Route path="/compras" element={<ComprasPage />} />
                 <Route path="/flujoCaja" element={<FlujoCajaPage />} />
+                <Route path="/flujoCaja/:id" element={<FlujoCajaPage />} />
                 <Route path="/actividades" element={<ActividadPage />} />
                 <Route
                   path="/estadoDeCuenta"
@@ -96,7 +99,9 @@ function App() {
                 <Route path="/basics" element={<BasicsInfoPage />} />
                 <Route path="/periodo" element={<PeriodoPage />} />
               </Route>
-              <Route element={<PrivateRoutes allowedGroup={GROUPS.ADMIN} />}>
+              <Route
+                element={<PrivateRoutes allowedGroup={GROUPS.COMERCIAL} />}
+              >
                 <Route path="/productos" element={<ProductosPage />} />
                 <Route path="/actividades" element={<ActividadPage />} />
                 <Route path="/aranceles" element={<ArancelesPage />} />

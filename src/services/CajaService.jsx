@@ -170,7 +170,7 @@ export const getFlujoCaja = (id, page, fecha) => {
   return ApiClient.get(
     `/caja/flujo_caja/${
       id
-        ? id + "/"
+        ? id
         : page
         ? "?page=" + page + `${fecha ? "&fecha=" + fecha : ""}`
         : ""

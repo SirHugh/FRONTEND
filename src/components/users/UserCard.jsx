@@ -1,4 +1,4 @@
-import { Card, Tooltip } from "flowbite-react";
+import { Avatar, Card, Tooltip } from "flowbite-react";
 import { FaToggleOff, FaToggleOn } from "react-icons/fa6";
 import { MdEditSquare, MdPassword } from "react-icons/md";
 import { useState } from "react";
@@ -10,7 +10,10 @@ function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
     <>
       <Card className={`p-0 w-full ${!user.is_active ? "bg-slate-200" : ""}`}>
         <div className="flex flex-row gap-2 justify-between text-gray-500">
-          <div className="flex  ">
+          <div className="flex">
+            <div className="flex items-center w-36 justify-center">
+              <Avatar img={user.foto} size="lg" alt="" rounded />
+            </div>
             <div className="flex flex-col ">
               <h2
                 className={`mb-1 text-xl font-medium dark:text-white w-72 ${
@@ -46,11 +49,11 @@ function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
                 </p>
                 <p
                   className={`${
-                    !user.is_active ? " text-red-800" : " text-gray-900"
+                    !user.is_active ? " text-red-800" : " text-green-800"
                   }`}
                 >
-                  <b>Es Activo: </b>
-                  {user.is_active ? "Si" : "No"}
+                  <b>Estado: </b>
+                  {user.is_active ? "Activo" : "Desactivado"}
                 </p>
               </div>
               <p className="user-card__groups">
@@ -59,8 +62,8 @@ function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-center items-center gap-1 text-black">
-            <Tooltip content="Editar" placement="left">
+          <div className="flex flex-row justify-center items-center gap-3 text-black">
+            <Tooltip content="Editar" placement="top">
               <button
                 className="w-8 h-8 items-center bg-transparent"
                 onClick={() => {
@@ -75,7 +78,7 @@ function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
             </Tooltip>
             <Tooltip
               content={user.is_active ? "Desactivar" : "Activar"}
-              placement="left"
+              placement="top"
             >
               <button
                 className="w-8 h-8 items-center bg-transparent"
@@ -99,7 +102,7 @@ function UserCard({ user, groups, editUser, activateUser, resetPassKey }) {
             <Tooltip
               hidden={user.is_active ? false : true}
               content="Cambiar Clave"
-              placement="left"
+              placement="top"
             >
               <button
                 disabled={user.is_active ? false : true}

@@ -6,11 +6,11 @@ import {
 import toast from "react-hot-toast";
 import { Button, Card, Table } from "flowbite-react";
 import { CurrencyFormatter } from "../Constants";
-import { MdOutlineTableChart } from "react-icons/md";
 import { FaPlay, FaStop } from "react-icons/fa";
 import AgregarFlujoModal from "./AgregarFlujoModal";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { PrintFlujoPDF } from "./PrintFlujo";
 
 function FlujoCaja({ id_flujoCaja }) {
   const [flujo, setFlujo] = useState(null);
@@ -22,7 +22,6 @@ function FlujoCaja({ id_flujoCaja }) {
       try {
         const res = await getFlujoCajaCurrent(true);
         setFlujo(res.data);
-        console.log(res.data);
       } catch (error) {
         toast.error(error.response.data.error);
       }
@@ -30,71 +29,23 @@ function FlujoCaja({ id_flujoCaja }) {
     load();
   }, [reload]);
 
-  const handlePrintPDF = (flujoData) => {
-    const doc = new jsPDF();
-
-    doc.text("Reporte de Flujo de Caja", doc.internal.pageSize.width / 2, 10, {
-      align: "center",
-    });
-
-    autoTable(doc, {
-      startY: 20,
-      head: [
-        [
-          "Fecha Apertura",
-          "Fecha Cierre",
-          "Monto Apertura",
-          "Monto Cierre",
-          "Ingresos",
-          "Egresos",
-        ],
-      ],
-      body: flujoData.map((flujo) => [
-        flujo.hora_apertura,
-        flujo.hora_cierre || "N/A",
-        CurrencyFormatter(Number(flujo.monto_apertura)),
-        CurrencyFormatter(Number(flujo.monto_cierre)),
-        CurrencyFormatter(Number(flujo.entrada)),
-        CurrencyFormatter(Number(flujo.salida)),
-      ]),
-    });
-
-    const pageCount = doc.internal.getNumberOfPages();
-
-    for (var i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.text(
-        "Página " + String(i) + " de " + String(pageCount),
-        doc.internal.pageSize.width / 2,
-        287,
-        {
-          align: "center",
-        }
-      );
-    }
-
-    doc.save(`flujo_caja-${new Date().toLocaleString()}.pdf`);
-  };
-
   const handleActivate = async (value) => {
     try {
       await setFlujoCajaActive(flujo.id_flujoCaja, value);
+      setReload(!reload);
     } catch (error) {
       toast.error(error.response.data.error);
     }
+    const message = value ? "Flujo En curso" : "Flujo Cerrado";
+    toast.success(message);
     if (!value) {
       const confirmPrint = window.confirm(
         "¿Deseas imprimir el flujo de caja antes de cerrar?"
       );
       if (confirmPrint) {
-        const res = await getFlujoCajaCurrent(true);
-        handlePrintPDF([res.data]);
+        PrintFlujoPDF(flujo.id_flujoCaja);
       }
     }
-
-    const message = value ? "Flujo En curso" : "Flujo Cerrado";
-    toast.success(message);
-    setReload(!reload);
   };
 
   const handleModal = () => {
@@ -136,23 +87,26 @@ function FlujoCaja({ id_flujoCaja }) {
                 : "El Flujo actual se encuentra en inactivo"}
             </div>
             <Button
+              color="gray"
               title="Habilitar Flujo"
               disabled={flujo.es_activo ? true : false}
               className={"border p-0 rounded-sm items-center"}
               onClick={() => handleActivate(true)}
             >
-              <FaPlay />
+              <div className="flex flex-row items-center justify-center gap-3">
+                <FaPlay />
+                Abrir
+              </div>
             </Button>
             <Button
-              title="Cerrar Flujo"
+              color="gray"
               disabled={flujo.es_activo ? false : true}
-              className={`border p-0 rounded-sm items-center`}
               onClick={() => handleActivate(false)}
             >
-              <FaStop />
-            </Button>
-            <Button className={"border p-0 rounded-sm items-center"}>
-              <MdOutlineTableChart />
+              <div className="flex flex-row items-center justify-center gap-3">
+                <FaStop />
+                Cerrar
+              </div>
             </Button>
           </div>
 
@@ -180,7 +134,7 @@ function FlujoCaja({ id_flujoCaja }) {
               <small className="text-cyan-700">Balance</small>
               <big className="self-center">
                 {CurrencyFormatter(
-                  Number(flujo.entrada) - Number(flujo.salida)
+                  Number(flujo.monto_cierre) - Number(flujo.salida)
                 )}
               </big>
             </Card>
@@ -203,11 +157,9 @@ function FlujoCaja({ id_flujoCaja }) {
                 <Table.HeadCell>Factura</Table.HeadCell>
                 <Table.HeadCell>Hora</Table.HeadCell>
                 <Table.HeadCell>Monto</Table.HeadCell>
+                <Table.HeadCell>Movimiento</Table.HeadCell>
               </Table.Head>
               <Table.Body>
-                <Table.Row colSpan={4} className="flex w-full justify-center">
-                  ENTRADAS
-                </Table.Row>
                 {flujo.facturas?.map((item, index) => (
                   <Table.Row key={index}>
                     <Table.Cell>{item.id_comprobante}</Table.Cell>
@@ -216,11 +168,11 @@ function FlujoCaja({ id_flujoCaja }) {
                     <Table.Cell>
                       {CurrencyFormatter(Number(item.monto))}
                     </Table.Cell>
+                    <Table.Cell className="text-green-600 font-bold">
+                      Entrada
+                    </Table.Cell>
                   </Table.Row>
                 ))}
-                <Table.Row colSpan={4} className="flex w-full justify-center">
-                  SALIDAS
-                </Table.Row>
                 {flujo.compras?.map((item, index) => (
                   <Table.Row key={index}>
                     <Table.Cell>{item.id_compra}</Table.Cell>
@@ -230,6 +182,9 @@ function FlujoCaja({ id_flujoCaja }) {
                     </Table.Cell>
                     <Table.Cell>
                       {CurrencyFormatter(Number(item.monto))}
+                    </Table.Cell>
+                    <Table.Cell className="text-red-600 font-bold">
+                      Salida
                     </Table.Cell>
                   </Table.Row>
                 ))}

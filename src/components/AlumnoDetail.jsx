@@ -1,14 +1,21 @@
 import { useState, useEffect, useRef } from "react";
-import { getAlumnoById, updateAlumno } from "../services/AcademicoService";
+import {
+  getAlumnoById,
+  getMatriculasAlumnoId,
+  getResponsables,
+  updateAlumno,
+} from "../services/AcademicoService";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { Breadcrumb } from "flowbite-react";
+import { Breadcrumb, Label } from "flowbite-react";
 import nophoto from "../assets/no-photo.png";
 import { CiCamera } from "react-icons/ci";
 
 const AlumnoDetail = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [alumno, setAlumno] = useState(null);
+  const [responsable, setResponsable] = useState([]);
+  const [matriculas, setMatriculas] = useState([]);
   const imageRef = useRef(null);
   const { id } = useParams();
 
@@ -17,6 +24,11 @@ const AlumnoDetail = () => {
       try {
         const response = await getAlumnoById(id);
         setAlumno(response.data);
+        const res2 = await getResponsables(id);
+        setResponsable(res2.data);
+        const res3 = await getMatriculasAlumnoId("", id);
+        setMatriculas(res3.data);
+        console.log(res3.data);
       } catch (error) {
         console.error("Error fetching alumno details:", error);
       }
@@ -414,6 +426,123 @@ const AlumnoDetail = () => {
         ) : (
           <p>Cargando datos del alumno...</p>
         )}
+      </div>
+      <div className="border rounded-3xl mt-5 shadow-lg w-3/4">
+        <div className="flex items-center rounded-t-lg w-full h-14 bg-blue-400 text-lg font-bold px-10">
+          <big>Responsable/s del Alumno</big>
+        </div>
+        <div className="bg-white-100 rounded-md ">
+          {responsable.map((resposable) => (
+            <div
+              key={responsable.id_cliente}
+              className="grid grid-cols-3 items-center justify-start gap-y-3 px-4 py-5 gap-x-7 border-t-4"
+            >
+              <Label>
+                Nombre:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {resposable.id_cliente.nombre}
+                </b>
+              </Label>
+
+              <Label>
+                Apellidos:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {resposable.id_cliente.apellido}
+                </b>
+              </Label>
+
+              <Label>
+                Afiliación:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {resposable.tipo_relacion}
+                </b>
+              </Label>
+
+              <Label>
+                Cedula:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {resposable.id_cliente.cedula}
+                </b>
+              </Label>
+
+              <Label>
+                Telefono:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {resposable.id_cliente.telefono}
+                </b>
+              </Label>
+
+              <Label>
+                E-mail:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {resposable.id_cliente.email}
+                </b>
+              </Label>
+
+              <Label>
+                Dirección:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {resposable.id_cliente.direccion}
+                </b>
+              </Label>
+
+              <Label>
+                Ocupación:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {resposable.ocupacion || "NN"}
+                </b>
+              </Label>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="border rounded-3xl mt-5 shadow-lg w-3/4">
+        <div className="flex items-center rounded-t-lg w-full h-14 bg-blue-400 text-lg font-bold px-10">
+          <big>Matriculaciones</big>
+        </div>
+        <div className="bg-white-100 rounded-md ">
+          {matriculas.map((matricula) => (
+            <div
+              key={matricula.id_matricula}
+              className="grid grid-cols-3 items-center justify-start gap-y-3 px-4 py-5 gap-x-7 border-t-4"
+            >
+              <Label>
+                Periodo:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {matricula.anio_lectivo}
+                </b>
+              </Label>
+
+              <Label>
+                Grado/Curso:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {matricula.id_grado.nombre}
+                </b>
+              </Label>
+
+              <Label>
+                Turno:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {matricula.id_grado.turno}
+                </b>
+              </Label>
+
+              <Label>
+                Estado:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {matricula.es_activo ? "Activo" : "Inactivo"}
+                </b>
+              </Label>
+
+              <Label>
+                Origen:
+                <b className="flex text-lg font-bold border-b-2 w-52">
+                  {matricula.es_interno ? "Fundacion UPC" : "Externo"}
+                </b>
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

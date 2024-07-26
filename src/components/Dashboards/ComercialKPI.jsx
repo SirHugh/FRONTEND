@@ -7,7 +7,7 @@ import { TbBoxOff } from "react-icons/tb";
 import { getComercialKpi } from "../../services/ReportsService";
 
 function ComercialKPI() {
-  const allowedGroup = "ADMIN";
+  const allowedGroup = ["ADMIN", "COMERCIAL"];
   const { user } = useAuth();
   const [kpiValues, setKpiValue] = useState();
   const [loading, setLoading] = useState(true);

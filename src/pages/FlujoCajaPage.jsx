@@ -4,10 +4,13 @@ import { MdSearch, MdTableChart } from "react-icons/md";
 import TablaFlujoCaja from "../components/FlujoCaja/TablaFlujoCaja";
 import { FaBackward, FaCashRegister } from "react-icons/fa";
 import FlujoCaja from "../components/FlujoCaja/FlujoCaja";
+import { useParams } from "react-router-dom";
+import moment from "moment";
 
 function FlujoCajaPage() {
   const [ShowAgregar, setShowAgregar] = useState(false);
   const [search, setSearch] = useState("");
+  const id = useParams();
 
   return (
     <>
@@ -18,18 +21,23 @@ function FlujoCajaPage() {
       <div className="flex flex-row justify-between h-20 px-6 gap-3 border items-center">
         <div>
           {ShowAgregar ? (
-            <TextInput
-              type="date"
-              icon={MdSearch}
-              name="search"
-              id="search"
-              value={search}
-              onChange={(e) => {
-                // setSearch(e.target.value);
-                console.log(e.target.value);
-              }}
-            />
+            <></>
           ) : (
+            // <TextInput
+            //   type="date"
+            //   icon={MdSearch}
+            //   name="search"
+            //   id="search"
+            //   value={search}
+            //   onChange={(e) => {
+            //     setSearch(
+            //       moment(new Date(e.target.value)).format("YYYY-MM-DD")
+            //     );
+            //     console.log(
+            //       moment(new Date(e.target.value)).format("YYYY-MM-DD")
+            //     );
+            //   }}
+            // />
             ""
           )}
         </div>
@@ -53,9 +61,12 @@ function FlujoCajaPage() {
         </Button>
       </div>
       {ShowAgregar ? (
-        <TablaFlujoCaja search={""} />
+        <TablaFlujoCaja search={search} />
       ) : (
-        <FlujoCaja onClose={() => setShowAgregar(false)} />
+        <FlujoCaja
+          id_flujoCaja={id || ""}
+          onClose={() => setShowAgregar(false)}
+        />
       )}
     </>
   );

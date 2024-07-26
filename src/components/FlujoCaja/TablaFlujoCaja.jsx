@@ -1,11 +1,13 @@
-import { Table } from "flowbite-react";
+import { Table, Tooltip } from "flowbite-react";
 import { useEffect, useState } from "react";
 import PaginationButtons from "../PaginationButtons";
 import { getFlujoCaja } from "../../services/CajaService";
 import toast from "react-hot-toast";
 import { CurrencyFormatter } from "../Constants";
+import { BsDownload } from "react-icons/bs";
+import { PrintFlujoPDF } from "./PrintFlujo";
 
-function TablaFlujoCaja(search) {
+function TablaFlujoCaja({ search }) {
   const [flujoCaja, setFlujoCaja] = useState([]);
   const [flujoCajaList, setFlujoCajaList] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -39,7 +41,9 @@ function TablaFlujoCaja(search) {
             <Table.HeadCell>Ingresos</Table.HeadCell>
             <Table.HeadCell>Egresos</Table.HeadCell>
             <Table.HeadCell>Saldo final</Table.HeadCell>
-            <Table.HeadCell>Acciones</Table.HeadCell>
+            <Table.HeadCell>
+              <span className="sr-only">Acciones</span>
+            </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {flujoCajaList.map((flujo) => (
@@ -70,9 +74,14 @@ function TablaFlujoCaja(search) {
                   {CurrencyFormatter(Number(flujo.monto_cierre))}
                 </Table.Cell>
                 <Table.Cell>
-                  <button className="text-blue-500" onClick={() => {}}>
-                    Ver
-                  </button>
+                  <Tooltip content="Descargar Pdf">
+                    <button
+                      className="text-blue-500"
+                      onClick={() => PrintFlujoPDF(flujo.id_flujoCaja)}
+                    >
+                      <BsDownload />
+                    </button>
+                  </Tooltip>
                   {flujo.es_activo ? "" : ""}
                 </Table.Cell>
               </Table.Row>

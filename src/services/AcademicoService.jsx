@@ -30,7 +30,10 @@ export const deleteAlumno = (id) =>
 export const createResponsables = (data) =>
   ApiClient.post("/academico/responsable/", data);
 
-export const getResponsables = () => ApiClient.get("/academico/responsable/");
+export const getResponsables = (id_alumno) =>
+  ApiClient.get(
+    `/academico/responsable/?${id_alumno ? "id_alumno=" + id_alumno : ""}`
+  );
 
 export const searchResponsables = (page, searchTerm) => {
   return ApiClient.get(
