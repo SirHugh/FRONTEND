@@ -145,6 +145,7 @@ const Profile = () => {
         toast.success("Foto de perfil actualizada");
       } catch (error) {
         toast.error(error.message);
+        console.log(error)
         return;
       }
     }

@@ -272,7 +272,6 @@ const PrintFacturaPage = () => {
 
         <div className="border border-black p-2 flex justify-between items-center mt-2">
           <p className="text-xs">Original: Cliente</p>
-          <p className="text-xs">Duplicado: Archivador</p>
         </div>
       </div>
     </div>

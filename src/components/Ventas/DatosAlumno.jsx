@@ -45,17 +45,27 @@ function DatosAlumno({ setData }) {
           />
         </div>
       </div>
-      <div className="flex w-full border rounded-md p-3  h-14">
+      <div className="flex w-full h-14 rounded pt-8 mb-5">
         {selectedValue ? (
-          selectedValue?.id_matricula +
-          " - " +
-          selectedValue?.id_alumno?.cedula +
-          " - " +
-          selectedValue?.id_alumno?.nombre +
-          " " +
-          selectedValue?.id_alumno?.apellido +
-          " - " +
-          selectedValue?.id_grado?.nombre
+          <div className="flex flex-row gap-5">
+            <span>
+            <b>Cedula: </b>
+            {selectedValue?.id_alumno.cedula}
+          </span>
+          <span>
+            <b>Nombre: </b>
+            {selectedValue?.id_alumno.nombre}
+          </span>
+          <span>
+            <b>Apellido: </b>
+            {selectedValue?.id_alumno.apellido}
+          </span>
+          <span>
+            <b>Grado: </b>
+            {selectedValue?.id_grado.grado}°
+          </span>
+           
+          </div>  
         ) : (
           <></>
         )}

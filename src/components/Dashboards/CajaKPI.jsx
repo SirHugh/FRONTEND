@@ -57,7 +57,7 @@ function CajaKPI() {
                 value={kpiValues?.cantidad_Efectivo}
               />
               <BoxGridKpi
-                title="Otros"
+                title="POS"
                 icon={
                   <FaMoneyBillTransfer
                     className={`${bg_color} p-1 text-white rounded-md`}
@@ -66,14 +66,11 @@ function CajaKPI() {
                   />
                 }
                 value={
-                  kpiValues?.cantidad_POS +
-                  kpiValues?.cantidad_Cheque +
-                  kpiValues?.cantidad_Targeta +
-                  kpiValues?.cantidad_Transferencia
+                  kpiValues?.total_comprobantes - kpiValues?.cantidad_Efectivo - kpiValues?.cantidad_Transferencia
                 }
               />
               <BoxGridKpi
-                title="Efectivo"
+                title="Transferencia"
                 icon={
                   <LiaFileInvoiceDollarSolid
                     className={`${bg_color} p-1 text-white rounded-md`}
@@ -81,7 +78,7 @@ function CajaKPI() {
                     color={color}
                   />
                 }
-                value={kpiValues?.cantidad_Efectivo}
+                value={kpiValues?.cantidad_Transferencia}
               />
             </>
           )}

@@ -72,7 +72,7 @@ const Cliente = ({ cliente, setCliente, edit }) => {
               getOptionValue={(e) => e.id_cliente}
             />
           </div>
-          <FaRegPlusSquare size={25} className="cursor-pointer" />
+          
           <FaRegEdit size={25} className="cursor-pointer" />
         </div>
       </div>

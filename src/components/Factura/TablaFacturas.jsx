@@ -19,7 +19,10 @@ function TablaFacturas({ search }) {
         const page = Math.min(currentPage + 1, totalPages) || 1;
         const res = await getComprobante("", page, search);
         setTotalPages(Math.ceil(res.data.count / 10));
-        setFacturas(res.data.results);
+        
+        // Ordenar las facturas por id_comprobante en orden descendente
+        const sortedFacturas = res.data.results.sort((a, b) => b.id_comprobante - a.id_comprobante);
+        setFacturas(sortedFacturas);
       } catch (error) {
         toast.error(error.message);
       }
