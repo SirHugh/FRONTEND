@@ -37,10 +37,11 @@ function TablaFlujoCaja({ search }) {
             <Table.HeadCell>Fecha</Table.HeadCell>
             <Table.HeadCell>Hora apertura</Table.HeadCell>
             <Table.HeadCell>Hora cierre</Table.HeadCell>
-            <Table.HeadCell>Saldo inicial</Table.HeadCell>
+            <Table.HeadCell>Monto Apertura</Table.HeadCell>
             <Table.HeadCell>Ingresos</Table.HeadCell>
             <Table.HeadCell>Egresos</Table.HeadCell>
             <Table.HeadCell>Saldo final</Table.HeadCell>
+            <Table.HeadCell>Monto Cierre</Table.HeadCell>
             <Table.HeadCell>
               <span className="sr-only">Acciones</span>
             </Table.HeadCell>
@@ -69,6 +70,9 @@ function TablaFlujoCaja({ search }) {
                 </Table.Cell>
                 <Table.Cell>
                   {CurrencyFormatter(Number(flujo.salida))}
+                </Table.Cell>
+                <Table.Cell>
+                  {CurrencyFormatter(Number(flujo.monto_flujoCaja))}
                 </Table.Cell>
                 <Table.Cell>
                   {CurrencyFormatter(Number(flujo.monto_cierre))}

@@ -41,23 +41,27 @@ export const PrintFlujoPDF = async (id) => {
   doc.text(`Monto Apertura:`, 15, 45);
   doc.text(`${CurrencyFormatter(Number(flujo.monto_apertura))}`, 50, 45);
 
-  doc.text(`Monto Cierre:`, 15, 50);
-  doc.text(`${CurrencyFormatter(Number(flujo.monto_cierre))}`, 50, 50);
+  doc.text(`Monto Saldo Final:`, 15, 50);
+  doc.text(`${CurrencyFormatter(Number(flujo.monto_flujoCaja))}`, 50, 50);
 
-  doc.text(`Total Ingresos:`, 15, 55);
-  doc.text(`${CurrencyFormatter(Number(flujo.entrada))}`, 50, 55);
+  doc.text(`Monto Cierre:`, 15, 55);
+  doc.text(`${CurrencyFormatter(Number(flujo.monto_cierre))}`, 50, 55);
 
-  doc.text(`Total Egreso: `, 15, 60);
-  doc.text(`${CurrencyFormatter(Number(flujo.salida))}`, 50, 60);
-  doc.text(`Balance:`, 15, 65);
+  doc.text(`Total Ingresos:`, 15, 60);
+  doc.text(`${CurrencyFormatter(Number(flujo.entrada))}`, 50, 60);
+
+  doc.text(`Total Egreso: `, 15, 65);
+  doc.text(`${CurrencyFormatter(Number(flujo.salida))}`, 50, 65);
+
+  doc.text(`Balance:`, 15, 70);
   doc.text(
     `${CurrencyFormatter(Number(flujo.entrada) - Number(flujo.salida))}`,
     50,
-    65
+    70
   );
 
   autoTable(doc, {
-    startY: 70,
+    startY: 75,
     head: [["Nro", "Hora", "Condición", "Forma Pago", "Monto", "Movimiento"]],
     body: flujo.facturas?.map((factura) => {
       return [

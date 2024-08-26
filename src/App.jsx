@@ -50,7 +50,27 @@ function App() {
 
   return (
     <>
-      <Toaster position="top-center"></Toaster>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 5000,
+          style: {
+            background: "#50c5f0",
+            color: "#111111",
+          },
+
+          // Default options for specific types
+          success: {
+            duration: 3000,
+            theme: {
+              primary: "green",
+              secondary: "black",
+            },
+          },
+        }}
+      ></Toaster>
       <div className="flex flex-row h-full">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <div className="flex flex-col w-screen">

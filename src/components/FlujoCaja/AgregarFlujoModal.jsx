@@ -24,6 +24,7 @@ function AgregarFlujoModal({ show, onClose }) {
     } catch (error) {
       console.error(error);
       toast.error(error.message);
+      return;
     }
     toast.success("Flujo de caja Iniciado Exitosamente");
     close();

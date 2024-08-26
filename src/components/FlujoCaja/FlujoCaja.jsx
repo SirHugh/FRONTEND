@@ -8,9 +8,8 @@ import { Button, Card, Table } from "flowbite-react";
 import { CurrencyFormatter } from "../Constants";
 import { FaPlay, FaStop } from "react-icons/fa";
 import AgregarFlujoModal from "./AgregarFlujoModal";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { PrintFlujoPDF } from "./PrintFlujo";
+import { MdOutlineLockClock } from "react-icons/md";
 
 function FlujoCaja({ id_flujoCaja }) {
   const [flujo, setFlujo] = useState(null);
@@ -38,25 +37,14 @@ function FlujoCaja({ id_flujoCaja }) {
     }
     const message = value ? "Flujo En curso" : "Flujo Cerrado";
     toast.success(message);
-    if (!value) {
-      const confirmPrint = window.confirm(
-        "¿Deseas imprimir el flujo de caja antes de cerrar?"
-      );
-      if (confirmPrint) {
-        PrintFlujoPDF(flujo.id_flujoCaja);
-      }
-    }
-  };
-
-  const handleModal = () => {
-    setShowModal(!showModal);
   };
 
   const handleClose = () => {
-    console.log("ModalShow", showModal);
     setShowModal(false);
     setReload(!reload);
   };
+
+  const handleCierre = async () => {};
 
   return (
     <>
@@ -88,23 +76,32 @@ function FlujoCaja({ id_flujoCaja }) {
             </div>
             <Button
               color="gray"
-              title="Habilitar Flujo"
-              disabled={flujo.es_activo ? true : false}
-              className={"border p-0 rounded-sm items-center"}
-              onClick={() => handleActivate(true)}
+              // className={"border p-0 rounded-sm items-center"}
+              onClick={() =>
+                flujo.es_activo ? handleActivate(false) : handleActivate(true)
+              }
             >
               <div className="flex flex-row items-center justify-center gap-3">
-                <FaPlay />
-                Abrir
+                {flujo.es_activo ? (
+                  <>
+                    <FaStop />
+                    Pausar
+                  </>
+                ) : (
+                  <>
+                    <FaPlay />
+                    Reanudar
+                  </>
+                )}
               </div>
             </Button>
             <Button
               color="gray"
               disabled={flujo.es_activo ? false : true}
-              onClick={() => handleActivate(false)}
+              onClick={() => handleCierre()}
             >
               <div className="flex flex-row items-center justify-center gap-3">
-                <FaStop />
+                <MdOutlineLockClock size={20} />
                 Cerrar
               </div>
             </Button>
@@ -134,16 +131,14 @@ function FlujoCaja({ id_flujoCaja }) {
               <small className="text-cyan-700">Balance</small>
               <big className="self-center">
                 {CurrencyFormatter(
-                  Number(flujo.monto_cierre) - Number(flujo.salida)
+                  Number(flujo.entrada) - Number(flujo.salida)
                 )}
               </big>
             </Card>
             <Card>
               <small className="text-cyan-700">Saldo Final</small>
               <big className="self-center">
-                {CurrencyFormatter(
-                  Number(flujo.monto_cierre) - Number(flujo.salida)
-                )}
+                {CurrencyFormatter(Number(flujo.monto_flujoCaja))}
               </big>
             </Card>
           </div>
