@@ -8,6 +8,7 @@ import {
 import { Button, Label, Spinner, Table, TextInput } from "flowbite-react";
 import axios from "axios";
 import ConfirmationModal from "../ConfirmationModal";
+import { baseURL } from "../../services/ApiClient";
 
 function ControlStock() {
   const { id } = useParams();
@@ -56,7 +57,7 @@ function ControlStock() {
     let cancel;
     axios({
       method: "GET",
-      url: `http://localhost:8000/comercial/detalle_stock_control/`,
+      url: `${baseURL}/comercial/detalle_stock_control/`,
       params: { id_controlStock: id, page: pageNumber },
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
@@ -109,7 +110,7 @@ function ControlStock() {
     const delayedRequest = setTimeout(() => {
       axios({
         method: "PATCH",
-        url: `http://localhost:8000/comercial/detalle_stock_control/${detalleUpdate.id_detalleControl}`,
+        url: `${baseURL}/comercial/detalle_stock_control/${detalleUpdate.id_detalleControl}`,
         data: { cantidad_contada: detalleUpdate.cantidad_contada },
         cancelToken: source.token,
       })

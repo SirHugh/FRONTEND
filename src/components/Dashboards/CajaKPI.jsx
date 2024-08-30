@@ -31,7 +31,7 @@ function CajaKPI() {
   return (
     <>
       {allowed && (
-        <div className="flex flex-row gap-10">
+        <>
           {!loading && (
             <>
               <BoxGridKpi
@@ -66,7 +66,9 @@ function CajaKPI() {
                   />
                 }
                 value={
-                  kpiValues?.total_comprobantes - kpiValues?.cantidad_Efectivo - kpiValues?.cantidad_Transferencia
+                  kpiValues?.total_comprobantes -
+                  kpiValues?.cantidad_Efectivo -
+                  kpiValues?.cantidad_Transferencia
                 }
               />
               <BoxGridKpi
@@ -82,7 +84,7 @@ function CajaKPI() {
               />
             </>
           )}
-        </div>
+        </>
       )}
     </>
   );

@@ -144,15 +144,11 @@ const MainPage = () => {
       <main className="p-4">
         {/* Contenedor para los KPI */}
         <div className="flex flex-wrap gap-4 justify-center">
+          <ComercialKPI />
 
-            <ComercialKPI />
-        
-          
-            <AcademicoKPI />
-         
-          
-            <CajaKPI />
-          
+          <AcademicoKPI />
+
+          <CajaKPI />
         </div>
 
         {/* Contenedor para los dashboard components */}
@@ -162,10 +158,7 @@ const MainPage = () => {
               {filteredDashboardData
                 .filter((dashboard) => dashboard.allowedGroup === group)
                 .map((dashboard, dashboardIndex) => (
-                  <div
-                    key={dashboardIndex}
-                    className="p-4 bg-white shadow-sm"
-                  >
+                  <div key={dashboardIndex} className="p-4 bg-white shadow-sm">
                     <dashboard.component />
                   </div>
                 ))}

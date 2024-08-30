@@ -31,7 +31,7 @@ function ComercialKPI() {
   return (
     <>
       {allowed && (
-        <div className="flex flex-row gap-10">
+        <>
           {!loading && (
             <>
               <BoxGridKpi
@@ -81,7 +81,7 @@ function ComercialKPI() {
               />
             </>
           )}
-        </div>
+        </>
       )}
     </>
   );
